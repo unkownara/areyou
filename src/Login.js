@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import {useInput} from "./hooks";
 import {user_info_url} from './backend/Apis';
-<<<<<<< HEAD
-=======
 
->>>>>>> 557c021f565f01bc37056d5301809ea507e6daf8
 import SkipToAnswers from './SkipToAnswers';
 import history from "./history";
 
