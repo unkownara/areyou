@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+
 import { useInput } from './Input';
 import SkipToAnswers from './SkipToAnswers';
-import history from "./history";
-import {user_info_url} from "./backend/Apis";
-import cookie from "react-cookies";
-import {makeid} from "./Generics";
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -91,45 +88,10 @@ const Button = styled.div`
 
 function SignUp() {
 
-    const [errorMsg, setErrorMsg] = useState('');
-
     const email = useInput('');
     const password = useInput('');
     const phone = useInput('');
     const name = useInput('');
-
-    const onSubmit = () => {
-        import('./backend/ApiRequests').then(obj => {
-            let payload = {
-                name: name.value,
-                userId: email.value,
-                password: password.value,
-                phoneNumber: phone.value
-            };
-            obj.postApiRequestCall(user_info_url, payload, function(response) {
-                try {
-                    if(response && response.data) {
-                        if(response.data === "user already exists") {
-                            setErrorMsg('User already exits.');
-                        } else {
-                            setErrorMsg('');
-                            cookie.save('__u_id__', email.value);
-                            history.push({
-                                pathname: '/',
-                                search: `?u_id=${makeid(6)}`,
-                                state: {detail: payload}
-                            });
-                        }
-                    } else {
-                        setErrorMsg('Something wrong');
-                    }
-                } catch (e) {
-                    console.log('something went wrong');
-                    setErrorMsg('Something wrong');
-                }
-            })
-        });
-    };
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
@@ -147,10 +109,6 @@ function SignUp() {
     //         setErrorMsg('Required');
     //     }
     // }
-
-    const logInRedirect = () => {
-        history.push('/login');
-    };
 
     return (
         <SignUpWrapper>
@@ -174,9 +132,8 @@ function SignUp() {
                 {...password}
                 placeholder={'Password'}
             />
-            <Button onClick={onSubmit}>Sign Up</Button>
-            {errorMsg}
-            <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
+            <Button>Sign Up</Button>
+            <LoginRedirect>Alreadt a member? <span>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers />
         </SignUpWrapper>
