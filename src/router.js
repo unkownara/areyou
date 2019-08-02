@@ -3,7 +3,7 @@ import history from './history';
 import { Router, Switch, Route } from 'react-router';
 import Login from './Login';
 import App from "./App";
-import {Signup} from "./Signup";
+import SignUp from "./SignUp";
 
 function Routers() {
     return (
@@ -22,7 +22,7 @@ function Routers() {
                 <Route
                     exact
                     path="/signup"
-                    component={Signup}
+                    component={SignUp}
                 />
             </Switch>
         </Router>

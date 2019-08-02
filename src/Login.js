@@ -2,9 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import {useInput} from "./hooks";
 import {user_info_url} from './backend/Apis';
-
-import { useInput } from './Input'
 import SkipToAnswers from './SkipToAnswers';
+import history from "./history";
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -101,7 +100,8 @@ function Login() {
     const onSubmit = () => {
         import('./backend/ApiRequests').then(obj => {
             let params = {
-                userId: email.value
+                userId: email.value,
+                password: password.value
             };
             obj.getApiRequestCall(user_info_url, params, function(response) {
                 try {
@@ -111,6 +111,10 @@ function Login() {
                 }
             })
         })
+    };
+
+    const signUpRedirect = () => {
+        history.push('/signup');
     };
     
 
@@ -140,14 +144,13 @@ function Login() {
             <Input
                 {...email}
                 placeholder={'Email'}
-                {...emailId}
             />
             <Input
                 {...password}
                 placeholder={'Password'}
             />
             <Button onClick={onSubmit}>Let's Go</Button>
-            <SignUpRedirect>Want to join us? <span>Sign Up</span></SignUpRedirect>
+            <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
             <SkipToAnswers />
         </LoginWrapper>
