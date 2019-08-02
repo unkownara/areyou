@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
+import cookie from 'react-cookies';
 import { useInput } from './Input';
 import SkipToAnswers from './SkipToAnswers';
-
+import {makeid} from './Generics';
+import history from "./history";
+import {user_info_url} from "./backend/Apis";
 import ShowEye from './eye.png';
 import HideEye from './eyecross.png';
 
@@ -120,6 +122,8 @@ const PasswordHiderIcon = styled.img`
 
 function SignUp() {
 
+    const [errorMsg, setErrorMsg] = useState('');
+
     const email = useInput('');
     const password = useInput('');
     const phone = useInput('');
@@ -142,6 +146,39 @@ function SignUp() {
     //         setErrorMsg('Required');
     //     }
     // }
+
+    const onSubmit = () => {
+        import('./backend/ApiRequests').then(obj => {
+            let payload = {
+                name: name.value,
+                userId: email.value,
+                password: password.value,
+                phoneNumber: phone.value
+            };
+            obj.postApiRequestCall(user_info_url, payload, function (response) {
+                try {
+                    if (response && response.data) {
+                        setErrorMsg('');
+                        cookie.save('__u_id__', email.value);
+                        history.push({
+                            pathname: '/',
+                            search: `?u_id=${makeid(6)}`,
+                            state: {detail: payload}
+                        });
+                    } else {
+                        setErrorMsg('Something wrong');
+                    }
+                } catch (e) {
+                    console.log('something went wrong');
+                    setErrorMsg('Something wrong');
+                }
+            })
+        });
+    };
+
+    const logInRedirect = () => {
+        history.push('/login');
+    };
 
     function enterPressed(e) {
         let code = e.keyCode || e.which;
@@ -190,8 +227,8 @@ function SignUp() {
                     }
                 </PasswordWrapper>
             </InputWrapper>
-            <Button>Sign Up</Button>
-            <LoginRedirect>Already a member? <span>Login</span></LoginRedirect>
+            <Button onClick={onSubmit}>Sign Up</Button>
+            <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers />
         </SignUpWrapper>

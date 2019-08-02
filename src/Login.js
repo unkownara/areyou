@@ -8,6 +8,8 @@ import history from "./history";
 
 import ShowEye from './eye.png';
 import HideEye from './eyecross.png';
+import cookie from "react-cookies";
+import {makeid} from "./Generics";
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -133,6 +135,7 @@ function Login() {
     const email = useInput('');
     const password = useInput('');
     const [showPass, setShowPass] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
     const onSubmit = () => {
         import('./backend/ApiRequests').then(obj => {
@@ -142,7 +145,17 @@ function Login() {
             };
             obj.getApiRequestCall(user_info_url, params, function(response) {
                 try {
-                    console.log('response from server ', response);
+                    if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                        setErrorMsg('');
+                        cookie.save('__u_id__', email.value);
+                        history.push({
+                            pathname: '/',
+                            search: `?u_id=${makeid(6)}`,
+                            state: {detail: response.data.Items[0]}
+                        });
+                    } else if(response.data === "incorrect password" || response.data === "Email doesn't exists" ){
+                        setErrorMsg(response.data);
+                    }
                 } catch (e) {
                     console.log('oops something went wrong');
                 }
@@ -210,7 +223,8 @@ function Login() {
                 </PasswordWrapper>
             </InputWrapper>
             <Button onClick={onSubmit}>Let's Go</Button>
-            <SignUpRedirect>Want to join us? <span>Sign Up</span></SignUpRedirect>
+            {errorMsg}
+            <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
             <SkipToAnswers />
         </LoginWrapper>
