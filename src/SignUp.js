@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useInput } from './Input'
+import { useInput } from './Input';
 import SkipToAnswers from './SkipToAnswers';
 
-const LoginWrapper = styled.div`
+const SignUpWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
-  padding-bottom: 30px;
+  /* padding-bottom: 30px; */
 `
 
 const AppName = styled.div`
@@ -29,11 +29,24 @@ const TagLine = styled.div`
 
 const SignUpHeading = styled.p`
     width: 300px;
-    padding-left: 10px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 20px;
+    margin-top: 0;
+`
+
+const OR = styled.div`
+    font-size: 12px;
+    margin-top: 20px;
     color: gray;
+`
+
+const LoginRedirect = styled.div`
+    color: #000;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    
+    &>span {
+        color: #09198A;
+        font-weight: bold;
+    }
 `
 
 const Input = styled.input`
@@ -73,28 +86,12 @@ const Button = styled.div`
     margin: 20px auto;
 `
 
-const SignUpRedirect = styled.div`
-    color: #000;
-    letter-spacing: 0.5px;
-    font-size: 14px;
-
-    &>span {
-        color: #09198A;
-        font-weight: bold;
-    }
-`
-
-const OR = styled.div`
-    font-size: 12px;
-    margin-top: 50px;
-    color: gray;
-    margin-top: 30px;
-`
-
-function Login() {
+function SignUp() {
 
     const email = useInput('');
     const password = useInput('');
+    const phone = useInput('');
+    const name = useInput('');
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
@@ -114,27 +111,35 @@ function Login() {
     // }
 
     return (
-        <LoginWrapper>
+        <SignUpWrapper>
             <AppName>Are You ?</AppName>
             {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
-            <SignUpHeading>Login</SignUpHeading>
-
+            <SignUpHeading>Sign Up</SignUpHeading>
+            <Input
+                {...name}
+                placeholder={'Name'}
+            />
             <Input
                 {...email}
                 placeholder={'Email'}
             />
             <Input
+                {...phone}
+                type="number"
+                placeholder={'Phone'}
+            />
+            <Input
                 {...password}
                 placeholder={'Password'}
             />
-            <Button>Let's Go</Button>
-            <SignUpRedirect>Want to join us? <span>Sign Up</span></SignUpRedirect>
+            <Button>Sign Up</Button>
+            <LoginRedirect>Alreadt a member? <span>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers />
-        </LoginWrapper>
+        </SignUpWrapper>
     );
 }
 
 
 
-export default Login;
+export default SignUp;
