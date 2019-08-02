@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import {useInput} from "./hooks";
+import {user_info_url} from './backend/Apis';
 
-import { useInput } from './Input'
 import SkipToAnswers from './SkipToAnswers';
 
 import ShowEye from './eye.png';
@@ -131,6 +132,22 @@ function Login() {
     const email = useInput('');
     const password = useInput('');
     const [showPass, setShowPass] = useState(false);
+
+    const onSubmit = () => {
+        import('./backend/ApiRequests').then(obj => {
+            let params = {
+                userId: email.value
+            };
+            obj.getApiRequestCall(user_info_url, params, function(response) {
+                try {
+                    console.log('response from server ', response);
+                } catch (e) {
+                    console.log('oops something went wrong');
+                }
+            })
+        })
+    };
+    
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
