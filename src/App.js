@@ -4,8 +4,11 @@ import history from "./history";
 import WallPage from './Wall';
 import Login from './Login';
 import cookie from 'react-cookies';
+import Profile from './Profile';
 const Profile = lazy(() => import('./Profile'));
 const Header = lazy(() => import('./Header'));
+const QnAPage = lazy(() => import('./QnAPage'));
+const SignUp = lazy(() => import('./SignUp'));
 
 const AppWrapper = styled.div`
   padding: 20px;
@@ -33,7 +36,7 @@ function App(props) {
         return (
             <Suspense fallback={<></>}>
                 <Fragment>
-                    <Header/>
+                    <Header userName={'Aravind'} />
                     <AppWrapper>
                         <Profile/>
                     </AppWrapper>

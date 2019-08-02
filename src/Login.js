@@ -3,20 +3,24 @@ import styled from 'styled-components';
 import {useInput} from "./hooks";
 import {user_info_url} from './backend/Apis';
 
+import { useInput } from './Input'
+import SkipToAnswers from './SkipToAnswers';
+
 const LoginWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 10px;
+  padding-bottom: 30px;
 `
 
 const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 0px auto 75px auto;
+    margin: 0px auto 35px auto;
 `
 
 
@@ -34,18 +38,19 @@ const SignUpHeading = styled.p`
     color: gray;
 `
 
-const EmailInput = styled.input`
+const Input = styled.input`
     width: 300px;
     height: 50px;
     color: gray;
-    border-radius: 10px;
+    border-radius: 7px;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 500;
     letter-spacing: 0.6px;
     border: none;
     border: 1px solid #eee;
     padding: 10px;
     outline: none;
+    margin: 0 auto 20px auto;
 
     &::placeholder{
         color: #d3d3d3;
@@ -70,20 +75,33 @@ const Button = styled.div`
     margin: 20px auto;
 `
 
+const SignUpRedirect = styled.div`
+    color: #000;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+
+    &>span {
+        color: #09198A;
+        font-weight: bold;
+    }
+`
+
 const OR = styled.div`
     font-size: 12px;
-    margin-top: 30px;
+    margin-top: 50px;
     color: gray;
+    margin-top: 30px;
 `
 
 function Login() {
 
-    const emailId = useInput('');
+    const email = useInput('');
+    const password = useInput('');
 
     const onSubmit = () => {
         import('./backend/ApiRequests').then(obj => {
             let params = {
-                userId: emailId.value
+                userId: email.value
             };
             obj.getApiRequestCall(user_info_url, params, function(response) {
                 try {
@@ -94,6 +112,7 @@ function Login() {
             })
         })
     };
+    
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
@@ -114,17 +133,23 @@ function Login() {
 
     return (
         <LoginWrapper>
-            <AppName>You Are</AppName>
+            <AppName>Are You ?</AppName>
             {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
-            <SignUpHeading>Sign Up</SignUpHeading>
-            <EmailInput
+            <SignUpHeading>Login</SignUpHeading>
+
+            <Input
+                {...email}
                 placeholder={'Email'}
                 {...emailId}
             />
+            <Input
+                {...password}
+                placeholder={'Password'}
+            />
             <Button onClick={onSubmit}>Let's Go</Button>
-            <TagLine>One click sign up and Happy sharing!</TagLine>
+            <SignUpRedirect>Want to join us? <span>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
-            <Button>View Other Answers</Button>
+            <SkipToAnswers />
         </LoginWrapper>
     );
 }
