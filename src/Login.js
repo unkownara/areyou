@@ -79,13 +79,12 @@ function Login() {
 
     const emailId = useInput('');
 
-    function onSubmit(e) {
-        e.preventDefault();
+    const onSubmit = () => {
         import('./backend/ApiRequests').then(obj => {
             let params = {
                 userId: emailId.value
             };
-            obj.getApiRequestCall('', params, function(response) {
+            obj.getApiRequestCall('https://cpx49jibf1.execute-api.us-east-2.amazonaws.com/beta/user', params, function(response) {
                 try {
                     console.log('response from server ', response);
                 } catch (e) {
@@ -93,7 +92,7 @@ function Login() {
                 }
             })
         })
-    }
+    };
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
@@ -121,7 +120,7 @@ function Login() {
                 placeholder={'Email'}
                 {...emailId}
             />
-            <Button onClick={onSubmit()}>Let's Go</Button>
+            <Button onClick={onSubmit}>Let's Go</Button>
             <TagLine>One click sign up and Happy sharing!</TagLine>
             <OR>or</OR>
             <Button>View Other Answers</Button>

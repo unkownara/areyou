@@ -1,9 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import history from "./history";
 import WallPage from './Wall';
-import Header from './Header';
 import Login from './Login';
-import Profile from './Profile';
+import cookie from 'react-cookies';
+const Profile = lazy(() => import('./Profile'));
+const Header = lazy(() => import('./Header'));
 
 const AppWrapper = styled.div`
   padding: 20px;
@@ -11,14 +13,35 @@ const AppWrapper = styled.div`
 `
 
 function App() {
-  return (
-    <Fragment>
-      <Header />
-      <AppWrapper>
-        <Profile />
-      </AppWrapper>
-    </Fragment>
-  );
+
+    const [isUserLogged, setIsUserLogged] = useState(false);
+
+    useEffect(() => {
+        if(cookie.load('__u_id__')) {
+            setIsUserLogged(true);
+        } else {
+            setIsUserLogged(false);
+            history.push('/login');
+        }
+    }, []);
+
+    if(isUserLogged) {
+        return (
+            <Suspense fallback={<></>}>
+                <Fragment>
+                    <Header/>
+                    <AppWrapper>
+                        <Profile/>
+                    </AppWrapper>
+                </Fragment>
+            </Suspense>
+        );
+    } else {
+        return (
+            <>
+            </>
+        );
+    }
 }
 
 export default App;
