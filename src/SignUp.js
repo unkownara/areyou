@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { useInput } from './Input';
 import SkipToAnswers from './SkipToAnswers';
+
+import ShowEye from './eye.png';
+import HideEye from './eyecross.png';
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -29,7 +32,10 @@ const TagLine = styled.div`
 
 const SignUpHeading = styled.p`
     width: 300px;
-    margin-top: 0;
+    padding-left: 10px;
+    text-align: center;
+    font-size: 20px;
+    color: gray;
 `
 
 const OR = styled.div`
@@ -47,6 +53,11 @@ const LoginRedirect = styled.div`
         color: #09198A;
         font-weight: bold;
     }
+`
+
+const InputWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
 `
 
 const Input = styled.input`
@@ -84,7 +95,28 @@ const Button = styled.div`
     color: #fff;
     font-weight: bold;
     margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
+
+const PasswordWrapper = styled.div``
+
+const PasswordHiderIcon = styled.img`
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    margin-left: -30px;
+    margin-top: 14px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
 
 function SignUp() {
 
@@ -92,6 +124,7 @@ function SignUp() {
     const password = useInput('');
     const phone = useInput('');
     const name = useInput('');
+    const [showPass, setShowPass] = useState(false);
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
@@ -110,30 +143,55 @@ function SignUp() {
     //     }
     // }
 
+    function enterPressed(e) {
+        let code = e.keyCode || e.which;
+        if (code === 13) {
+        }
+    }
+
+    function togglePassword() {
+        setShowPass(!showPass)
+    }
+
     return (
         <SignUpWrapper>
             <AppName>Are You ?</AppName>
             {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
             <SignUpHeading>Sign Up</SignUpHeading>
-            <Input
-                {...name}
-                placeholder={'Name'}
-            />
-            <Input
-                {...email}
-                placeholder={'Email'}
-            />
-            <Input
-                {...phone}
-                type="number"
-                placeholder={'Phone'}
-            />
-            <Input
-                {...password}
-                placeholder={'Password'}
-            />
+            <InputWrapper>
+                <Input
+                    {...name}
+                    placeholder={'Name'}
+                />
+                <Input
+                    {...email}
+                    placeholder={'Email'}
+                />
+                <Input
+                    {...phone}
+                    type="number"
+                    placeholder={'Phone'}
+                />
+                <PasswordWrapper>
+                    <Input
+                        {...password}
+                        type={showPass ? 'text' : 'password'}
+                        autoComplete="off"
+                        placeholder="Password"
+                        // style={{
+                        //     fontSize: password.value.length ? showPass ? '14px' : '22px' : '14px'
+                        // }}
+                        onKeyPress={(e) => enterPressed(e, 'password')}
+                    />
+                    {
+                        <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
+                            className="passHideShowIcon" onClick={togglePassword}
+                            alt={'pass'} />
+                    }
+                </PasswordWrapper>
+            </InputWrapper>
             <Button>Sign Up</Button>
-            <LoginRedirect>Alreadt a member? <span>Login</span></LoginRedirect>
+            <LoginRedirect>Already a member? <span>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers />
         </SignUpWrapper>

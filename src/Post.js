@@ -5,14 +5,25 @@ import Like from './like.png';
 import UnLike from './unlike.png';
 import User from './user.png';
 
-const PostWrapper = styled.div``
+const PostWrapper = styled.div`
+    width: 600px;
+    margin: 0 auto;
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
+`
 
 const Post = styled.div``
 
 const ProfileWrapper = styled.div`
     display: grid;
-    grid-template-columns: 0.7fr 4.3fr;
+    grid-template-columns: 0.4fr 4.6fr;
     grid-gap: 10px;
+    
+    @media(max-width: 700px){
+        grid-template-columns: 0.7fr 4.3fr;
+    }
 `
 
 const ProfileImageWrapper = styled.div`
@@ -21,21 +32,42 @@ const ProfileImageWrapper = styled.div`
     align-items: center;
 `
 
-const ProfileImage = styled.img`
+const ProfileImage = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    font-weight: bold;
+    font-size: 24px;
     height: 40px;
     width: 40px;
+    background: ${props => props.bg || '#eee'};
+    border-radius: 50%;
 `
 
 const ProfileDetailsWrapper = styled.div``
 
 const Answer = styled.div`
-    margin: 20px 0;
+    margin: 20px 0 0 0;
     letter-spacing: 0.8px;
     line-height: 22px;
     text-align: left;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const ShowMore = styled.span`
+    color: #329bff;
+    font-size: 14px;
+    font-weight: bold;
+`
+
+const ShowLess = styled.div`
+    width: 100%;
+    text-align: right;
     color: #329bff;
     font-size: 14px;
     font-weight: bold;
@@ -53,7 +85,9 @@ const UploadDate = styled.div`
     font-size: 12px;
 `
 
-const PostOptionsWrapper = styled.div``
+const PostOptionsWrapper = styled.div`
+    margin: 20px 0;
+`
 
 const LikeIconWrapper = styled.div`
     display: flex;
@@ -63,6 +97,11 @@ const LikeIconWrapper = styled.div`
 const LikeIcon = styled.img`
     height: 25px;
     width: 25px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const LikesCount = styled.div`
@@ -76,7 +115,7 @@ const LikesCount = styled.div`
 `
 
 const HR = styled.div`
-    margin-top: 10px;
+    margin: 10px 0 20px 0;
     border-bottom: 1px solid #eee;
 `
 
@@ -88,15 +127,29 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
         setShowMore(true)
     }
 
+    function hideFullAnswer() {
+        setShowMore(false)
+    }
+
+    function likeAnswer() {
+        
+    }
+
+    function getRandomColor() {
+        var letters = 'BCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * letters.length)];
+        }
+        return color;
+    }
+
     return (
         <PostWrapper>
             <Post>
                 <ProfileWrapper>
                     <ProfileImageWrapper>
-                        <ProfileImage
-                            src={User}
-                            alt={'User'}
-                        />
+                        <ProfileImage bg={getRandomColor}>{userName.substring(0, 1)}</ProfileImage>
                     </ProfileImageWrapper>
                     <ProfileDetailsWrapper>
                         <ProfileName>{userName}</ProfileName>
@@ -110,12 +163,19 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                                 {answer.substring(1, 200)}
                                 <ShowMore>... show more</ShowMore>
                             </Fragment> :
-                            answer
+                            <Fragment>
+                                {answer}
+                            </Fragment>
                     }
                 </Answer>
+                {
+                    showMore ?
+                        <ShowLess style={{ zIndex: 2 }} onClick={hideFullAnswer}> Show less</ShowLess> : null
+                }
                 <PostOptionsWrapper>
                     <LikeIconWrapper>
                         <LikeIcon
+                            onClick={likeAnswer}
                             src={liked ? Like : UnLike}
                             alt={'Like'}
                         />
@@ -127,4 +187,3 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
         </PostWrapper>
     );
 }
-

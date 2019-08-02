@@ -10,13 +10,6 @@ const SkipWrapper = styled.div`
     grid-gap: 8px;
 `
 
-const Skip = styled.div`
-    font-weight: bold;
-    color: #09198A;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-`
-
 const LeftIconWrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -26,6 +19,26 @@ const LeftIconWrapper = styled.div`
 const LeftIcon = styled.img`
     height: 15px;
     width: 15px;
+    margin-left: 0px;
+    transition: all 0.3s ease-in-out;
+`
+
+const Skip = styled.div`
+    font-weight: bold;
+    color: #09198A;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+
+    &:hover{
+        ${LeftIcon} {
+            margin-left: 10px;
+        }
+    }
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 export default function SkipToAnswers() {
