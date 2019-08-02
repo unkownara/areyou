@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { useInput } from './Input'
 import SkipToAnswers from './SkipToAnswers';
+
+import ShowEye from './eye.png';
+import HideEye from './eyecross.png';
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -18,7 +21,11 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 0px auto 35px auto;
+    margin: 0px auto 60px auto;
+
+    @media(max-width: 700px){
+        margin: 0px auto 35px auto;
+    }
 `
 
 
@@ -27,17 +34,21 @@ const TagLine = styled.div`
     font-size: 14px;
 `
 
-const SignUpHeading = styled.p`
+const LoginHeading = styled.p`
     width: 300px;
     padding-left: 10px;
     text-align: center;
-    font-weight: bold;
     font-size: 20px;
     color: gray;
 `
 
+const InputWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
 const Input = styled.input`
-    width: 300px;
+    width: 350px;
     height: 50px;
     color: gray;
     border-radius: 7px;
@@ -57,6 +68,10 @@ const Input = styled.input`
     &:focus{
         outline: 0;
     }
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
 `
 
 const Button = styled.div`
@@ -71,6 +86,11 @@ const Button = styled.div`
     color: #fff;
     font-weight: bold;
     margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const SignUpRedirect = styled.div`
@@ -91,10 +111,26 @@ const OR = styled.div`
     margin-top: 30px;
 `
 
+const PasswordWrapper = styled.div``
+
+const PasswordHiderIcon = styled.img`
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    margin-left: -30px;
+    margin-top: 14px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
 function Login() {
 
     const email = useInput('');
     const password = useInput('');
+    const [showPass, setShowPass] = useState(false);
 
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
@@ -113,20 +149,43 @@ function Login() {
     //     }
     // }
 
+    function enterPressed(e) {
+        let code = e.keyCode || e.which;
+        if (code === 13) {
+        }
+    }
+
+    function togglePassword() {
+        setShowPass(!showPass)
+    }
+
     return (
         <LoginWrapper>
             <AppName>Are You ?</AppName>
-            {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
-            <SignUpHeading>Login</SignUpHeading>
-
-            <Input
-                {...email}
-                placeholder={'Email'}
-            />
-            <Input
-                {...password}
-                placeholder={'Password'}
-            />
+            <LoginHeading>Login</LoginHeading>
+            <InputWrapper>
+                <Input
+                    {...email}
+                    placeholder={'Email'}
+                />
+                <PasswordWrapper>
+                    <Input
+                        {...password}
+                        type={showPass ? 'text' : 'password'}
+                        autoComplete="off"
+                        placeholder="Password"
+                        style={{
+                            fontSize: password.value.length ? showPass ? '14px' : '22px' : '14px'
+                        }}
+                        onKeyPress={(e) => enterPressed(e, 'password')}
+                    />
+                    {
+                        <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
+                            className="passHideShowIcon" onClick={togglePassword}
+                            alt={'pass'} />
+                    }
+                </PasswordWrapper>
+            </InputWrapper>
             <Button>Let's Go</Button>
             <SignUpRedirect>Want to join us? <span>Sign Up</span></SignUpRedirect>
             <OR>or</OR>

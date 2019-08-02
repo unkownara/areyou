@@ -8,7 +8,7 @@ const HeaderStickyWrapper = styled.div`
 `
 
 const HeaderWrapper = styled.div`
-    height: 70px;
+    height: 60px;
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
     box-shadow: 0px 3px 25px -3px rgb(229, 229, 231);
@@ -29,13 +29,15 @@ const Wrapper = styled.div`
 
 const AppName = styled.div`
     color: #000;
-    font-size: 32px;
+    font-size: 26px;
     font-weight: bold;
     vertical-align: middle;
-    line-height: 70px;
+    line-height: 60px;
+    padding-left: 10px;
 
     @media(max-width: 700px){
         line-height: 50px;
+        padding-left: 0px;
         font-size: 20px;
     }
 `
@@ -51,11 +53,12 @@ const AnswerTrigger = styled.div`
     border-radius: 3px;
     color: #fff;
     font-weight: bold;
+    cursor: pointer;
 
     @media(max-width: 700px){
         line-height: 25px;
         height: 25px;
-        padding: 0 10px;
+        cursor: default;        
         padding: 0 10px;
         font-weight: 500;
     }
@@ -64,6 +67,11 @@ const AnswerTrigger = styled.div`
 
 const LogoWrapper = styled.div`
     display: flex;
+    padding-left: 10px;
+
+    @media(max-width: 700px){
+        padding-left: 0px;
+    }
 `
 
 const MenuIconWrapper = styled.div`
@@ -80,11 +88,19 @@ const ProfileImage = styled.div`
     align-items: center;
     color: #000;
     font-weight: bold;
-    font-size: 15px;
-    height: 25px;
-    width: 25px;
+    font-size: 20px;
+    height: 35px;
+    width: 35px;
     background: ${props => props.bg || '#eee'};
     border-radius: 50%;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+        height: 25px;
+        font-size: 15px;
+        width: 25px;
+    }
 `
 
 

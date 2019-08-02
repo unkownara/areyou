@@ -17,7 +17,7 @@ function App() {
     <Fragment>
       <Header userName={'Aravind'} />
       <AppWrapper>
-        <QnAPage />
+        <Profile userName={'Ara'} />
       </AppWrapper>
     </Fragment>
   );
