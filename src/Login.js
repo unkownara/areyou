@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {useInput} from "./hooks";
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -76,6 +77,24 @@ const OR = styled.div`
 
 function Login() {
 
+    const emailId = useInput('');
+
+    function onSubmit(e) {
+        e.preventDefault();
+        import('./backend/ApiRequests').then(obj => {
+            let params = {
+                userId: emailId.value
+            };
+            obj.getApiRequestCall('', params, function(response) {
+                try {
+                    console.log('response from server ', response);
+                } catch (e) {
+                    console.log('oops something went wrong');
+                }
+            })
+        })
+    }
+
     // function ValidateEmail(email) {
     //     setVerifyingEmail(false);
 
@@ -100,8 +119,9 @@ function Login() {
             <SignUpHeading>Sign Up</SignUpHeading>
             <EmailInput
                 placeholder={'Email'}
+                {...emailId}
             />
-            <Button>Let's Go</Button>
+            <Button onClick={onSubmit()}>Let's Go</Button>
             <TagLine>One click sign up and Happy sharing!</TagLine>
             <OR>or</OR>
             <Button>View Other Answers</Button>
