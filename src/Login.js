@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {useInput} from "./hooks";
+import {user_info_url} from './backend/Apis';
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -84,7 +85,7 @@ function Login() {
             let params = {
                 userId: emailId.value
             };
-            obj.getApiRequestCall('https://cpx49jibf1.execute-api.us-east-2.amazonaws.com/beta/user', params, function(response) {
+            obj.getApiRequestCall(user_info_url, params, function(response) {
                 try {
                     console.log('response from server ', response);
                 } catch (e) {

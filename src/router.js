@@ -3,6 +3,7 @@ import history from './history';
 import { Router, Switch, Route } from 'react-router';
 import Login from './Login';
 import App from "./App";
+import {Signup} from "./Signup";
 
 function Routers() {
     return (
@@ -17,6 +18,11 @@ function Routers() {
                     exact
                     path="/login"
                     component={Login}
+                />
+                <Route
+                    exact
+                    path="/signup"
+                    component={Signup}
                 />
             </Switch>
         </Router>

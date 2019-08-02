@@ -1,0 +1,1 @@
+export const user_info_url = "https://cpx49jibf1.execute-api.us-east-2.amazonaws.com/prod/user";

@@ -12,7 +12,7 @@ const AppWrapper = styled.div`
   height: 100%;
 `
 
-function App() {
+function App(props) {
 
     const [isUserLogged, setIsUserLogged] = useState(false);
 
@@ -24,6 +24,10 @@ function App() {
             history.push('/login');
         }
     }, []);
+
+    useEffect(() => {
+        console.log('data from signup ', props.location.state.detail);
+    });
 
     if(isUserLogged) {
         return (
