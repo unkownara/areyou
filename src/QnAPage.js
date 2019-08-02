@@ -11,6 +11,12 @@ const QnAWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 600px;
+    margin: 0 auto;
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
 `
 
 const Question = styled.p`
@@ -43,6 +49,11 @@ const Button = styled.div`
     color: #fff;
     font-weight: bold;
     margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const OR = styled.div`
@@ -67,6 +78,19 @@ const ToggleButton = styled.div`
     padding: 6px;
     border: ${props => props.selected ? 'none' : '1px solid #eee'};
     background: ${props => props.selected ? '#BDF0FF' : '#fff'};
+    cursor: pointer;
+
+    &:hover{
+        background: #BDF0FF;
+    }
+
+    @media(max-width: 700px){
+        cursor: default;
+
+        &:hover{
+            background: #fff;
+        }
+    }
 `
 
 const ToggleIconWrapper = styled.div`

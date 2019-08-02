@@ -37,7 +37,7 @@ function App(props) {
                 <Fragment>
                     <Header userName={'Aravind'} />
                     <AppWrapper>
-                        <Profile/>
+                        <Profile userName={'Aravind'}/>
                     </AppWrapper>
                 </Fragment>
             </Suspense>
