@@ -9,7 +9,7 @@ export const getApiRequestCall = function(url, payload, callback) {
         }
     }).then(res => {
         callback(res);
-        console.log('response ', res);
+        // console.log('response ', res);
     }).catch(err => {
         console.log('error ', err);
         callback(err);

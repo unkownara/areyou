@@ -190,7 +190,8 @@ function QnAPage(props) {
                             postId: postId,
                             path: key,
                             userId: userInfo.userId,
-                            userName: userInfo.userName
+                            userName: userInfo.userName,
+                            questionId: questionResponse.qId
                         };
                         obj.postApiRequestCall(user_post_url, payload, function(response) {
                            if(response.data === true) {
@@ -207,33 +208,37 @@ function QnAPage(props) {
         }
     };
 
-    return (
-        <QnAWrapper>
-            <Question> {questionResponse.question} </Question>
-            <ToggleButtonWrapper>
-                <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
-                    <ToggleIconWrapper>
-                        <ToggleIcon src={Happy} />
-                    </ToggleIconWrapper>
-                    <ToggleText selected={yesSelected}>Yes</ToggleText>
-                </ToggleButton>
-                <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
-                    <ToggleIconWrapper>
-                        <ToggleIcon src={Sad} />
-                    </ToggleIconWrapper>
-                    <ToggleText selected={noSelected}>No</ToggleText>
-                </ToggleButton>
-            </ToggleButtonWrapper>
-            <AnswerInput
-                rows={7}
-                {...answerInput}
-            />
-            <Button onClick={onSubmit}>Submit Answer</Button>
-            {errorMsg}
-            <OR>or</OR>
-            <SkipToAnswers />
-        </QnAWrapper>
-    );
+    if(questionResponse.qId !== '') {
+        return (
+            <QnAWrapper>
+                <Question> {questionResponse.question} </Question>
+                <ToggleButtonWrapper>
+                    <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
+                        <ToggleIconWrapper>
+                            <ToggleIcon src={Happy}/>
+                        </ToggleIconWrapper>
+                        <ToggleText selected={yesSelected}>Yes</ToggleText>
+                    </ToggleButton>
+                    <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
+                        <ToggleIconWrapper>
+                            <ToggleIcon src={Sad}/>
+                        </ToggleIconWrapper>
+                        <ToggleText selected={noSelected}>No</ToggleText>
+                    </ToggleButton>
+                </ToggleButtonWrapper>
+                <AnswerInput
+                    rows={7}
+                    {...answerInput}
+                />
+                <Button onClick={onSubmit}>Submit Answer</Button>
+                {errorMsg}
+                <OR>or</OR>
+                <SkipToAnswers/>
+            </QnAWrapper>
+        );
+    } else {
+        return <></>;
+    }
 }
 
 export default QnAPage;

@@ -1,6 +1,8 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
-
+import {getDate} from "../Functions/Generics";
+import {user_post_url, user_question_url} from "../backend/Apis";
+import {getApiRequestCall} from '../backend/ApiRequests';
 const WallPost = lazy(() => import('../Components/Post'));
 
 const WallWrapper = styled.div`
@@ -32,47 +34,73 @@ const Ans = 'My parents did exactly that. They did not have any plan for me to c
 function Wall() {
 
     const [postApiDate, setPostApiDate] = useState(Date.now());
-    const [loadMoreCount, setLoadMoreCount] = useState(0);
     const [posts, setPosts] = useState([]);
+    const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
 
     useEffect(() => {
-        import('../backend/ApiRequests').then(obj => {
-            let params = {
-                date: postApiDate
-            };
-            obj.getApiRequestCall('', params, function (response) {
-                try {
-                    if (response.data && response.data.Items) {
-                        setPosts(posts => posts.concat(response.date.Items));
-                    } else {
+        if(questionResponse.qId !== '') {
+            console.log('here i am');
 
-                        setPosts(posts => posts.concat([]));
+            let params = {
+                date: postApiDate,
+                questionId: questionResponse.qId
+            };
+            getApiRequestCall(user_post_url, params, function (response) {
+                try {
+                    if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                        console.log('response value ', response.data.Items);
+                        let newPosts = posts.length === 0 ? response.data.Items : posts.concat(response.data.Items);
+                        console.log('new posts ', newPosts);
+                        setPosts(newPosts);
+                    } else {
+                        console.log('No posts are available');
                     }
                 } catch (e) {
                     console.log('Something went wrong', e);
                 }
-            })
+            });
+        }
+    }, [questionResponse, postApiDate]);
+
+    useEffect(() => {
+        let params = {
+            date: getDate()
+        };
+        getApiRequestCall(user_question_url, params, function (response) {
+            if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                setQuestionResponse(response.data.Items[0]);
+            }
         });
-    }, [loadMoreCount, postApiDate]);
+    }, []);
 
-    function loadMoreHandler() {
-        setLoadMoreCount(loadMoreCount => loadMoreCount + 1);
+    const loadMoreHandler = () => {
+        console.log('load more here');
+        let lastEvaluatedKey = posts[posts.length - 1];
+        if(lastEvaluatedKey !== undefined && lastEvaluatedKey !== null) {
+            setPostApiDate(lastEvaluatedKey.createdOn);
+        }
+    };
+
+    if(questionResponse.qId !== '') {
+        return (
+            <Suspense fallback={<>Loading </>}>
+                <WallWrapper>
+                    <WallPost
+                        answer={Ans}
+                        liked={true}
+                        likesCount={`1.2 k`}
+                        userName={`Aravind Manoharan`}
+                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                    />
+                    <LoadMore onClick={loadMoreHandler}>
+                        Load more
+                    </LoadMore>
+                </WallWrapper>
+            </Suspense>
+        );
+    } else {
+        return <> wait </>;
     }
-
-    return (
-        <WallWrapper>
-            <WallPost
-                answer={Ans}
-                liked={true}
-                likesCount={`1.2 k`}
-                userName={`Aravind Manoharan`}
-                uploadDate={'May 23rd, 2019 at 3:57 PM'}
-            />
-            <LoadMore onClick={() => loadMoreHandler}>
-                Load more
-            </LoadMore>
-        </WallWrapper>
-    );
 }
 
 export default Wall;
