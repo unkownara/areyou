@@ -2,6 +2,7 @@ import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import history from "./history";
 import WallPage from './Wall';
+import WallPost from './Post';
 import Login from './Login';
 import cookie from 'react-cookies';
 const Profile = lazy(() => import('./Profile'));

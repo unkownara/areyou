@@ -161,9 +161,9 @@ export default function Header({ userName }) {
                             <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
                             <span>You</span>
                         </ProfileName>
-                        <LogoutIconWrapper>
+                        {/* <LogoutIconWrapper>
                             <LogoutIcon src={Logout} />
-                        </LogoutIconWrapper>
+                        </LogoutIconWrapper> */}
                     </LogoWrapper>
                 </Wrapper>
             </HeaderWrapper>
