@@ -57,9 +57,15 @@ const HR = styled.div`
 
 const Info = styled.div`
     color: gray;
+    width: ${props => props.width || '100%'};
+    line-height: 24px;
+    letter-spacing: 1px;
     font-size: 14px;
     text-align: center;
-    line-height: 18px;
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
 `
 
 const NoDataIcon = styled.img`
@@ -88,7 +94,7 @@ const OR = styled.div`
     margin-top: 30px;
 `
 
-const Logout = styled.div`
+const Button = styled.div`
     margin: 40px auto 20px auto;
     border: 1px solid #09198A;
     border-radius: 5px;
@@ -108,6 +114,14 @@ const Logout = styled.div`
     }
 `
 
+const LoginWrapper = styled.div`
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+`
+
 export default function Profile() {
     // Api call for my answers
 
@@ -116,11 +130,20 @@ export default function Profile() {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            history.push('/login');
+            // history.push('/login');
         } else {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
         }
     }, []);
+
+    function logout() {
+        localStorage.setItem('__u_info__', null);
+        history.push('/');
+    }
+
+    function redirectToLoginPage() {
+        history.push('/login');
+    }
 
     if (userInfo !== undefined && userInfo !== null) {
         const userName = userInfo.userName;
@@ -134,7 +157,7 @@ export default function Profile() {
                         </ImageWrapper>
                         <ProfileName>{userName || 'User'}</ProfileName>
                         <Email>{userEmail || ''}</Email>
-                        <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in top right corner.`}</Info>
+                        <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
                         <SkipWrapper>
                             <OR>or</OR>
                             <SkipToAnswers />
@@ -154,16 +177,19 @@ export default function Profile() {
                                     <NoDataIcon src={NoData} />
                                 </ImageWrapper>
                         }
-                        <Logout>Logout</Logout>
+                        <Button onClick={logout}>Logout</Button>
                     </ProfileWrapper>
                 </ProfileContainer>
             </Fragment>
         );
     } else {
         return (
-            <Fragment>
-                <p>Loading</p>
-            </Fragment>
+            <ProfileContainer>
+                <LoginWrapper>
+                    <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question or to like/unlike other answers, you have to login.</Info>
+                    <Button onClick={redirectToLoginPage}>Login</Button>
+                </LoginWrapper>
+            </ProfileContainer>
         )
     }
 }

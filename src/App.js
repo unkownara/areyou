@@ -25,30 +25,24 @@ function App() {
             setIsUserLogged(true);
         } else {
             setIsUserLogged(false);
-            history.push('/login');
+            // history.push('/login');
         }
     }, []);
 
-    // useEffect(() => {
-    //     console.log('data from signup ', props.location.state.detail);
-    // });
+    useEffect(() => {
+        console.log('data from signup ');
+    });
 
-    if (isUserLogged) {
-        return (
-            <Suspense fallback={<></>}>
-                <Fragment>
-                    <AppWrapper>
-                        <WallPage userName={'Aravind'} />
-                    </AppWrapper>
-                </Fragment>
-            </Suspense>
-        );
-    } else {
-        return (
-            <>
-            </>
-        );
-    }
+    return (
+        <Suspense fallback={<></>}>
+            <Fragment>
+                <AppWrapper>
+                    <WallPage />
+                </AppWrapper>
+            </Fragment>
+        </Suspense>
+    );
+
 }
 
 export default App;

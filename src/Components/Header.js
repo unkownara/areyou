@@ -37,6 +37,7 @@ const AppName = styled.div`
     line-height: 60px;
     margin-left: 10px;
     cursor: pointer;
+    width: max-content;
 
     @media(max-width: 700px){
         cursor: default;
@@ -147,7 +148,7 @@ export default function Header() {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            history.push('/login');
+            // history.push('/login');
         } else {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
         }
@@ -166,8 +167,8 @@ export default function Header() {
                         <AnswerTrigger onClick={redirectToQnAPage}>Answer</AnswerTrigger>
                         <ProfileName onClick={redirectToProfilePage}>
                             <ProfileImage
-                                bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo && userInfo.userName.substring(0, 1)}</ProfileImage>
-                            <span>You</span>
+                                bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{(userInfo && userInfo.userName.substring(0, 1)) || '-'}</ProfileImage>
+                            <span>{userInfo ? 'You' : ''}</span>
                         </ProfileName>
                     </LogoWrapper>
                 </Wrapper>
