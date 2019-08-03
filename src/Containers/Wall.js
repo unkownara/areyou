@@ -1,9 +1,16 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Fragment, Suspense } from 'react';
 import styled from 'styled-components';
 import {getDate} from "../Functions/Generics";
 import {user_post_url, user_question_url} from "../backend/Apis";
 import {getApiRequestCall} from '../backend/ApiRequests';
+
+import history from '../history';
+
 const WallPost = lazy(() => import('../Components/Post'));
+
+const WallContainer = styled.div`
+    padding: 20px;
+`
 
 const WallWrapper = styled.div`
     margin-top: 30px;
@@ -36,6 +43,7 @@ function Wall() {
     const [postApiDate, setPostApiDate] = useState(Date.now());
     const [posts, setPosts] = useState([]);
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
+    const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
         if(questionResponse.qId !== '') {
@@ -84,24 +92,52 @@ function Wall() {
     if(questionResponse.qId !== '') {
         return (
             <Suspense fallback={<>Loading </>}>
-                <WallWrapper>
-                    <WallPost
-                        answer={Ans}
-                        liked={true}
-                        likesCount={`1.2 k`}
-                        userName={`Aravind Manoharan`}
-                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                    />
-                    <LoadMore onClick={loadMoreHandler}>
-                        Load more
-                    </LoadMore>
-                </WallWrapper>
+                <Fragment>
+                    <WallContainer>
+                        <WallWrapper>
+                            <WallPost
+                                answer={Ans}
+                                liked={true}
+                                likesCount={`1.2 k`}
+                                userName={`Aravind Manoharan`}
+                                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                            />
+                            <WallPost
+                                answer={Ans}
+                                liked={true}
+                                likesCount={`1.2 k`}
+                                userName={`Aravind Manoharan`}
+                                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                            />
+                            <WallPost
+                                answer={Ans}
+                                liked={true}
+                                likesCount={`1.2 k`}
+                                userName={`Aravind Manoharan`}
+                                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                            />
+                            <WallPost
+                                answer={Ans}
+                                liked={true}
+                                likesCount={`1.2 k`}
+                                userName={`Aravind Manoharan`}
+                                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                            />
+                            <WallPost
+                                answer={Ans}
+                                liked={true}
+                                likesCount={`1.2 k`}
+                                userName={`Aravind Manoharan`}
+                                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                            />
+                            <LoadMore onClick={() => loadMoreHandler}>Load more</LoadMore>
+                        </WallWrapper>
+                    </WallContainer>
+                </Fragment>
             </Suspense>
         );
     } else {
-        return <> wait </>;
+        return <> Loading </>;
     }
 }
-
 export default Wall;
-

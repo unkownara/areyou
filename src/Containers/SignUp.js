@@ -218,10 +218,7 @@ function SignUp() {
             }
         }
         // Number validation
-        if (phone.value.length === 0) {
-            errFlag = false;
-            setPhoneErrorMsg('Required')
-        } else if (
+        if (
             !phone.value.match(/^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$/) ||
             phone.value.length !== 10
         ) {
@@ -278,7 +275,7 @@ function SignUp() {
                         if (response && response.data) {
                             setErrorMsg('');
                             cookie.save('__u_id__', email.value);
-                            localStorage.setItem('__u_info__',JSON.stringify(payload));
+                            localStorage.setItem('__u_info__', JSON.stringify(payload));
                             history.push({
                                 pathname: '/qns',
                                 search: `wall?u_id=${makeid(6)}`,

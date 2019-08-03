@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 
+import history from '../history';
 import { getRandomColor } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import SkipToAnswers from '../Components/SkipToAnswers';
 
 import NoData from '../Images/no-data.png';
 
+const ProfileContainer = styled.div`
+    padding: 20px;
+`
+
 const ProfileWrapper = styled.div`
-    margin-top: 30px;
+    margin-top: 40px;
 `
 
 const ImageWrapper = styled.div`
@@ -29,12 +34,22 @@ const ProfileImage = styled.div`
     background: ${props => props.bg || '#eee'};
     border-radius: 50%;
 `
-const ProfileName = styled.p`
+const ProfileName = styled.div`
     font-weight: bold;
     font-size: 22px;
     text-align: center;
     padding-top: 2px;
+    margin: 20px auto 10px auto;
 `
+
+const Email = styled.div`
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 30px;
+`
+
 const HR = styled.div`
     margin: 10px auto 30px auto;
     border-bottom: 1px solid #eee;
@@ -42,9 +57,15 @@ const HR = styled.div`
 
 const Info = styled.div`
     color: gray;
+    width: ${props => props.width || '100%'};
+    line-height: 24px;
+    letter-spacing: 1px;
     font-size: 14px;
     text-align: center;
-    line-height: 18px;
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
 `
 
 const NoDataIcon = styled.img`
@@ -73,7 +94,7 @@ const OR = styled.div`
     margin-top: 30px;
 `
 
-const Logout = styled.div`
+const Button = styled.div`
     margin: 40px auto 20px auto;
     border: 1px solid #09198A;
     border-radius: 5px;
@@ -93,37 +114,82 @@ const Logout = styled.div`
     }
 `
 
-const Ans = 'My parents did exactly that. They did not have any plan for me to come first in life. They just took things as  they came, eveling in the beautiful journey of teaching their child to talk and talk more. They did not compete with anyone nor did they push me to compete. I ambled along at my own pace, going from strength to strength as I moved up the classes. I was never a good student in school. In fact my class reports had begun to worry my teachers who were sensitive of their school’s reputation. So, when I got through my boards in the 1st Division, they were elated. I have never looked back since then! I completed my Masters in Social Work from the Tata Institute of Social Sciences, Mumbai and am currently pursuing a PhD in Social Work as a UGC JRF from Visva-Bharati University, the university set up by the poet Nobel Laureate Rabindranath Tagore in Santiniketan, West Bengal. I also teach BSW and MSW students at the university as part of my duties as a PhD Fellow. The beautiful irony is that I was not supposed to speak, but here I was, poised to make a living from speaking and teaching. Without the solid base in language that was prepared for me early in life, I am sure I would not have been able to make my own choices in life so naturally. So, though my parents didn’t plan for me to come first in life, things fell into place and worked out in the end.'
+const LoginWrapper = styled.div`
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+`
 
-export default function Profile({ answers, userName }) {
+export default function Profile() {
+    // Api call for my answers
 
-    return (
-        <ProfileWrapper>
-            <ImageWrapper>
-                <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-            </ImageWrapper>
-            <ProfileName>Aravind Manoharan</ProfileName>
-            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in top right corner.`}</Info>
-            <SkipWrapper>
-                <OR>or</OR>
-                <SkipToAnswers />
-            </SkipWrapper>
-            <HR />
-            {
-                answers && answers.length ?
-                    <WallPost
-                        answer={Ans}
-                        liked={true}
-                        likesCount={`1.2 k`}
-                        userName={`Aravind Manoharan`}
-                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                    />
-                    :
-                    <ImageWrapper>
-                        <NoDataIcon src={NoData} />
-                    </ImageWrapper>
-            }
-            <Logout>Logout</Logout>
-        </ProfileWrapper>
-    );
+    var answers = []
+    const [userInfo, setUserInfo] = useState(null);
+
+    useEffect(() => {
+        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
+            // history.push('/login');
+        } else {
+            setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
+        }
+    }, []);
+
+    function logout() {
+        localStorage.setItem('__u_info__', null);
+        history.push('/');
+    }
+
+    function redirectToLoginPage() {
+        history.push('/login');
+    }
+
+    if (userInfo !== undefined && userInfo !== null) {
+        const userName = userInfo.userName;
+        const userEmail = userInfo.userId;
+        return (
+            <Fragment>
+                <ProfileContainer>
+                    <ProfileWrapper>
+                        <ImageWrapper>
+                            <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                        </ImageWrapper>
+                        <ProfileName>{userName || 'User'}</ProfileName>
+                        <Email>{userEmail || ''}</Email>
+                        <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
+                        <SkipWrapper>
+                            <OR>or</OR>
+                            <SkipToAnswers />
+                        </SkipWrapper>
+                        <HR />
+                        {
+                            answers && answers.length ?
+                                <WallPost
+                                    answer={'Ans'}
+                                    liked={true}
+                                    likesCount={`1.2 k`}
+                                    userName={`Aravind Manoharan`}
+                                    uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                                />
+                                :
+                                <ImageWrapper>
+                                    <NoDataIcon src={NoData} />
+                                </ImageWrapper>
+                        }
+                        <Button onClick={logout}>Logout</Button>
+                    </ProfileWrapper>
+                </ProfileContainer>
+            </Fragment>
+        );
+    } else {
+        return (
+            <ProfileContainer>
+                <LoginWrapper>
+                    <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question or to like/unlike other answers, you have to login.</Info>
+                    <Button onClick={redirectToLoginPage}>Login</Button>
+                </LoginWrapper>
+            </ProfileContainer>
+        )
+    }
 }
