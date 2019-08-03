@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import AWS from 'aws-sdk';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
-import history from "./history";
-import SkipToAnswers from './SkipToAnswers';
-import {makeid} from './Generics';
-import Happy from './happy1.png';
-import Sad from './sad1.png';
-import {useInput} from "./hooks";
+
+import history from "../history";
+import SkipToAnswers from '../Components/SkipToAnswers';
+import { makeid } from '../Functions/Generics';
+import { useInput } from "../Components/hooks";
+
+import Happy from '../Images/happy1.png';
+import Sad from '../Images/sad1.png';
 
 const QnAWrapper = styled.div`
     display: flex;
@@ -128,7 +130,7 @@ function QnAPage(props) {
     const answerInput = useInput('');
 
     useEffect(() => {
-        if(!(cookie.load('__u_id__') && cookie.load('__q_id__'))) {
+        if (!(cookie.load('__u_id__') && cookie.load('__q_id__'))) {
             history.push('/');
         }
     });
@@ -145,7 +147,7 @@ function QnAPage(props) {
     }
 
     const onSubmit = () => {
-        if(yesSelected || noSelected) {
+        if (yesSelected || noSelected) {
             AWS.config = new AWS.Config();
             AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
             AWS.config.secretAccessKey = "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";
@@ -180,13 +182,13 @@ function QnAPage(props) {
             <ToggleButtonWrapper>
                 <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
                     <ToggleIconWrapper>
-                        <ToggleIcon src={Happy}/>
+                        <ToggleIcon src={Happy} />
                     </ToggleIconWrapper>
                     <ToggleText selected={yesSelected}>Yes</ToggleText>
                 </ToggleButton>
                 <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
                     <ToggleIconWrapper>
-                        <ToggleIcon src={Sad}/>
+                        <ToggleIcon src={Sad} />
                     </ToggleIconWrapper>
                     <ToggleText selected={noSelected}>No</ToggleText>
                 </ToggleButton>
@@ -198,7 +200,7 @@ function QnAPage(props) {
             <Button onClick={onSubmit}>Submit Answer</Button>
             {errorMsg}
             <OR>or</OR>
-            <SkipToAnswers/>
+            <SkipToAnswers />
         </QnAWrapper>
     );
 }

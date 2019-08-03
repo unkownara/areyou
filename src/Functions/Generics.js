@@ -1,4 +1,14 @@
-export default function getRandomColor(char) {
+export function makeid(length) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+};
+
+export function getRandomColor(char) {
     switch (char) {
         case 'a':
             return '#BECECD';
@@ -56,3 +66,6 @@ export default function getRandomColor(char) {
             break;
     }
 }
+
+
+export const GA_ID = 'UA-145111269-1';

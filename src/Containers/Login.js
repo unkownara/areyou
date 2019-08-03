@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from "react-cookies";
 
-import { useInput } from "./hooks";
-import { user_info_url } from './backend/Apis';
-import SkipToAnswers from './SkipToAnswers';
-import history from "./history";
-import { makeid } from "./Generics";
+import { useInput } from "../Components/hooks";
+import { user_info_url } from '../backend/Apis';
+import SkipToAnswers from '../Components/SkipToAnswers';
+import history from "../history";
+import { makeid } from "../Functions/Generics";
 
-import ShowEye from './eye.png';
-import HideEye from './eyecross.png';
+import ShowEye from '../Images/eye.png';
+import HideEye from '../Images/eyecross.png';
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -247,7 +247,7 @@ function Login() {
     const LoginUser = () => {
         if (!ValidateEmailAndPassword()) {
             setVerifyingCredentials(true);
-            import('./backend/ApiRequests').then(obj => {
+            import('../backend/ApiRequests').then(obj => {
                 let params = {
                     userId: email.value,
                     password: password.value
@@ -266,7 +266,7 @@ function Login() {
                         } else if (response.data === "incorrect password") {
                             setVerifyingCredentials(false);
                             setPasswordErrorMsg(response.data);
-                        } else if(response.data === "Email doesn't exists") {
+                        } else if (response.data === "Email doesn't exists") {
                             setVerifyingCredentials(false);
                             setEmailErrorMsg(response.data);
                         }

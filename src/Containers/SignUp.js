@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 
-import { useInput } from './hooks';
-import SkipToAnswers from './SkipToAnswers';
-import { makeid } from './Generics';
-import history from "./history";
-import { user_info_url } from "./backend/Apis";
+import { useInput } from '../Components/hooks';
+import SkipToAnswers from '../Components/SkipToAnswers';
+import { makeid } from '../Functions/Generics';
+import history from "../history";
+import { user_info_url } from "../backend/Apis";
 
-import ShowEye from './eye.png';
-import HideEye from './eyecross.png';
+import ShowEye from '../Images/eye.png';
+import HideEye from '../Images/eyecross.png';
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -266,7 +266,7 @@ function SignUp() {
     const SignUpNewUser = () => {
         if (!ValidateSignUpFields()) {
             setVerifyingCredentials(true);
-            import('./backend/ApiRequests').then(obj => {
+            import('../backend/ApiRequests').then(obj => {
                 let payload = {
                     name: name.value,
                     userId: email.value,
