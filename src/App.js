@@ -1,26 +1,53 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import history from "./history";
 import WallPage from './Wall';
-import Header from './Header';
 import Login from './Login';
-import SignUp from './SignUp';
-import Profile from './Profile';
-import QnAPage from './QnAPage';
+import cookie from 'react-cookies';
+const Profile = lazy(() => import('./Profile'));
+const Header = lazy(() => import('./Header'));
+const QnAPage = lazy(() => import('./QnAPage'));
+const SignUp = lazy(() => import('./SignUp'));
 
 const AppWrapper = styled.div`
   padding: 20px;
   height: 100%;
 `
 
-function App() {
-  return (
-    <Fragment>
-      <Header userName={'Aravind'} />
-      <AppWrapper>
-        <Profile userName={'Ara'} />
-      </AppWrapper>
-    </Fragment>
-  );
+function App(props) {
+
+    const [isUserLogged, setIsUserLogged] = useState(false);
+
+    useEffect(() => {
+        if(cookie.load('__u_id__')) {
+            setIsUserLogged(true);
+        } else {
+            setIsUserLogged(false);
+            history.push('/login');
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log('data from signup ', props.location.state.detail);
+    });
+
+    if(isUserLogged) {
+        return (
+            <Suspense fallback={<></>}>
+                <Fragment>
+                    <Header userName={'Aravind'} />
+                    <AppWrapper>
+                        <Profile userName={'Aravind'}/>
+                    </AppWrapper>
+                </Fragment>
+            </Suspense>
+        );
+    } else {
+        return (
+            <>
+            </>
+        );
+    }
 }
 
 export default App;
