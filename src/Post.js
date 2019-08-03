@@ -1,9 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
+import getRandomColor from './getColor';
+
 import Like from './like.png';
 import UnLike from './unlike.png';
-import User from './user.png';
+import Happy from './happy1.png';
+import Sad from './sad1.png';
 
 const PostWrapper = styled.div`
     width: 600px;
@@ -52,7 +55,7 @@ const Answer = styled.div`
     letter-spacing: 0.8px;
     line-height: 22px;
     text-align: left;
-    cursor: pointer;
+    cursor: ${props => !props.pointer ? 'pointer' : 'default'};
 
     @media(max-width: 700px){
         cursor: default;
@@ -71,6 +74,11 @@ const ShowLess = styled.div`
     color: #329bff;
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const ProfileName = styled.div`
@@ -119,7 +127,60 @@ const HR = styled.div`
     border-bottom: 1px solid #eee;
 `
 
-export default function WallPost({ liked, answer, likesCount, userName, uploadDate }) {
+const YesNoWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 20px;
+    align-items: center;
+`
+
+const Greet = styled.div`
+    padding-left: 20px;
+    letter-spacing: 0.5px;
+    color: #2d2c2c;
+    font-weight: 500;
+`
+
+const ToggleButton = styled.div`
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    padding: 6px 10px;
+    border: ${props => props.selected ? 'none' : '1px solid #eee'};
+    background: ${props => props.selected ? '#BDF0FF' : '#fff'};
+    cursor: pointer;
+
+    &:hover {
+        background: #BDF0FF;
+    }
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
+const ToggleIconWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+const ToggleIcon = styled.img`
+    height: 22px;
+    width: 22px;
+`
+
+const ToggleText = styled.div`
+    padding-left: 5px;
+    font-weight: bold;
+    color: ${props => props.selected ? '#000' : 'gray'};
+`
+
+
+export default function WallPost({ liked, answer, likesCount, userName, uploadDate, yesNoAnswer }) {
 
     const [showMore, setShowMore] = useState(false);
 
@@ -132,16 +193,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
     }
 
     function likeAnswer() {
-        
-    }
 
-    function getRandomColor() {
-        var letters = 'BCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * letters.length)];
-        }
-        return color;
     }
 
     return (
@@ -149,14 +201,23 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
             <Post>
                 <ProfileWrapper>
                     <ProfileImageWrapper>
-                        <ProfileImage bg={getRandomColor}>{userName.substring(0, 1)}</ProfileImage>
+                        <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
                     </ProfileImageWrapper>
                     <ProfileDetailsWrapper>
                         <ProfileName>{userName}</ProfileName>
                         <UploadDate>{uploadDate}</UploadDate>
                     </ProfileDetailsWrapper>
                 </ProfileWrapper>
-                <Answer onClick={showFullAnswer}>
+                <YesNoWrapper>
+                    <ToggleButton selected>
+                        <ToggleIconWrapper>
+                            <ToggleIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
+                        </ToggleIconWrapper>
+                        <ToggleText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</ToggleText>
+                    </ToggleButton>
+                    <Greet>{yesNoAnswer === 'yes' ? `Yay! User is happy.` : `Oh oh! User is unhappy.`}</Greet>
+                </YesNoWrapper>
+                <Answer onClick={showFullAnswer} pointer={showMore}>
                     {
                         answer && answer.length >= 200 && !showMore ?
                             <Fragment>
@@ -170,7 +231,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                 </Answer>
                 {
                     showMore ?
-                        <ShowLess style={{ zIndex: 2 }} onClick={hideFullAnswer}> Show less</ShowLess> : null
+                        <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
                 }
                 <PostOptionsWrapper>
                     <LikeIconWrapper>

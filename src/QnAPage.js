@@ -32,7 +32,7 @@ const Question = styled.p`
 `
 
 const AnswerInput = styled.textarea`
-    border: 1px solid #eee;
+    border: 1px solid #CACACA;
     border-radius: 5px;
     width: 100%;
     font-weight: 500;
@@ -61,7 +61,7 @@ const Button = styled.div`
 
 const OR = styled.div`
     font-size: 12px;
-    margin-top: 30px;
+    margin-top: 10px;
     color: gray;
 `
 
@@ -83,16 +83,12 @@ const ToggleButton = styled.div`
     background: ${props => props.selected ? '#BDF0FF' : '#fff'};
     cursor: pointer;
 
-    &:hover{
+    &:hover {
         background: #BDF0FF;
     }
 
     @media(max-width: 700px){
         cursor: default;
-
-        &:hover{
-            background: #fff;
-        }
     }
 `
 
@@ -113,8 +109,22 @@ const ToggleText = styled.div`
     color: ${props => props.selected ? '#000' : 'gray'};
 `
 
+<<<<<<< HEAD
 function QnAPage(props) {
+=======
+const Info = styled.div`
+    color: gray;
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+    margin: 8px 0 10px 0;
+    letter-spacing: 0.5px;
+`
 
+function QnAPage() {
+>>>>>>> f3dc105cda935084937fc28b4db823bd8dd06a9e
+
+    const answer = useInput('');
     const [yesSelected, setYesSelected] = useState(false);
     const [noSelected, setNoSelected] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -185,12 +195,20 @@ function QnAPage(props) {
                     <ToggleText selected={noSelected}>No</ToggleText>
                 </ToggleButton>
             </ToggleButtonWrapper>
+<<<<<<< HEAD
             <AnswerInput
                 rows={7}
                 {...answerInput}
             />
             <Button onClick={onSubmit}>Submit Answer</Button>
             {errorMsg}
+=======
+            <Info>Express yourself in words.</Info>
+            <AnswerInput
+                rows={7}
+                {...answer} />
+            <Button>Submit Answer</Button>
+>>>>>>> f3dc105cda935084937fc28b4db823bd8dd06a9e
             <OR>or</OR>
             <SkipToAnswers/>
         </QnAWrapper>

@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Menu from './menu.png';
+import getRandomColor from './getColor';
+
+import Logout from './logout.png';
 
 const HeaderStickyWrapper = styled.div`
     overflow: visible;
@@ -25,6 +27,10 @@ const Wrapper = styled.div`
     justify-content: flex-end;
     align-items: center;
     padding-right: 20px;
+
+    @media(max-width: 700px){
+        padding-right: 0;
+    }
 `
 
 const AppName = styled.div`
@@ -33,7 +39,7 @@ const AppName = styled.div`
     font-weight: bold;
     vertical-align: middle;
     line-height: 60px;
-    padding-left: 10px;
+    margin-left: 10px;
 
     @media(max-width: 700px){
         line-height: 50px;
@@ -53,6 +59,7 @@ const AnswerTrigger = styled.div`
     border-radius: 3px;
     color: #fff;
     font-weight: bold;
+    margin: 0 30px 0 20px;
     cursor: pointer;
 
     @media(max-width: 700px){
@@ -61,6 +68,7 @@ const AnswerTrigger = styled.div`
         cursor: default;        
         padding: 0 10px;
         font-weight: 500;
+        margin: 0;
     }
 
 `
@@ -68,17 +76,33 @@ const AnswerTrigger = styled.div`
 const LogoWrapper = styled.div`
     display: flex;
     padding-left: 10px;
+    padding-right: 20px;
 
     @media(max-width: 700px){
-        padding-left: 0px;
+        padding: 0px;
     }
 `
 
-const MenuIconWrapper = styled.div`
+const ProfileName = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;   
     margin: 0 10px;
+    cursor: pointer;        
+
+    &>span {
+        font-weight: 500;
+        padding-left: 8px;
+    }
+
+    @media(max-width: 700px){
+        cursor: default;  
+       
+        &>span{
+            display: none;
+        }
+    }
+
 `
 
 const ProfileImage = styled.div`
@@ -100,32 +124,47 @@ const ProfileImage = styled.div`
         height: 25px;
         font-size: 15px;
         width: 25px;
+        margin: 0 10px;
     }
 `
 
+const LogoutIconWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+
+    @media(max-width: 700px){
+        display: none;
+    }
+`
+
+const LogoutIcon = styled.img`
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        display: none;
+    }
+`
 
 export default function Header({ userName }) {
-
-    function getRandomColor() {
-        var letters = 'BCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * letters.length)];
-        }
-        return color;
-    }
-
     return (
         <HeaderStickyWrapper>
             <HeaderWrapper>
-                <LogoWrapper>
-                    <MenuIconWrapper>
-                        <ProfileImage bg={getRandomColor}>{userName.substring(0, 1)}</ProfileImage>
-                    </MenuIconWrapper>
-                    <AppName>Are You</AppName>
-                </LogoWrapper>
+                <AppName>Are You</AppName>
                 <Wrapper>
-                    <AnswerTrigger>Answer</AnswerTrigger>
+                    <LogoWrapper>
+                        <AnswerTrigger>Answer</AnswerTrigger>
+                        <ProfileName>
+                            <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                            <span>You</span>
+                        </ProfileName>
+                        {/* <LogoutIconWrapper>
+                            <LogoutIcon src={Logout} />
+                        </LogoutIconWrapper> */}
+                    </LogoWrapper>
                 </Wrapper>
             </HeaderWrapper>
         </HeaderStickyWrapper>

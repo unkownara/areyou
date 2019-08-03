@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import WallPost from './Post';
+import SkipToAnswers from './SkipToAnswers';
 
 import NoData from './no-data.png';
 
@@ -42,6 +43,7 @@ const Info = styled.div`
     color: gray;
     font-size: 14px;
     text-align: center;
+    line-height: 18px;
 `
 
 const NoDataIcon = styled.img`
@@ -51,6 +53,42 @@ const NoDataIcon = styled.img`
     @media(max-width: 700px){
         height: 200px;
         width: 230px;
+    }
+`
+
+const SkipWrapper = styled.div`
+    width: max-content;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+`
+
+const OR = styled.div`
+    font-size: 12px;
+    margin-top: 50px;
+    color: gray;
+    margin-top: 30px;
+`
+
+const Logout = styled.div`
+    margin: 40px auto 20px auto;
+    border: 1px solid #09198A;
+    border-radius: 5px;
+    color: #09198A;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    width: 300px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        width: 100%;
+        cursor: default;
     }
 `
 
@@ -70,10 +108,14 @@ export default function Profile({ answers, userName }) {
     return (
         <ProfileWrapper>
             <ImageWrapper>
-                <ProfileImage bg={getRandomColor}>{userName && userName.substring(0, 1)}</ProfileImage>
+                <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
             </ImageWrapper>
             <ProfileName>Aravind Manoharan</ProfileName>
-            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions.`}</Info>
+            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in top right corner.`}</Info>
+            <SkipWrapper>
+                <OR>or</OR>
+                <SkipToAnswers />
+            </SkipWrapper>
             <HR />
             {
                 answers && answers.length ?
@@ -89,6 +131,7 @@ export default function Profile({ answers, userName }) {
                         <NoDataIcon src={NoData} />
                     </ImageWrapper>
             }
+            <Logout>Logout</Logout>
         </ProfileWrapper>
     );
 }
