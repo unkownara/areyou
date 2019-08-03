@@ -25,7 +25,7 @@ function App() {
             setIsUserLogged(true);
         } else {
             setIsUserLogged(false);
-            history.push('/login');
+            // history.push('/login');
         }
     }, []);
 
@@ -33,22 +33,16 @@ function App() {
     //     console.log('data from signup ', props.location.state.detail);
     // });
 
-    if (isUserLogged) {
-        return (
-            <Suspense fallback={<></>}>
-                <Fragment>
-                    <AppWrapper>
-                        <WallPage userName={'Aravind'} />
-                    </AppWrapper>
-                </Fragment>
-            </Suspense>
-        );
-    } else {
-        return (
-            <>
-            </>
-        );
-    }
+    return (
+        <Suspense fallback={<></>}>
+            <Fragment>
+                <AppWrapper>
+                    <WallPage />
+                </AppWrapper>
+            </Fragment>
+        </Suspense>
+    );
+
 }
 
 export default App;

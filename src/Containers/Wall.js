@@ -69,65 +69,56 @@ function Wall() {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            history.push('/login');
+            // history.push('/login');
         } else {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
         }
     }, []);
 
-    if (userInfo !== undefined && userInfo !== null) {
-        return (
-            <Fragment>
-                <WallContainer>
-                    <WallWrapper>
-                        <WallPost
-                            answer={Ans}
-                            liked={true}
-                            likesCount={`1.2 k`}
-                            userName={`Aravind Manoharan`}
-                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                        />
-                        <WallPost
-                            answer={Ans}
-                            liked={true}
-                            likesCount={`1.2 k`}
-                            userName={`Aravind Manoharan`}
-                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                        />
-                        <WallPost
-                            answer={Ans}
-                            liked={true}
-                            likesCount={`1.2 k`}
-                            userName={`Aravind Manoharan`}
-                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                        />
-                        <WallPost
-                            answer={Ans}
-                            liked={true}
-                            likesCount={`1.2 k`}
-                            userName={`Aravind Manoharan`}
-                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                        />
-                        <WallPost
-                            answer={Ans}
-                            liked={true}
-                            likesCount={`1.2 k`}
-                            userName={`Aravind Manoharan`}
-                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                        />
-                        <LoadMore onClick={() => loadMoreHandler}>Load more</LoadMore>
-                    </WallWrapper>
-                </WallContainer>
-            </Fragment>
-        );
-    } else {
-        return (
-            <Fragment>
-                <p>Loading</p>
-            </Fragment>
-        )
-    }
-
+    return (
+        <Fragment>
+            <WallContainer>
+                <WallWrapper>
+                    <WallPost
+                        answer={Ans}
+                        liked={true}
+                        likesCount={`1.2 k`}
+                        userName={`Aravind Manoharan`}
+                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                    />
+                    <WallPost
+                        answer={Ans}
+                        liked={true}
+                        likesCount={`1.2 k`}
+                        userName={`Aravind Manoharan`}
+                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                    />
+                    <WallPost
+                        answer={Ans}
+                        liked={true}
+                        likesCount={`1.2 k`}
+                        userName={`Aravind Manoharan`}
+                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                    />
+                    <WallPost
+                        answer={Ans}
+                        liked={true}
+                        likesCount={`1.2 k`}
+                        userName={`Aravind Manoharan`}
+                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                    />
+                    <WallPost
+                        answer={Ans}
+                        liked={true}
+                        likesCount={`1.2 k`}
+                        userName={`Aravind Manoharan`}
+                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                    />
+                    <LoadMore onClick={() => loadMoreHandler}>Load more</LoadMore>
+                </WallWrapper>
+            </WallContainer>
+        </Fragment>
+    );
 }
 
 export default Wall;

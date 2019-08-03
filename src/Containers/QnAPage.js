@@ -138,7 +138,7 @@ function QnAPage(props) {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            history.push('/login');
+            // history.push('/login');
         } else if (!(cookie.load('__q_id__'))) {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
             import('../backend/ApiRequests').then(obj => {
@@ -246,9 +246,10 @@ function QnAPage(props) {
         );
     } else {
         return (
-            <Fragment>
+            <QnAContainer>
                 <p>Loading</p>
-            </Fragment>);
+            </QnAContainer>
+        );
     }
 }
 

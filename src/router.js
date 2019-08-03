@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Router, Switch, Route } from 'react-router';
 
 import Header from './Components/Header';
@@ -10,9 +10,26 @@ import QnAPage from "./Containers/QnAPage";
 import Profile from "./Containers/Profile";
 
 function Routers() {
+
+    const [showHeader, setShowHeader] = useState(true);
+    const path = window.location.pathname;
+
+    useEffect(() => {
+        if (window.location.pathname === '/login' || window.location.pathname === '/signup') {
+            setShowHeader(false);
+            console.log(window.location.pathname)
+        } else {
+            setShowHeader(true);
+            console.log(window.location.pathname)
+        }
+    }, [])
+
     return (
         <Fragment>
-            <Header />
+            {
+                showHeader ?
+                    <Header /> : null
+            }
             <Router history={history}>
                 <Switch>
                     <Route
