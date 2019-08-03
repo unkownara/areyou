@@ -1,9 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
+import getRandomColor from './getColor';
+
 import Like from './like.png';
 import UnLike from './unlike.png';
-import User from './user.png';
 
 const PostWrapper = styled.div`
     width: 600px;
@@ -52,7 +53,7 @@ const Answer = styled.div`
     letter-spacing: 0.8px;
     line-height: 22px;
     text-align: left;
-    cursor: pointer;
+    cursor: ${props => !props.pointer ? 'pointer' : 'default'};
 
     @media(max-width: 700px){
         cursor: default;
@@ -71,6 +72,11 @@ const ShowLess = styled.div`
     color: #329bff;
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const ProfileName = styled.div`
@@ -132,16 +138,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
     }
 
     function likeAnswer() {
-        
-    }
 
-    function getRandomColor() {
-        var letters = 'BCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * letters.length)];
-        }
-        return color;
     }
 
     return (
@@ -149,14 +146,14 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
             <Post>
                 <ProfileWrapper>
                     <ProfileImageWrapper>
-                        <ProfileImage bg={getRandomColor}>{userName.substring(0, 1)}</ProfileImage>
+                        <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
                     </ProfileImageWrapper>
                     <ProfileDetailsWrapper>
                         <ProfileName>{userName}</ProfileName>
                         <UploadDate>{uploadDate}</UploadDate>
                     </ProfileDetailsWrapper>
                 </ProfileWrapper>
-                <Answer onClick={showFullAnswer}>
+                <Answer onClick={showFullAnswer} pointer={showMore}>
                     {
                         answer && answer.length >= 200 && !showMore ?
                             <Fragment>
@@ -170,7 +167,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                 </Answer>
                 {
                     showMore ?
-                        <ShowLess style={{ zIndex: 2 }} onClick={hideFullAnswer}> Show less</ShowLess> : null
+                        <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
                 }
                 <PostOptionsWrapper>
                     <LikeIconWrapper>
