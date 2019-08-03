@@ -35,9 +35,9 @@ function App(props) {
         return (
             <Suspense fallback={<></>}>
                 <Fragment>
-                    <Header userName={'Aravind'} />
+                    <Header userName={'Aravind Manoharan'} />
                     <AppWrapper>
-                        <Profile userName={'Aravind'}/>
+                        <WallPage userName={'Aravind'}/>
                     </AppWrapper>
                 </Fragment>
             </Suspense>
