@@ -5,11 +5,12 @@ import cookie from 'react-cookies';
 
 import history from "../history";
 import SkipToAnswers from '../Components/SkipToAnswers';
-import { makeid } from '../Functions/Generics';
+import { makeid, getDate } from '../Functions/Generics';
 import { useInput } from "../Components/hooks";
 
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
+import { user_post_url, user_question_url } from '../backend/Apis';
 
 const QnAWrapper = styled.div`
     display: flex;
@@ -122,7 +123,9 @@ const Info = styled.div`
 
 function QnAPage(props) {
 
-    const answer = useInput('');
+    const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
+    const [userInfo, setUserInfo] = useState(null);
+    const [postUploadStatus, setPostUploadStatus] = useState('not_yet');
     const [yesSelected, setYesSelected] = useState(false);
     const [noSelected, setNoSelected] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -130,10 +133,24 @@ function QnAPage(props) {
     const answerInput = useInput('');
 
     useEffect(() => {
-        if (!(cookie.load('__u_id__') && cookie.load('__q_id__'))) {
-            history.push('/');
+        if(!(JSON.parse(localStorage.getItem('__u_info__')))) {
+            history.push('/login');
+        } else if(!(cookie.load('__q_id__'))) {
+            setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
+            import('../backend/ApiRequests').then(obj => {
+                let params = {
+                    date: getDate()
+                };
+                obj.getApiRequestCall(user_question_url, params, function(response) {
+                    if(response.data && response.data.Items && response.data.Items.length > 0) {
+                        setQuestionResponse(response.data.Items[0]);
+                    } else {
+                        console.log('Error ', response);
+                    }
+                })
+            })
         }
-    });
+    }, []);
 
     function toggleYesNo(type) {
         if (type === 'yes') {
@@ -153,8 +170,8 @@ function QnAPage(props) {
             AWS.config.secretAccessKey = "YN6Dsmx+SOd80POwZtDwzJeMfnNLbbAZUYK6CNup";
             AWS.config.region = "us-east-2";
 
-            let postId = makeid(5);
-            let key = `${props.userId}/${props.questionId}/${new Date()}/${postId}.txt`;
+            let postId = makeid(10);
+            let key = `${userInfo.userId}/${questionResponse.qId}/${postId}.txt`;
             let s3Bucket = new AWS.S3();
             let s3Obj = {
                 Bucket: 'areyou-posts',
@@ -163,11 +180,26 @@ function QnAPage(props) {
                 ACL: 'public-read',
                 ContentType: 'text/plain; charset=us-ascii'
             };
-            s3Bucket.putObject(s3Obj, function (data, err) {
+            s3Bucket.putObject(s3Obj, function (err, data) {
                 if (err) {
-                    console.log('Error message', err, data);
+                    console.log('Error message', err);
                 } else {
                     console.log('S3 upload successful', data);
+                    import('../backend/ApiRequests').then(obj => {
+                        let payload = {
+                            postId: postId,
+                            path: key,
+                            userId: userInfo.userId,
+                            userName: userInfo.userName
+                        };
+                        obj.postApiRequestCall(user_post_url, payload, function(response) {
+                           if(response.data === true) {
+                               setPostUploadStatus('success');
+                           } else {
+                               setPostUploadStatus('failure');
+                           }
+                        });
+                    });
                 }
             });
         } else {
@@ -177,8 +209,7 @@ function QnAPage(props) {
 
     return (
         <QnAWrapper>
-            <Question>Are you happy with the salary you are getting?Are you happy with the salary you are getting? If
-                yes or no, why?</Question>
+            <Question> {questionResponse.question} </Question>
             <ToggleButtonWrapper>
                 <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
                     <ToggleIconWrapper>

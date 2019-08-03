@@ -16,7 +16,7 @@ const AppWrapper = styled.div`
   height: 100%;
 `
 
-function App(props) {
+function App() {
 
     const [isUserLogged, setIsUserLogged] = useState(false);
 

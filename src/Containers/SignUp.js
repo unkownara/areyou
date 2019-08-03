@@ -268,7 +268,7 @@ function SignUp() {
             setVerifyingCredentials(true);
             import('../backend/ApiRequests').then(obj => {
                 let payload = {
-                    name: name.value,
+                    userName: name.value,
                     userId: email.value,
                     password: password.value,
                     phoneNumber: phone.value
@@ -278,9 +278,10 @@ function SignUp() {
                         if (response && response.data) {
                             setErrorMsg('');
                             cookie.save('__u_id__', email.value);
+                            localStorage.setItem('__u_info__',JSON.stringify(payload));
                             history.push({
-                                pathname: '/',
-                                search: `?u_id=${makeid(6)}`,
+                                pathname: '/qns',
+                                search: `wall?u_id=${makeid(6)}`,
                                 state: { detail: payload }
                             });
                             setVerifyingCredentials(false);
