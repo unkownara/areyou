@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import AWS from 'aws-sdk';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
@@ -11,6 +11,10 @@ import { useInput } from "../Components/hooks";
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
 import { user_post_url, user_question_url } from '../backend/Apis';
+
+const QnAContainer = styled.div`
+    padding: 20px;
+`
 
 const QnAWrapper = styled.div`
     display: flex;
@@ -133,16 +137,16 @@ function QnAPage(props) {
     const answerInput = useInput('');
 
     useEffect(() => {
-        if(!(JSON.parse(localStorage.getItem('__u_info__')))) {
+        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
             history.push('/login');
-        } else if(!(cookie.load('__q_id__'))) {
+        } else if (!(cookie.load('__q_id__'))) {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
             import('../backend/ApiRequests').then(obj => {
                 let params = {
                     date: getDate()
                 };
-                obj.getApiRequestCall(user_question_url, params, function(response) {
-                    if(response.data && response.data.Items && response.data.Items.length > 0) {
+                obj.getApiRequestCall(user_question_url, params, function (response) {
+                    if (response.data && response.data.Items && response.data.Items.length > 0) {
                         setQuestionResponse(response.data.Items[0]);
                     } else {
                         console.log('Error ', response);
@@ -192,12 +196,12 @@ function QnAPage(props) {
                             userId: userInfo.userId,
                             userName: userInfo.userName
                         };
-                        obj.postApiRequestCall(user_post_url, payload, function(response) {
-                           if(response.data === true) {
-                               setPostUploadStatus('success');
-                           } else {
-                               setPostUploadStatus('failure');
-                           }
+                        obj.postApiRequestCall(user_post_url, payload, function (response) {
+                            if (response.data === true) {
+                                setPostUploadStatus('success');
+                            } else {
+                                setPostUploadStatus('failure');
+                            }
                         });
                     });
                 }
@@ -207,33 +211,45 @@ function QnAPage(props) {
         }
     };
 
-    return (
-        <QnAWrapper>
-            <Question> {questionResponse.question} </Question>
-            <ToggleButtonWrapper>
-                <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
-                    <ToggleIconWrapper>
-                        <ToggleIcon src={Happy} />
-                    </ToggleIconWrapper>
-                    <ToggleText selected={yesSelected}>Yes</ToggleText>
-                </ToggleButton>
-                <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
-                    <ToggleIconWrapper>
-                        <ToggleIcon src={Sad} />
-                    </ToggleIconWrapper>
-                    <ToggleText selected={noSelected}>No</ToggleText>
-                </ToggleButton>
-            </ToggleButtonWrapper>
-            <AnswerInput
-                rows={7}
-                {...answerInput}
-            />
-            <Button onClick={onSubmit}>Submit Answer</Button>
-            {errorMsg}
-            <OR>or</OR>
-            <SkipToAnswers />
-        </QnAWrapper>
-    );
+    if (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') {
+        return (
+            <Fragment>
+                <QnAContainer>
+                    <QnAWrapper>
+                        <Question> {questionResponse.question} </Question>
+                        <ToggleButtonWrapper>
+                            <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
+                                <ToggleIconWrapper>
+                                    <ToggleIcon src={Happy} />
+                                </ToggleIconWrapper>
+                                <ToggleText selected={yesSelected}>Yes</ToggleText>
+                            </ToggleButton>
+                            <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
+                                <ToggleIconWrapper>
+                                    <ToggleIcon src={Sad} />
+                                </ToggleIconWrapper>
+                                <ToggleText selected={noSelected}>No</ToggleText>
+                            </ToggleButton>
+                        </ToggleButtonWrapper>
+                        <Info>Express your answer in words.</Info>
+                        <AnswerInput
+                            rows={7}
+                            {...answerInput}
+                        />
+                        <Button onClick={onSubmit}>Submit Answer</Button>
+                        {errorMsg}
+                        <OR>or</OR>
+                        <SkipToAnswers />
+                    </QnAWrapper>
+                </QnAContainer>
+            </Fragment>
+        );
+    } else {
+        return (
+            <Fragment>
+                <p>Loading</p>
+            </Fragment>);
+    }
 }
 
 export default QnAPage;

@@ -75,6 +75,7 @@ const ShowLess = styled.div`
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 10px;
 
     @media(max-width: 700px){
         cursor: default;

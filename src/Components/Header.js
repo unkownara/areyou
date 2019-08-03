@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import Headroom from 'react-headroom';
 
+import history from '../history';
 import { getRandomColor } from '../Functions/Generics';
 
 const HeaderWrapper = styled.div`
@@ -27,7 +28,7 @@ const Wrapper = styled.div`
     }
 `
 
-const AppName = styled(Link)`
+const AppName = styled.div`
     color: #000;
     text-decoration: none;
     font-size: 26px;
@@ -35,15 +36,17 @@ const AppName = styled(Link)`
     vertical-align: middle;
     line-height: 60px;
     margin-left: 10px;
+    cursor: pointer;
 
     @media(max-width: 700px){
+        cursor: default;
         line-height: 50px;
         padding-left: 0px;
         font-size: 20px;
     }
 `
 
-const AnswerTrigger = styled(Link)`
+const AnswerTrigger = styled.div`
     text-decoration: none;
     background: #09198A;
     height: 35px;   
@@ -79,7 +82,7 @@ const LogoWrapper = styled.div`
     }
 `
 
-const ProfileName = styled(Link)`
+const ProfileName = styled.div`
     text-decoration: none;
     display: flex;
     justify-content: center;
@@ -126,19 +129,49 @@ const ProfileImage = styled.div`
     }
 `
 
-export default function Header({ userName }) {
+export default function Header() {
+
+    const [userInfo, setUserInfo] = useState(null);
+
+    function redirectToQnAPage() {
+        history.push({
+            pathname: '/qns'
+        });
+    }
+
+    function redirectToProfilePage() {
+        history.push({
+            pathname: '/profile'
+        });
+    }
+
+    useEffect(() => {
+        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
+            history.push('/login');
+        } else {
+            setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
+        }
+    }, []);
+
+    function redirectToWallPage() {
+        history.push('/');
+    }
+
     return (
-        <HeaderWrapper>
-            <AppName to={'/'}>Are You</AppName>
-            <Wrapper>
-                <LogoWrapper>
-                    <AnswerTrigger to={'/qns'}>Answer</AnswerTrigger>
-                    <ProfileName to={'profile'}>
-                        <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                        <span>You</span>
-                    </ProfileName>
-                </LogoWrapper>
-            </Wrapper>
-        </HeaderWrapper>
+        <Headroom>
+            <HeaderWrapper>
+                <AppName onClick={redirectToWallPage}>Are You</AppName>
+                <Wrapper>
+                    <LogoWrapper>
+                        <AnswerTrigger onClick={redirectToQnAPage}>Answer</AnswerTrigger>
+                        <ProfileName onClick={redirectToProfilePage}>
+                            <ProfileImage
+                                bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo && userInfo.userName.substring(0, 1)}</ProfileImage>
+                            <span>You</span>
+                        </ProfileName>
+                    </LogoWrapper>
+                </Wrapper>
+            </HeaderWrapper>
+        </Headroom>
     );
 }
