@@ -263,7 +263,10 @@ function Login() {
                                 state: { detail: response.data.Items[0] }
                             });
                             setVerifyingCredentials(false);
-                        } else if (response.data === "incorrect password" || response.data === "Email doesn't exists") {
+                        } else if (response.data === "incorrect password") {
+                            setVerifyingCredentials(false);
+                            setPasswordErrorMsg(response.data);
+                        } else if(response.data === "Email doesn't exists") {
                             setVerifyingCredentials(false);
                             setEmailErrorMsg(response.data);
                         }

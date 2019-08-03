@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 
-import { useInput } from './Input';
+import { useInput } from './hooks';
 import SkipToAnswers from './SkipToAnswers';
 import { makeid } from './Generics';
 import history from "./history";

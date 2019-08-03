@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import AWS from 'aws-sdk';
 import styled from 'styled-components';
-
+import cookie from 'react-cookies';
+import history from "./history";
 import SkipToAnswers from './SkipToAnswers';
-
+import {makeid} from './Generics';
 import Happy from './happy1.png';
 import Sad from './sad1.png';
+import {useInput} from "./hooks";
 
 const QnAWrapper = styled.div`
     display: flex;
@@ -110,10 +113,19 @@ const ToggleText = styled.div`
     color: ${props => props.selected ? '#000' : 'gray'};
 `
 
-function QnAPage() {
+function QnAPage(props) {
 
     const [yesSelected, setYesSelected] = useState(false);
     const [noSelected, setNoSelected] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+
+    const answerInput = useInput('');
+
+    useEffect(() => {
+        if(!(cookie.load('__u_id__') && cookie.load('__q_id__'))) {
+            history.push('/');
+        }
+    });
 
     function toggleYesNo(type) {
         if (type === 'yes') {
@@ -126,27 +138,61 @@ function QnAPage() {
         }
     }
 
+    const onSubmit = () => {
+        if(yesSelected || noSelected) {
+            AWS.config = new AWS.Config();
+            AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
+            AWS.config.secretAccessKey = "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";
+            AWS.config.region = "us-east-2";
+
+            let postId = makeid(5);
+            let key = `${props.userId}/${props.questionId}/${new Date()}/${postId}.txt`;
+            let s3Bucket = new AWS.S3();
+            let s3Obj = {
+                Bucket: 'areyou-posts',
+                Key: key,
+                Body: answerInput.value,
+                ACL: 'public-read',
+                ContentType: 'text/plain; charset=us-ascii'
+            };
+            s3Bucket.putObject(s3Obj, function (data, err) {
+                if (err) {
+                    console.log('Error message', err, data);
+                } else {
+                    console.log('S3 upload successful', data);
+                }
+            });
+        } else {
+            setErrorMsg('Please select yes or no');
+        }
+    };
+
     return (
         <QnAWrapper>
-            <Question>Are you happy with the salary you are getting?Are you happy with the salary you are getting? If yes or no, why?</Question>
+            <Question>Are you happy with the salary you are getting?Are you happy with the salary you are getting? If
+                yes or no, why?</Question>
             <ToggleButtonWrapper>
                 <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
                     <ToggleIconWrapper>
-                        <ToggleIcon src={Happy} />
+                        <ToggleIcon src={Happy}/>
                     </ToggleIconWrapper>
                     <ToggleText selected={yesSelected}>Yes</ToggleText>
                 </ToggleButton>
                 <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
                     <ToggleIconWrapper>
-                        <ToggleIcon src={Sad} />
+                        <ToggleIcon src={Sad}/>
                     </ToggleIconWrapper>
                     <ToggleText selected={noSelected}>No</ToggleText>
                 </ToggleButton>
             </ToggleButtonWrapper>
-            <AnswerInput rows={7}></AnswerInput>
-            <Button>Submit Answer</Button>
+            <AnswerInput
+                rows={7}
+                {...answerInput}
+            />
+            <Button onClick={onSubmit}>Submit Answer</Button>
+            {errorMsg}
             <OR>or</OR>
-            <SkipToAnswers />
+            <SkipToAnswers/>
         </QnAWrapper>
     );
 }
