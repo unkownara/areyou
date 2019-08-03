@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
 import { getRandomColor } from '../Functions/Generics';
+import {user_post_like_url} from '../backend/Apis';
 
 import Like from '../Images/like.png';
 import UnLike from '../Images/unlike.png';
@@ -178,9 +179,10 @@ const YesNoText = styled.div`
 `
 
 
-export default function WallPost({ liked, answer, likesCount, userName, uploadDate, yesNoAnswer }) {
+export default function WallPost({ liked, answer, likesCount, userName, uploadDate, yesNoAnswer, postId }) {
 
     const [showMore, setShowMore] = useState(false);
+    const [like, setLike] = useState(likesCount);
 
     function showFullAnswer() {
         setShowMore(true)
@@ -190,9 +192,18 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
         setShowMore(false)
     }
 
-    function likeAnswer() {
-
-    }
+    const likeAnswer = () => {
+        setLike(like => like + 1);
+        import('../backend/ApiRequests').then(obj => {
+            let payload = {
+                postId: postId,
+                createdOn: uploadDate,
+                likes: likesCount
+            };
+            obj.postApiRequestCall(user_post_like_url, payload, function(response) {
+            });
+        })
+    };
 
     return (
         <PostWrapper>
@@ -237,7 +248,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                             src={liked ? Like : UnLike}
                             alt={'Like'}
                         />
-                        <LikesCount><span>{likesCount}</span> people liked this answer.</LikesCount>
+                        <LikesCount><span>{like}</span> people liked this answer.</LikesCount>
                     </LikeIconWrapper>
                 </PostOptionsWrapper>
             </Post>
