@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useEffect, Fragment } from 'react';
 import history from './history';
 import { Router, Switch, Route } from 'react-router';
 import Header from './Components/Header';
@@ -12,7 +12,6 @@ const Profile = lazy(() => import('./Containers/Profile'));
 function Routers() {
 
     const [showHeader, setShowHeader] = useState(true);
-    const path = window.location.pathname;
 
     useEffect(() => {
         if (window.location.pathname === '/login' || window.location.pathname === '/signup') {
@@ -22,7 +21,7 @@ function Routers() {
             setShowHeader(true);
             console.log(window.location.pathname)
         }
-    }, [])
+    }, []);
 
     return (
         <Fragment>

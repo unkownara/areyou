@@ -130,7 +130,7 @@ function Wall() {
                                 userName={`Aravind Manoharan`}
                                 uploadDate={'May 23rd, 2019 at 3:57 PM'}
                             />
-                            <LoadMore onClick={() => loadMoreHandler}>Load more</LoadMore>
+                            <LoadMore onClick={loadMoreHandler}>Load more</LoadMore>
                         </WallWrapper>
                     </WallContainer>
                 </Fragment>
