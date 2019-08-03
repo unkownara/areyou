@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import getRandomColor from './getColor';
-
-import Logout from './logout.png';
+import { getRandomColor } from '../Functions/Generics';
 
 const HeaderStickyWrapper = styled.div`
     overflow: visible;
@@ -125,27 +123,6 @@ const ProfileImage = styled.div`
         font-size: 15px;
         width: 25px;
         margin: 0 10px;
-    }
-`
-
-const LogoutIconWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 20px;
-
-    @media(max-width: 700px){
-        display: none;
-    }
-`
-
-const LogoutIcon = styled.img`
-    height: 20px;
-    width: 20px;
-    cursor: pointer;
-
-    @media(max-width: 700px){
-        display: none;
     }
 `
 

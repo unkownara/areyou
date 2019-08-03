@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Left from './left-arrow.png';
+import Left from '../Images/left-arrow.png';
 
 const SkipWrapper = styled.div`
     display: grid;

@@ -1,9 +1,11 @@
 import React from 'react';
 import history from './history';
 import { Router, Switch, Route } from 'react-router';
-import Login from './Login';
+import Login from './Containers/Login';
 import App from "./App";
-import SignUp from "./SignUp";
+import SignUp from "./Containers/SignUp";
+import QnAPage from "./Containers/QnAPage";
+import Profile from "./Containers/Profile";
 
 function Routers() {
     return (
@@ -23,6 +25,10 @@ function Routers() {
                     exact
                     path="/signup"
                     component={SignUp}
+                />
+                <Route
+                    path="/qns"
+                    component={QnAPage}
                 />
             </Switch>
         </Router>
