@@ -109,9 +109,6 @@ const ToggleText = styled.div`
     color: ${props => props.selected ? '#000' : 'gray'};
 `
 
-<<<<<<< HEAD
-function QnAPage(props) {
-=======
 const Info = styled.div`
     color: gray;
     font-size: 14px;
@@ -121,8 +118,7 @@ const Info = styled.div`
     letter-spacing: 0.5px;
 `
 
-function QnAPage() {
->>>>>>> f3dc105cda935084937fc28b4db823bd8dd06a9e
+function QnAPage(props) {
 
     const answer = useInput('');
     const [yesSelected, setYesSelected] = useState(false);
@@ -195,20 +191,12 @@ function QnAPage() {
                     <ToggleText selected={noSelected}>No</ToggleText>
                 </ToggleButton>
             </ToggleButtonWrapper>
-<<<<<<< HEAD
             <AnswerInput
                 rows={7}
                 {...answerInput}
             />
             <Button onClick={onSubmit}>Submit Answer</Button>
             {errorMsg}
-=======
-            <Info>Express yourself in words.</Info>
-            <AnswerInput
-                rows={7}
-                {...answer} />
-            <Button>Submit Answer</Button>
->>>>>>> f3dc105cda935084937fc28b4db823bd8dd06a9e
             <OR>or</OR>
             <SkipToAnswers/>
         </QnAWrapper>

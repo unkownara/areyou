@@ -28,9 +28,9 @@ function App(props) {
         }
     }, []);
 
-    useEffect(() => {
-        console.log('data from signup ', props.location.state.detail);
-    });
+    // useEffect(() => {
+    //     console.log('data from signup ', props.location.state.detail);
+    // });
 
     if(isUserLogged) {
         return (
