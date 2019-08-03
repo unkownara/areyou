@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import Left from '../Images/left-arrow.png';
 
-const SkipWrapper = styled.div`
+const SkipWrapper = styled(Link)`
     display: grid;
     grid-template-columns: 4.6fr 0.4fr;
     margin-top: 10px;
     grid-gap: 8px;
+    text-decoration: none;
 `
 
 const LeftIconWrapper = styled.div`
@@ -43,7 +45,7 @@ const Skip = styled.div`
 
 export default function SkipToAnswers() {
     return (
-        <SkipWrapper>
+        <SkipWrapper to={'/'}>
             <Skip>Skip to see answers</Skip>
             <LeftIconWrapper>
                 <LeftIcon src={Left} />

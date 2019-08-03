@@ -27,9 +27,16 @@ function Routers() {
                     component={SignUp}
                 />
                 <Route
+                    exact
                     path="/qns"
                     component={QnAPage}
                 />
+                <Route
+                    exact
+                    path="/profile"
+                    component={Profile}
+                />
+
             </Switch>
         </Router>
     );
