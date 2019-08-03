@@ -7,8 +7,3 @@ export function makeid(length) {
     }
     return result;
 }
-
-export function getDate() {
-    let nowDate = new Date();
-    return nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate();
-}

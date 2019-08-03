@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import AWS from 'aws-sdk';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
-import history from "./history";
-import SkipToAnswers from './SkipToAnswers';
-import {makeid} from './Generics';
-import Happy from './happy1.png';
-import Sad from './sad1.png';
-import {useInput} from "./hooks";
-import {getDate} from './Generics';
-import {user_post_url, user_question_url} from './backend/Apis';
+
+import history from "../history";
+import SkipToAnswers from '../Components/SkipToAnswers';
+import { makeid, getDate } from '../Functions/Generics';
+import { useInput } from "../Components/hooks";
+
+import Happy from '../Images/happy1.png';
+import Sad from '../Images/sad1.png';
+import { user_post_url, user_question_url } from '../backend/Apis';
 
 const QnAWrapper = styled.div`
     display: flex;
@@ -136,7 +137,7 @@ function QnAPage(props) {
             history.push('/login');
         } else if(!(cookie.load('__q_id__'))) {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
-            import('./backend/ApiRequests').then(obj => {
+            import('../backend/ApiRequests').then(obj => {
                 let params = {
                     date: getDate()
                 };
@@ -163,7 +164,7 @@ function QnAPage(props) {
     }
 
     const onSubmit = () => {
-        if(yesSelected || noSelected) {
+        if (yesSelected || noSelected) {
             AWS.config = new AWS.Config();
             AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
             AWS.config.secretAccessKey = "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";
@@ -184,7 +185,7 @@ function QnAPage(props) {
                     console.log('Error message', err);
                 } else {
                     console.log('S3 upload successful', data);
-                    import('./backend/ApiRequests').then(obj => {
+                    import('../backend/ApiRequests').then(obj => {
                         let payload = {
                             postId: postId,
                             path: key,
@@ -212,13 +213,13 @@ function QnAPage(props) {
             <ToggleButtonWrapper>
                 <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
                     <ToggleIconWrapper>
-                        <ToggleIcon src={Happy}/>
+                        <ToggleIcon src={Happy} />
                     </ToggleIconWrapper>
                     <ToggleText selected={yesSelected}>Yes</ToggleText>
                 </ToggleButton>
                 <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
                     <ToggleIconWrapper>
-                        <ToggleIcon src={Sad}/>
+                        <ToggleIcon src={Sad} />
                     </ToggleIconWrapper>
                     <ToggleText selected={noSelected}>No</ToggleText>
                 </ToggleButton>
@@ -230,7 +231,7 @@ function QnAPage(props) {
             <Button onClick={onSubmit}>Submit Answer</Button>
             {errorMsg}
             <OR>or</OR>
-            <SkipToAnswers/>
+            <SkipToAnswers />
         </QnAWrapper>
     );
 }

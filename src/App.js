@@ -1,14 +1,14 @@
 import React, { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import history from "./history";
-import WallPage from './Wall';
-import WallPost from './Post';
-import Login from './Login';
+import WallPage from './Containers/Wall';
+import WallPost from './Components/Post';
+import Login from './Containers/Login';
 import cookie from 'react-cookies';
-const Profile = lazy(() => import('./Profile'));
-const Header = lazy(() => import('./Header'));
-const QnAPage = lazy(() => import('./QnAPage'));
-const SignUp = lazy(() => import('./SignUp'));
+const Profile = lazy(() => import('./Containers/Profile'));
+const Header = lazy(() => import('./Components/Header'));
+const QnAPage = lazy(() => import('./Containers/QnAPage'));
+const SignUp = lazy(() => import('./Containers/SignUp'));
 
 const AppWrapper = styled.div`
   padding: 20px;

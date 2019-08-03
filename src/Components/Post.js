@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
-import getRandomColor from './getColor';
+import { getRandomColor } from '../Functions/Generics';
 
-import Like from './like.png';
-import UnLike from './unlike.png';
-import Happy from './happy1.png';
-import Sad from './sad1.png';
+import Like from '../Images/like.png';
+import UnLike from '../Images/unlike.png';
+import Happy from '../Images/happy1.png';
+import Sad from '../Images/sad1.png';
 
 const PostWrapper = styled.div`
     width: 600px;

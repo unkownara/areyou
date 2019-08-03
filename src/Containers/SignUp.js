@@ -1,49 +1,80 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
-import cookie from "react-cookies";
+import cookie from 'react-cookies';
 
-import { useInput } from "./hooks";
-import { user_info_url } from './backend/Apis';
-import SkipToAnswers from './SkipToAnswers';
-import history from "./history";
-import { makeid } from "./Generics";
+import { useInput } from '../Components/hooks';
+import SkipToAnswers from '../Components/SkipToAnswers';
+import { makeid } from '../Functions/Generics';
+import history from "../history";
+import { user_info_url } from "../backend/Apis";
 
-import ShowEye from './eye.png';
-import HideEye from './eyecross.png';
+import ShowEye from '../Images/eye.png';
+import HideEye from '../Images/eyecross.png';
 
-const LoginWrapper = styled.div`
+const SignUpWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
-  padding-bottom: 30px;
+  /* padding-bottom: 30px; */
 `
 
 const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 0px auto 60px auto;
-
-    @media(max-width: 700px){
-        margin: 0px auto 35px auto;
-    }
+    margin: 0px auto 35px auto;
 `
-
 
 const TagLine = styled.div`
     color: #000;
     font-size: 14px;
 `
 
-const LoginHeading = styled.p`
+const SignUpHeading = styled.p`
     width: 300px;
     padding-left: 10px;
     text-align: center;
     font-size: 20px;
     color: gray;
+`
+
+const OR = styled.div`
+    font-size: 12px;
+    margin-top: 20px;
+    color: gray;
+`
+
+const LoginRedirect = styled.div`
+    color: #000;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    
+    &>span {
+        cursor: pointer;
+        color: #09198A;
+        font-weight: bold;
+    }
+
+    &:hover{
+        &>span {
+            text-decoration: underline;
+        }
+    }
+
+    @media(max-width: 700px){
+        &>span {
+            cursor: default;
+        }
+
+        &:hover{
+            &>span {
+                text-decoration: none;
+            }
+        }
+    }
 `
 
 const InputWrapper = styled.div`
@@ -54,7 +85,7 @@ const InputWrapper = styled.div`
 const InputContainer = styled.div``
 
 const Input = styled.input`
-    width: 350px;
+    width: 300px;
     height: 50px;
     color: #000;
     border-radius: 7px;
@@ -74,11 +105,6 @@ const Input = styled.input`
     &:focus{
         outline: 0;
         border: 1px solid #09198A;
-    }
-
-    @media(max-width: 700px){
-        min-width: 300px;
-        width: 100%;
     }
 `
 
@@ -145,45 +171,6 @@ const LineLoader = styled.div`
     background: white;
     animation: ${LoaderLine} .7s alternate infinite ease-in-out;
 `
-
-const SignUpRedirect = styled.div`
-    color: #000;
-    letter-spacing: 0.5px;
-    font-size: 14px;
-
-    &>span {
-        cursor: pointer;
-        color: #09198A;
-        font-weight: bold;
-    }
-
-    &:hover{
-        &>span {
-            text-decoration: underline;
-        }
-    }
-
-
-    @media(max-width: 700px){
-        &>span {
-            cursor: default;
-        }
-
-        &:hover{
-            &>span {
-                text-decoration: none;
-            }
-        }
-    }
-`
-
-const OR = styled.div`
-    font-size: 12px;
-    margin-top: 50px;
-    color: gray;
-    margin-top: 30px;
-`
-
 const PasswordWrapper = styled.div``
 
 const PasswordHiderIcon = styled.img`
@@ -199,20 +186,51 @@ const PasswordHiderIcon = styled.img`
     }
 `
 
-function Login() {
+
+function SignUp() {
+
+    const [errorMsg, setErrorMsg] = useState('');
 
     const email = useInput('');
     const password = useInput('');
+    const phone = useInput('');
+    const name = useInput('');
     const [showPass, setShowPass] = useState(false);
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
+    const [nameErrorMsg, setNameErrorMsg] = useState('');
+    const [phoneErrorMsg, setPhoneErrorMsg] = useState('');
     const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
     const [verifyingCredentials, setVerifyingCredentials] = useState(false);
     const passswordRef = useRef(null);
 
-    function ValidateEmailAndPassword() {
+    function ValidateSignUpFields() {
 
         let errFlag = false;
 
+        // Name validation
+        if (name.value.length === 0) {
+            errFlag = false;
+            setNameErrorMsg('Required')
+        } else if (name.value.length) {
+            if (!name.value.match(/^[a-zA-Z_ ]+$/)) {
+                errFlag = false;
+                setNameErrorMsg('Enter correct name')
+            }
+        }
+        // Number validation
+        if (phone.value.length === 0) {
+            errFlag = false;
+            setPhoneErrorMsg('Required')
+        } else if (
+            !phone.value.match(/^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$/) ||
+            phone.value.length !== 10
+        ) {
+            errFlag = false;
+            setPhoneErrorMsg('Invalid number')
+        }
+
+
+        // Email Validation
         let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (email.value.length !== 0 && email.value !== undefined && email.value !== '') {
@@ -227,6 +245,8 @@ function Login() {
             errFlag = true
         }
 
+        // Password Vaidation
+
         if (password.value === '' || password.value.length === 0 || password.value === undefined) {
             setPasswordErrorMsg('Required');
             errFlag = true
@@ -240,51 +260,49 @@ function Login() {
     function enterPressed(e) {
         let code = e.keyCode || e.which;
         if (code === 13) {
-            LoginUser();
+            SignUpNewUser();
         }
     }
-
-    const LoginUser = () => {
-        if (!ValidateEmailAndPassword()) {
+    const SignUpNewUser = () => {
+        if (!ValidateSignUpFields()) {
             setVerifyingCredentials(true);
-            import('./backend/ApiRequests').then(obj => {
-                let params = {
+            import('../backend/ApiRequests').then(obj => {
+                let payload = {
+                    userName: name.value,
                     userId: email.value,
-                    password: password.value
+                    password: password.value,
+                    phoneNumber: phone.value
                 };
-                obj.getApiRequestCall(user_info_url, params, function (response) {
+                obj.postApiRequestCall(user_info_url, payload, function (response) {
                     try {
-                        if (response && response.data && response.data.Items && response.data.Items.length > 0) {
-                            setEmailErrorMsg('');
+                        if (response && response.data) {
+                            setErrorMsg('');
                             cookie.save('__u_id__', email.value);
-                            localStorage.setItem('__u_info__',JSON.stringify(response.data.Items[0]));
+                            localStorage.setItem('__u_info__',JSON.stringify(payload));
                             history.push({
                                 pathname: '/qns',
                                 search: `wall?u_id=${makeid(6)}`,
-                                state: { detail: response.data.Items[0] }
+                                state: { detail: payload }
                             });
                             setVerifyingCredentials(false);
-                        } else if (response.data === "incorrect password") {
+                        } else {
+                            setErrorMsg('Something wrong');
                             setVerifyingCredentials(false);
-                            setPasswordErrorMsg(response.data);
-                        } else if(response.data === "Email doesn't exists") {
-                            setVerifyingCredentials(false);
-                            setEmailErrorMsg(response.data);
                         }
                     } catch (e) {
+                        setErrorMsg('Something wrong');
                         setVerifyingCredentials(false);
-                        console.log('oops something went wrong');
                     }
                 })
-            })
+            });
         } else {
-            console.log('Fix errors');
+            console.log('Fix Errors')
             setVerifyingCredentials(false);
         }
     };
 
-    const signUpRedirect = () => {
-        history.push('/signup');
+    const logInRedirect = () => {
+        history.push('/login');
     };
 
     function togglePassword() {
@@ -300,11 +318,33 @@ function Login() {
         setEmailErrorMsg('')
     }, [email.value]);
 
+    useEffect(() => {
+        setNameErrorMsg('')
+    }, [name.value]);
+
+
+    useEffect(() => {
+        setPhoneErrorMsg('')
+    }, [phone.value]);
+
+
     return (
-        <LoginWrapper>
+        <SignUpWrapper>
             <AppName>Are You ?</AppName>
-            <LoginHeading>Login</LoginHeading>
+            {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
+            <SignUpHeading>Sign Up</SignUpHeading>
             <InputWrapper>
+                <InputContainer>
+                    <Input
+                        {...name}
+                        placeholder={'Name'}
+                    />
+                    {
+                        nameErrorMsg.length ?
+                            <ErrorLabel
+                                margin={nameErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : nameErrorMsg === 'Enter correct name' ? '-6.5px 0px 0px -115px' : '-6.5px 0px 0px -117px'}>{nameErrorMsg}</ErrorLabel> : null
+                    }
+                </InputContainer>
                 <InputContainer>
                     <Input
                         {...email}
@@ -313,7 +353,19 @@ function Login() {
                     {
                         emailErrorMsg.length ?
                             <ErrorLabel
-                                margin={emailErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : emailErrorMsg === 'Invalid Email' ? '-6.5px 0px 0px -85px' : '-6.5px 0px 0px -117px'}>{emailErrorMsg}</ErrorLabel> : null
+                                margin={emailErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : emailErrorMsg === 'Invalid Email' ? '-6.5px 0px 0px -82px' : '-6.5px 0px 0px -117px'}>{emailErrorMsg}</ErrorLabel> : null
+                    }
+                </InputContainer>
+                <InputContainer>
+                    <Input
+                        {...phone}
+                        type="number"
+                        placeholder={'Phone (Optional)'}
+                    />
+                    {
+                        phoneErrorMsg.length ?
+                            <ErrorLabel
+                                margin={phoneErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : phoneErrorMsg === 'Invalid number' ? '-6.5px 0px 0px -93px' : '-6.5px 0px 0px -117px'}>{phoneErrorMsg}</ErrorLabel> : null
                     }
                 </InputContainer>
                 <PasswordWrapper>
@@ -339,22 +391,22 @@ function Login() {
                 </PasswordWrapper>
             </InputWrapper>
             <Button
-                onClick={LoginUser}
+                onClick={SignUpNewUser}
                 disabled={verifyingCredentials}
                 login={verifyingCredentials}>
-                <span>{!verifyingCredentials ? "Let's Go" : 'Verifying ...'}</span>
+                <span>{!verifyingCredentials ? "Sign Up" : 'Signing you up ...'}</span>
                 {
                     verifyingCredentials ?
                         <LineLoader /> : null
                 }
             </Button>
-            <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
+            <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers />
-        </LoginWrapper>
+        </SignUpWrapper>
     );
 }
 
 
 
-export default Login;
+export default SignUp;

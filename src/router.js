@@ -1,10 +1,11 @@
 import React from 'react';
 import history from './history';
 import { Router, Switch, Route } from 'react-router';
-import Login from './Login';
+import Login from './Containers/Login';
 import App from "./App";
-import SignUp from "./SignUp";
-import QnAPage from "./QnAPage";
+import SignUp from "./Containers/SignUp";
+import QnAPage from "./Containers/QnAPage";
+import Profile from "./Containers/Profile";
 
 function Routers() {
     return (

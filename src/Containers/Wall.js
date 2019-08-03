@@ -1,7 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
 
-const WallPost = lazy(() => import('./Post'));
+const WallPost = lazy(() => import('../Components/Post'));
 
 const WallWrapper = styled.div`
     margin-top: 30px;
@@ -36,7 +36,7 @@ function Wall() {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        import('./backend/ApiRequests').then(obj => {
+        import('../backend/ApiRequests').then(obj => {
             let params = {
                 date: postApiDate
             };
