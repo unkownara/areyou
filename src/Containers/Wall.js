@@ -43,12 +43,9 @@ function Wall() {
     const [postApiDate, setPostApiDate] = useState(Date.now());
     const [posts, setPosts] = useState([]);
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
-    const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
         if(questionResponse.qId !== '') {
-            console.log('here i am');
-
             let params = {
                 date: postApiDate,
                 questionId: questionResponse.qId
@@ -82,7 +79,6 @@ function Wall() {
     }, []);
 
     const loadMoreHandler = () => {
-        console.log('load more here');
         let lastEvaluatedKey = posts[posts.length - 1];
         if(lastEvaluatedKey !== undefined && lastEvaluatedKey !== null) {
             setPostApiDate(lastEvaluatedKey.createdOn);
@@ -97,10 +93,11 @@ function Wall() {
                         <WallWrapper>
                             <WallPost
                                 answer={Ans}
-                                liked={true}
-                                likesCount={`1.2 k`}
+                                liked={false}
+                                likesCount={1}
                                 userName={`Aravind Manoharan`}
-                                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                                uploadDate={1564849054294}
+                                postId={'0J1Cs4RRnU'}
                             />
                             <WallPost
                                 answer={Ans}
