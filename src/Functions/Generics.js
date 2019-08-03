@@ -69,3 +69,8 @@ export function getRandomColor(char) {
 
 
 export const GA_ID = 'UA-145111269-1';
+
+export function getDate() {
+    let nowDate = new Date();
+    return nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate();
+}
