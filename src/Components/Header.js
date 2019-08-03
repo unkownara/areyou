@@ -1,19 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import { getRandomColor } from '../Functions/Generics';
-
-const HeaderStickyWrapper = styled.div`
-    overflow: visible;
-`
 
 const HeaderWrapper = styled.div`
     height: 60px;
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
     box-shadow: 0px 3px 25px -3px rgb(229, 229, 231);
-    position: sticky;
-    top: 0;
+    background: #fff;
 
     @media(max-width: 700px){
         height: 50px;
@@ -31,8 +27,9 @@ const Wrapper = styled.div`
     }
 `
 
-const AppName = styled.div`
+const AppName = styled(Link)`
     color: #000;
+    text-decoration: none;
     font-size: 26px;
     font-weight: bold;
     vertical-align: middle;
@@ -46,9 +43,10 @@ const AppName = styled.div`
     }
 `
 
-const AnswerTrigger = styled.div`
+const AnswerTrigger = styled(Link)`
+    text-decoration: none;
     background: #09198A;
-    height: 35px;
+    height: 35px;   
     vertical-align: middle;
     line-height: 35px;
     width: max-content;
@@ -81,7 +79,8 @@ const LogoWrapper = styled.div`
     }
 `
 
-const ProfileName = styled.div`
+const ProfileName = styled(Link)`
+    text-decoration: none;
     display: flex;
     justify-content: center;
     align-items: center;   
@@ -104,6 +103,7 @@ const ProfileName = styled.div`
 `
 
 const ProfileImage = styled.div`
+    text-decoration: none;
     display: flex;
     border: 0.1px solid gray;
     justify-content: center;
@@ -128,22 +128,17 @@ const ProfileImage = styled.div`
 
 export default function Header({ userName }) {
     return (
-        <HeaderStickyWrapper>
-            <HeaderWrapper>
-                <AppName>Are You</AppName>
-                <Wrapper>
-                    <LogoWrapper>
-                        <AnswerTrigger>Answer</AnswerTrigger>
-                        <ProfileName>
-                            <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                            <span>You</span>
-                        </ProfileName>
-                        {/* <LogoutIconWrapper>
-                            <LogoutIcon src={Logout} />
-                        </LogoutIconWrapper> */}
-                    </LogoWrapper>
-                </Wrapper>
-            </HeaderWrapper>
-        </HeaderStickyWrapper>
+        <HeaderWrapper>
+            <AppName to={'/'}>Are You</AppName>
+            <Wrapper>
+                <LogoWrapper>
+                    <AnswerTrigger to={'/qns'}>Answer</AnswerTrigger>
+                    <ProfileName to={'profile'}>
+                        <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                        <span>You</span>
+                    </ProfileName>
+                </LogoWrapper>
+            </Wrapper>
+        </HeaderWrapper>
     );
 }

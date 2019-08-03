@@ -68,6 +68,35 @@ function Wall() {
                 userName={`Aravind Manoharan`}
                 uploadDate={'May 23rd, 2019 at 3:57 PM'}
             />
+            <WallPost
+                answer={Ans}
+                liked={true}
+                likesCount={`1.2 k`}
+                userName={`Aravind Manoharan`}
+                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+            />
+            <WallPost
+                answer={Ans}
+                liked={true}
+                likesCount={`1.2 k`}
+                userName={`Aravind Manoharan`}
+                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+            />
+            <WallPost
+                answer={Ans}
+                liked={true}
+                likesCount={`1.2 k`}
+                userName={`Aravind Manoharan`}
+                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+            />
+            <WallPost
+                answer={Ans}
+                liked={true}
+                likesCount={`1.2 k`}
+                userName={`Aravind Manoharan`}
+                uploadDate={'May 23rd, 2019 at 3:57 PM'}
+            />
+
             <LoadMore onClick={() => loadMoreHandler}>
                 Load more
             </LoadMore>

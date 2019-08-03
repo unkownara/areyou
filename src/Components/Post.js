@@ -123,7 +123,7 @@ const LikesCount = styled.div`
 `
 
 const HR = styled.div`
-    margin: 10px 0 20px 0;
+    margin: 10px 0 35px 0;
     border-bottom: 1px solid #eee;
 `
 
@@ -135,14 +135,7 @@ const YesNoWrapper = styled.div`
     align-items: center;
 `
 
-const Greet = styled.div`
-    padding-left: 20px;
-    letter-spacing: 0.5px;
-    color: #2d2c2c;
-    font-weight: 500;
-`
-
-const ToggleButton = styled.div`
+const YesNoAnswer = styled.div`
     width: max-content;
     display: flex;
     justify-content: center;
@@ -150,7 +143,7 @@ const ToggleButton = styled.div`
     border-radius: 30px;
     padding: 6px 10px;
     border: ${props => props.selected ? 'none' : '1px solid #eee'};
-    background: ${props => props.selected ? '#BDF0FF' : '#fff'};
+    background: ${props => props.selected ? '#c7f9ff' : '#fff'};
     cursor: pointer;
 
     &:hover {
@@ -162,21 +155,25 @@ const ToggleButton = styled.div`
     }
 `
 
-const ToggleIconWrapper = styled.div`
+const YesNoIconWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
 `
 
-const ToggleIcon = styled.img`
+const YesNoIcon = styled.img`
     height: 22px;
     width: 22px;
 `
 
-const ToggleText = styled.div`
+const YesNoText = styled.div`
     padding-left: 5px;
     font-weight: bold;
     color: ${props => props.selected ? '#000' : 'gray'};
+
+    @media(max-width: 700px){
+        font-size: 14px;
+    }
 `
 
 
@@ -209,13 +206,12 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                     </ProfileDetailsWrapper>
                 </ProfileWrapper>
                 <YesNoWrapper>
-                    <ToggleButton selected>
-                        <ToggleIconWrapper>
-                            <ToggleIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
-                        </ToggleIconWrapper>
-                        <ToggleText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</ToggleText>
-                    </ToggleButton>
-                    <Greet>{yesNoAnswer === 'yes' ? `Yay! User is happy.` : `Oh oh! User is unhappy.`}</Greet>
+                    <YesNoAnswer selected>
+                        <YesNoIconWrapper>
+                            <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
+                        </YesNoIconWrapper>
+                        <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
+                    </YesNoAnswer>
                 </YesNoWrapper>
                 <Answer onClick={showFullAnswer} pointer={showMore}>
                     {

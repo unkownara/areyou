@@ -4,6 +4,7 @@ import history from "./history";
 import WallPage from './Containers/Wall';
 import WallPost from './Components/Post';
 import Login from './Containers/Login';
+import Headroom from 'react-headroom';
 import cookie from 'react-cookies';
 const Profile = lazy(() => import('./Containers/Profile'));
 const Header = lazy(() => import('./Components/Header'));
@@ -20,7 +21,7 @@ function App() {
     const [isUserLogged, setIsUserLogged] = useState(false);
 
     useEffect(() => {
-        if(cookie.load('__u_id__')) {
+        if (cookie.load('__u_id__')) {
             setIsUserLogged(true);
         } else {
             setIsUserLogged(false);
@@ -32,13 +33,15 @@ function App() {
     //     console.log('data from signup ', props.location.state.detail);
     // });
 
-    if(isUserLogged) {
+    if (isUserLogged) {
         return (
             <Suspense fallback={<></>}>
                 <Fragment>
-                    <Header userName={'Aravind Manoharan'} />
+                    <Headroom>
+                        <Header userName={'Aravind Manoharan'} />
+                    </Headroom>
                     <AppWrapper>
-                        <WallPage userName={'Aravind'}/>
+                        <QnAPage userName={'Aravind'} />
                     </AppWrapper>
                 </Fragment>
             </Suspense>
