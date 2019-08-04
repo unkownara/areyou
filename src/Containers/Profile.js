@@ -89,6 +89,10 @@ const Info = styled.div`
     text-align: center;
     margin-bottom: 30px;
 
+    &>span{
+        font-weight: bold;
+    }
+
     @media(max-width: 700px){
         width: 100%;
     }
@@ -140,7 +144,7 @@ const Button = styled.div`
     }
 `
 
-const LoginWrapper = styled.div`
+const UserNotFound = styled.div`
     margin-top: 50px;
     display: flex;
     justify-content: center;
@@ -158,7 +162,9 @@ export default function Profile(props) {
     const [postMsg, setPostMsg] = useState('');
     const [open, setOpen] = useState(false);
     const [loadingPosts, setLoadingPosts] = useState(false)
+    const [userNotFound, setUserNotFound] = useState(false);
 
+    
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/profile');
@@ -172,6 +178,7 @@ export default function Profile(props) {
             if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                 setUserInfo(response.data.Items[0]);
             } else {
+                setUserNotFound(true);
                 console.log('User does not exit');
             }
         })
@@ -180,8 +187,9 @@ export default function Profile(props) {
     useEffect(() => {
         const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
         setUserInfo(uInfo);
+
         let params = {
-            userId: uInfo.userId
+            userId: uInfo !== undefined && uInfo !== null ? uInfo : uId
         };
         setLoadingPosts(true);
         getApiRequestCall(user_profile_url, params, function (response) {
@@ -224,14 +232,14 @@ export default function Profile(props) {
             <Header openSnackBar={openSnackBar} />
             <ProfileContainer>
                 {
-                    userInfo !== undefined && userInfo !== null ?
+                    !userNotFound ?
                         <ProfileWrapper>
                             <ImageWrapper>
                                 <ProfileImage
-                                    bg={getRandomColor(userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo.userName.substring(0, 1)}</ProfileImage>
+                                    bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo && userInfo.userName.substring(0, 1)}</ProfileImage>
                             </ImageWrapper>
-                            <ProfileName>{userInfo.userName || 'User'}</ProfileName>
-                            <Email>{userInfo.userId || ''}</Email>
+                            <ProfileName>{(userInfo && userInfo.userName) || 'User'}</ProfileName>
+                            <Email>{(userInfo && userInfo.userId) || ''}</Email>
                             <HR />
                             {
                                 !loadingPosts ?
@@ -274,14 +282,13 @@ export default function Profile(props) {
                             <Button onClick={logout}>Logout</Button>
                         </ProfileWrapper>
                         :
-                        <LoginWrapper>
+                        <UserNotFound>
                             <ImageWrapper>
                                 <NoDataIcon src={NoData} />
                             </ImageWrapper>
-                            <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question
-                                or to like/unlike other answers, you have to login.</Info>
-                            <Button onClick={redirectToLoginPage}>Login</Button>
-                        </LoginWrapper>
+                            <Info width={'600px'}><span>User Not Found!</span> Looks like you have hit a wrong profile name.</Info>
+                            <SkipToAnswers origin={'Profile Page'} />
+                        </UserNotFound>
                 }
             </ProfileContainer>
             <SnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />
