@@ -1,5 +1,7 @@
 import React, { useEffect, useState, lazy, Fragment, Suspense } from 'react';
 import styled, { keyframes } from 'styled-components';
+import ReactGA from 'react-ga';
+
 import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
@@ -99,9 +101,14 @@ function Wall({ props }) {
         setOpen(true)
     }
 
-    const handleClose = () => {
+    function handleClose() {
         setOpen(false);
     };
+
+    useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/');
+    }, [])
 
     useEffect(() => {
         if (questionResponse.qId !== '') {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import AWS from 'aws-sdk';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
+import ReactGA from 'react-ga';
 
 import history from '../history';
 import SnackBar from '../Components/SnackBar';
@@ -196,6 +197,11 @@ function QnAPage() {
     const [submitting, setSubmitting] = useState(false);
 
     const answerInput = useInput('');
+
+    useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/qna');
+    }, [])
 
     function openSnackBar() {
         setOpen(true)

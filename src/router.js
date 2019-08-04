@@ -30,7 +30,7 @@ function Routers() {
                             component={SignUp}
                         />
                         <Route
-                            path="/qns"
+                            path="/qna"
                             component={QnAPage}
                         />
                         <Route
