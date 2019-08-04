@@ -35,7 +35,7 @@ function Routers() {
                         />
                         <Route
                             exact
-                            path="/profile"
+                            path="/profile/:id"
                             component={Profile}
                         />
 

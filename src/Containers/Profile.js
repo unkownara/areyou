@@ -4,10 +4,10 @@ import * as qs from 'query-string';
 import cookie from 'react-cookies';
 import history from '../history';
 import Header from '../Components/Header';
-import { getRandomColor } from '../Functions/Generics';
+import {getRandomColor, s3UrlToText} from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import {user_info_url, user_profile_url} from "../backend/Apis";
+import { user_profile_url} from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import SnackBar from '../Components/SnackBar';
 
@@ -130,17 +130,17 @@ const LoginWrapper = styled.div`
 
 export default function Profile(props) {
     // Api call for my answers
+    let url = window.location.href.split('/');
 
     const [userInfo, setUserInfo] = useState(null);
-    const [uId, setUId] = useState((qs.parse(props.location.search)).u_id);
+    const [uId, setUId] = useState(url[4]);
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        console.log(uId);
+        console.log('user id', uId);
     });
-
 
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem('__u_info__'));
@@ -206,7 +206,7 @@ export default function Profile(props) {
                                 userPosts && userPosts.length > 0 ?
                                     userPosts.map((data, index) =>
                                         <WallPost
-                                            answer={'Ans'}
+                                            path={data.path}
                                             liked={true}
                                             likesCount={`1.2 k`}
                                             userName={`Aravind Manoharan`}

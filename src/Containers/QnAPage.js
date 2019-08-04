@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import AWS from 'aws-sdk';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
-
+import history from "../history";
 import SnackBar from '../Components/SnackBar';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
@@ -211,6 +211,7 @@ function QnAPage() {
                         obj.postApiRequestCall(user_post_url, payload, function (response) {
                             if (response.data === true) {
                                 setPostUploadStatus('success');
+                                history.push('/');
                             } else {
                                 setPostUploadStatus('failure');
                             }

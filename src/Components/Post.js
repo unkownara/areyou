@@ -1,13 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import styled from 'styled-components';
 
-import { getRandomColor } from '../Functions/Generics';
+import {getRandomColor, s3UrlToText} from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
 
 import Like from '../Images/like.png';
 import UnLike from '../Images/unlike.png';
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
+import AWS from "aws-sdk";
 
 const PostWrapper = styled.div`
     width: 600px;
@@ -171,10 +172,11 @@ const YesNoText = styled.div`
 `
 
 
-export default function WallPost({ liked, answer, likesCount, userName, uploadDate, yesNoAnswer, postId }) {
+export default function WallPost({ liked, path, likesCount, userName, uploadDate, yesNoAnswer, postId }) {
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
+    const [answer, setAnswer] = useState('');
 
     function showFullAnswer() {
         setShowMore(true)
@@ -196,6 +198,28 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
             });
         })
     };
+
+    useEffect(() => {
+        AWS.config = new AWS.Config();
+        AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
+        AWS.config.secretAccessKey = "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";
+        AWS.config.region = "us-east-2";
+        const s3 = new AWS.S3();
+
+        let getParams = {
+            Bucket: 'areyou-posts',
+            Key: path
+        };
+
+        s3.getObject(getParams, function (err, data) {
+            if (err)
+                return '';
+            else {
+                console.log('s3 content ', data.Body.toString('utf-8'));
+                setAnswer(data.Body.toString('utf-8'));
+            }
+        });
+    }, [path]);
 
     return (
         <PostWrapper>

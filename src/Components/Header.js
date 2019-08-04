@@ -161,9 +161,10 @@ export default function Header({ openSnackBar }) {
     function redirectToProfilePage() {
         if(userInfo !== null) {
             history.push({
-                pathname: '/profile',
-                search: `?u_id=${userInfo.userId}`
+                pathname: `/profile/${userInfo.userId}`
             });
+        } else {
+            history.push('/login');
         }
     }
 

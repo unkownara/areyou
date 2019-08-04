@@ -138,7 +138,7 @@ function Wall() {
                                         posts.map((data) =>
                                             <WallPost
                                                 key={data.postId}
-                                                answer={'zexrcytfvgybihunjimkijnohibyguvtfycrdxetdrcyfvtugbyihnuojimnhubgyvutfycdrfvtugybihnojimponhuibyguvftycdrtxedcryfvutgbyihnuojinhubiyguvtfycrdxestdcryfvtugbyihnjjkdnjidkbbeibjdfreifbruehgfbrhegfbrfehgbrhfgbrehgbyurehgfbvu fgbreuvbry'}
+                                                path={data.path}
                                                 liked={false}
                                                 likesCount={data.likes}
                                                 userName={data.userName}
