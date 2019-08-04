@@ -74,7 +74,7 @@ const Email = styled.div`
 
 const HR = styled.div`
     margin: 10px auto 30px auto;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #D0D0D0;
 `
 
 const Info = styled.div`
@@ -92,11 +92,11 @@ const Info = styled.div`
 
 const NoDataIcon = styled.img`
     height: 300px;
-    width: 350px;
+    width: 370px;
 
     @media(max-width: 700px){
         height: 200px;
-        width: 230px;
+        width: 250px;
     }
 `
 
@@ -230,12 +230,7 @@ export default function Profile(props) {
                             </ImageWrapper>
                             <ProfileName>{userInfo.userName || 'User'}</ProfileName>
                             <Email>{userInfo.userId || ''}</Email>
-                            <Info>{userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
-                            <SkipWrapper>
-                                <OR>or</OR>
-                                <SkipToAnswers/>
-                            </SkipWrapper>
-                            <HR/>
+                            <HR />
                             {
                                 userPosts && userPosts.length > 0 ?
                                     userPosts.map((data, index) =>
@@ -250,17 +245,22 @@ export default function Profile(props) {
                                     :
                                     <Fragment>
                                         <ImageWrapper>
-                                            <NoDataIcon src={NoData}/>
+                                            <NoDataIcon src={Login} />
                                         </ImageWrapper>
-                                        <Info>No Answers</Info>
+                                        {/* <Info>No Answers</Info> */}
                                     </Fragment>
                             }
+                            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
+                            <SkipWrapper>
+                                <OR>or</OR>
+                                <SkipToAnswers />
+                            </SkipWrapper>
                             <Button onClick={logout}>Logout</Button>
                         </ProfileWrapper>
                         :
                         <LoginWrapper>
                             <ImageWrapper>
-                                <NoDataIcon src={Login}/>
+                                <NoDataIcon src={NoData} />
                             </ImageWrapper>
                             <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question
                                 or to like/unlike other answers, you have to login.</Info>
