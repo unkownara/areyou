@@ -2,6 +2,8 @@ import React, { useState, useEffect, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
+
+import ContentLoader from '../Components/ContentLoader';
 import history from '../history';
 import Header from '../Components/Header';
 import { getRandomColor, s3UrlToText } from '../Functions/Generics';
@@ -248,7 +250,7 @@ export default function Profile(props) {
                                             }
                                         </Info>
                                         {
-                                            userPosts && userPosts.length > 0 ?
+                                            !loadingPosts && userPosts && userPosts.length > 0 ?
                                                 userPosts.map((data, index) =>
                                                     <WallPost
                                                         path={data.path}
@@ -267,7 +269,7 @@ export default function Profile(props) {
                                         }
                                     </Fragment>
                                     :
-                                    <DotLoader height={'30px'} />
+                                    <ContentLoader count={5} />
                             }
                             <SkipWrapper>
                                 <OR>or</OR>

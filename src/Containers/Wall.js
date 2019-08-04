@@ -6,6 +6,7 @@ import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
 
+import ContentLoader from '../Components/ContentLoader';
 import SnackBar from '../Components/SnackBar';
 import Header from '../Components/Header';
 import DotLoader from '../Components/DotLoader';
@@ -174,7 +175,7 @@ function Wall({ props }) {
             }
             {
                 posts && posts.length && questionResponse.qId !== '' ?
-                    <Suspense fallback={<DotLoader />}>
+                    <Suspense fallback={<ContentLoader count={1} />}>
                         <Fragment>
                             <WallContainer>
                                 <WallWrapper>
@@ -210,7 +211,7 @@ function Wall({ props }) {
                             </WallContainer>
                         </Fragment>
                     </Suspense>
-                    : <DotLoader />
+                    : <ContentLoader count={5} />
             }
             <SnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
         </Fragment>

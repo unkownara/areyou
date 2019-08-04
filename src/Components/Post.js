@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import ContentLoader from './ContentLoader';
-import {getRandomColor, s3UrlToText} from '../Functions/Generics';
+import { getRandomColor, s3UrlToText } from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
 
 import Like from '../Images/like.png';
@@ -265,54 +265,60 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
 
     return (
         <PostWrapper>
-            <Post>
-                <ProfileWrapper>
-                    <ProfileImageWrapper>
-                        <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                    </ProfileImageWrapper>
-                    <ProfileDetailsWrapper>
-                        <ProfileName>{userName}</ProfileName>
-                        <UploadDate>{uploadDate}</UploadDate>
-                    </ProfileDetailsWrapper>
-                </ProfileWrapper>
-                <YesNoWrapper>
-                    <YesNoAnswer selected>
-                        <YesNoIconWrapper>
-                            <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
-                        </YesNoIconWrapper>
-                        <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
-                    </YesNoAnswer>
-                </YesNoWrapper>
-                <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
-                    {
-                        answer && answer.length >= 200 && !showMore ?
-                            <Fragment>
-                                {answer.substring(1, 200)}
-                                <ShowMore>... show full</ShowMore>
-                            </Fragment> :
-                            <Fragment>
-                                {answer}
-                            </Fragment>
-                    }
-                </Answer>
-                {
-                    showMore ?
-                        <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
-                }
-                <PostOptionsWrapper>
-                    <LikeIconWrapper anim={showAnim}>
-                        <div>
-                            <LikeIcon
-                                anim={showAnim}
-                                onClick={likeAnswer}
-                                src={liked || likedByUser ? Clap : UnClap}
-                                alt={'Like'}
-                            />
-                        </div>
-                        <LikesCount><span>{like}</span> people clapped to this answer.</LikesCount>
-                    </LikeIconWrapper>
-                </PostOptionsWrapper>
-            </Post>
+            {
+                answer && answer.length ?
+                    <Post>
+                        <ProfileWrapper>
+                            <ProfileImageWrapper>
+                                <ProfileImage
+                                    bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                            </ProfileImageWrapper>
+                            <ProfileDetailsWrapper>
+                                <ProfileName>{userName}</ProfileName>
+                                <UploadDate>{uploadDate}</UploadDate>
+                            </ProfileDetailsWrapper>
+                        </ProfileWrapper>
+                        <YesNoWrapper>
+                            <YesNoAnswer selected>
+                                <YesNoIconWrapper>
+                                    <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
+                                </YesNoIconWrapper>
+                                <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
+                            </YesNoAnswer>
+                        </YesNoWrapper>
+                        <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
+                            {
+                                answer && answer.length >= 200 && !showMore ?
+                                    <Fragment>
+                                        {answer.substring(1, 200)}
+                                        <ShowMore>... show full</ShowMore>
+                                    </Fragment> :
+                                    <Fragment>
+                                        {answer}
+                                    </Fragment>
+                            }
+                        </Answer>
+                        {
+                            showMore ?
+                                <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
+                        }
+                        <PostOptionsWrapper>
+                            <LikeIconWrapper anim={showAnim}>
+                                <div>
+                                    <LikeIcon
+                                        anim={showAnim}
+                                        onClick={likeAnswer}
+                                        src={liked || likedByUser ? Clap : UnClap}
+                                        alt={'Like'}
+                                    />
+                                </div>
+                                <LikesCount><span>{like}</span> people clapped to this answer.</LikesCount>
+                            </LikeIconWrapper>
+                        </PostOptionsWrapper>
+                    </Post>
+                    :
+                    <ContentLoader count={5} />
+            }
             <HR />
         </PostWrapper>
     );
