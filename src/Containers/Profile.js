@@ -6,6 +6,7 @@ import { getRandomColor } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import SkipToAnswers from '../Components/SkipToAnswers';
 
+import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
 
 const ProfileContainer = styled.div`
@@ -115,7 +116,7 @@ const Button = styled.div`
 `
 
 const LoginWrapper = styled.div`
-    margin-top: 100px;
+    margin-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -173,9 +174,12 @@ export default function Profile() {
                                     uploadDate={'May 23rd, 2019 at 3:57 PM'}
                                 />
                                 :
-                                <ImageWrapper>
-                                    <NoDataIcon src={NoData} />
-                                </ImageWrapper>
+                                <Fragment>
+                                    <ImageWrapper>
+                                        <NoDataIcon src={NoData} />
+                                    </ImageWrapper>
+                                    <Info>No Answers</Info>
+                                </Fragment>
                         }
                         <Button onClick={logout}>Logout</Button>
                     </ProfileWrapper>
@@ -186,6 +190,9 @@ export default function Profile() {
         return (
             <ProfileContainer>
                 <LoginWrapper>
+                    <ImageWrapper>
+                        <NoDataIcon src={Login} />
+                    </ImageWrapper>
                     <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question or to like/unlike other answers, you have to login.</Info>
                     <Button onClick={redirectToLoginPage}>Login</Button>
                 </LoginWrapper>
