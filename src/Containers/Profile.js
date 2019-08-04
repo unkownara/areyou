@@ -233,7 +233,7 @@ export default function Profile() {
                             <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
                             <SkipWrapper>
                                 <OR>or</OR>
-                                <SkipToAnswers />
+                                <SkipToAnswers origin={'Profile Page'} />
                             </SkipWrapper>
                             <Button onClick={logout}>Logout</Button>
                         </ProfileWrapper>
@@ -247,7 +247,7 @@ export default function Profile() {
                         </LoginWrapper>
                 }
             </ProfileContainer>
-            <SnackBar open={open} handleClose={handleClose} />
+            <SnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />
         </Fragment>
     );
 }

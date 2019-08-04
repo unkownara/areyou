@@ -212,7 +212,7 @@ function Wall({ props }) {
                     </Suspense>
                     : <DotLoader />
             }
-            <SnackBar open={open} handleClose={handleClose} />
+            <SnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
         </Fragment>
     );
 }

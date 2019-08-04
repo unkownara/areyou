@@ -70,10 +70,11 @@ const ProfileDetailsWrapper = styled.div``
 
 const Answer = styled.div`
     margin: 20px 0 0 0;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
     line-height: 22px;
     text-align: left;
     word-break: break-word;
+    font-family: 'Raleway', sans-serif;
     cursor: ${props => !props.pointer ? 'pointer' : 'default'};
     
     @media(max-width: 700px){
