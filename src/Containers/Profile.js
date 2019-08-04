@@ -165,7 +165,7 @@ export default function Profile(props) {
     }, []);
 
     useEffect(() => {
-        let params  = {
+        let params = {
             userId: uId
         };
         getApiRequestCall(user_guest_profile_info_url, params, function(response) {
@@ -253,6 +253,7 @@ export default function Profile(props) {
                                                         userName={data.userName}
                                                         uploadDate={data.createdOn}
                                                         postId={data.postId}
+                                                        showQuestion
                                                     />
                                                 )
                                                 :
