@@ -96,7 +96,7 @@ function Wall() {
         }
     };
 
-    function getDate(date) {
+    function getDate1(date) {
         var dateString = new Date(parseInt(date));
         dateString = new Date(dateString).toUTCString();
         dateString = dateString.split(' ').slice(0, 4).join(' ');
@@ -112,42 +112,55 @@ function Wall() {
                         <Fragment>
                             <WallContainer>
                                 <WallWrapper>
-                                    <WallPost
-                                        answer={Ans}
-                                        liked={false}
-                                        likesCount={1}
-                                        userName={`Aravind Manoharan`}
-                                        uploadDate={getDate(1564849054294)}
-                                        postId={'0J1Cs4RRnU'}
-                                    />
-                                    <WallPost
-                                        answer={Ans}
-                                        liked={true}
-                                        likesCount={`1.2 k`}
-                                        userName={`Aravind Manoharan`}
-                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                    />
-                                    <WallPost
-                                        answer={Ans}
-                                        liked={true}
-                                        likesCount={`1.2 k`}
-                                        userName={`Aravind Manoharan`}
-                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                    />
-                                    <WallPost
-                                        answer={Ans}
-                                        liked={true}
-                                        likesCount={`1.2 k`}
-                                        userName={`Aravind Manoharan`}
-                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                    />
-                                    <WallPost
-                                        answer={Ans}
-                                        liked={true}
-                                        likesCount={`1.2 k`}
-                                        userName={`Aravind Manoharan`}
-                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                    />
+                                    {
+                                        posts.map((data, index) =>
+                                            <WallPost
+                                                key={data.postId}
+                                                answer={Ans}
+                                                liked={false}
+                                                likesCount={data.likes}
+                                                userName={data.userName}
+                                                uploadDate={getDate1(data.createdOn)}
+                                                postId={data.postId}
+                                            />
+                                        )
+                                    }
+                                    {/*<WallPost*/}
+                                    {/*    answer={Ans}*/}
+                                    {/*    liked={false}*/}
+                                    {/*    likesCount={1}*/}
+                                    {/*    userName={`Aravind Manoharan`}*/}
+                                    {/*    uploadDate={getDate(1564849054294)}*/}
+                                    {/*    postId={'0J1Cs4RRnU'}*/}
+                                    {/*/>*/}
+                                    {/*<WallPost*/}
+                                    {/*    answer={Ans}*/}
+                                    {/*    liked={true}*/}
+                                    {/*    likesCount={`1.2 k`}*/}
+                                    {/*    userName={`Aravind Manoharan`}*/}
+                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
+                                    {/*/>*/}
+                                    {/*<WallPost*/}
+                                    {/*    answer={Ans}*/}
+                                    {/*    liked={true}*/}
+                                    {/*    likesCount={`1.2 k`}*/}
+                                    {/*    userName={`Aravind Manoharan`}*/}
+                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
+                                    {/*/>*/}
+                                    {/*<WallPost*/}
+                                    {/*    answer={Ans}*/}
+                                    {/*    liked={true}*/}
+                                    {/*    likesCount={`1.2 k`}*/}
+                                    {/*    userName={`Aravind Manoharan`}*/}
+                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
+                                    {/*/>*/}
+                                    {/*<WallPost*/}
+                                    {/*    answer={Ans}*/}
+                                    {/*    liked={true}*/}
+                                    {/*    likesCount={`1.2 k`}*/}
+                                    {/*    userName={`Aravind Manoharan`}*/}
+                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
+                                    {/*/>*/}
                                     <LoadMore onClick={loadMoreHandler}>Load more</LoadMore>
                                 </WallWrapper>
                             </WallContainer>
@@ -155,7 +168,7 @@ function Wall() {
                     </Suspense>
                     : <>Loading...</>
             }
-            <SnackBar open={open} handleClose={handleClose} />
+            {/*<SnackBar open={open} handleClose={handleClose} />*/}
         </Fragment>
     );
 }
