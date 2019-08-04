@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
 import { getRandomColor } from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
@@ -9,9 +9,24 @@ import UnLike from '../Images/unlike.png';
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
 
+const LiftUp = keyframes`
+    0% {
+        opacity: 0;
+        transform: translate(0%, 20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0%, 0px);
+    }
+`
+
 const PostWrapper = styled.div`
     width: 600px;
     margin: 0 auto;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 
     @media(max-width: 700px){
         width: 100%;

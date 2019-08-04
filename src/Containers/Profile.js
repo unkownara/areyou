@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import history from '../history';
 import Header from '../Components/Header';
@@ -13,8 +13,24 @@ import SnackBar from '../Components/SnackBar';
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
 
+
+const LiftUp = keyframes`
+    0% {
+        opacity: 0;
+        transform: translate(0%, 20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0%, 0px);
+    }
+`
+
 const ProfileContainer = styled.div`
     padding: 20px;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 const ProfileWrapper = styled.div`
