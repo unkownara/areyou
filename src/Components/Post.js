@@ -1,17 +1,16 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import {getRandomColor, makeid, s3UrlToText} from '../Functions/Generics';
-import {user_post_delete_url, user_post_edit_url, user_post_like_url} from '../backend/Apis';
+import ContentLoader from './ContentLoader';
+import { getRandomColor } from '../Functions/Generics';
+import { user_post_delete_url, user_post_edit_url, user_post_like_url } from '../backend/Apis';
+import { postApiRequestCall } from "../backend/ApiRequests";
 
-import Like from '../Images/like.png';
-import UnLike from '../Images/unlike.png';
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
 import AWS from "aws-sdk";
 import Clap from '../Images/clap.png';
 import UnClap from '../Images/unclap.png';
-import {postApiRequestCall} from "../backend/ApiRequests";
 
 const LiftUp = keyframes`
     0% {
@@ -74,6 +73,7 @@ const Answer = styled.div`
     margin: 20px 0 0 0;
     letter-spacing: 0.5px;
     line-height: 22px;
+    padding-left: 10px;
     text-align: left;
     word-break: break-word;
     font-family: 'Raleway', sans-serif;
@@ -246,8 +246,8 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
             postId: postId,
             createdOn: createdOn
         };
-        postApiRequestCall(user_post_delete_url, payload, function(response) {
-            if(response.data === true) {
+        postApiRequestCall(user_post_delete_url, payload, function (response) {
+            if (response.data === true) {
                 console.log('Successfully deleted');
             }
         })
@@ -277,8 +277,8 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
                     createdOn,
                     path: key
                 };
-                postApiRequestCall(user_post_edit_url, payload, function(response) {
-                    if(response.data === true) {
+                postApiRequestCall(user_post_edit_url, payload, function (response) {
+                    if (response.data === true) {
                         console.log('updated successfully');
                     }
                 })
@@ -310,54 +310,60 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
 
     return (
         <PostWrapper>
-            <Post>
-                <ProfileWrapper>
-                    <ProfileImageWrapper>
-                        <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                    </ProfileImageWrapper>
-                    <ProfileDetailsWrapper>
-                        <ProfileName>{userName}</ProfileName>
-                        <UploadDate>{uploadDate}</UploadDate>
-                    </ProfileDetailsWrapper>
-                </ProfileWrapper>
-                <YesNoWrapper>
-                    <YesNoAnswer selected>
-                        <YesNoIconWrapper>
-                            <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
-                        </YesNoIconWrapper>
-                        <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
-                    </YesNoAnswer>
-                </YesNoWrapper>
-                <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
-                    {
-                        answer && answer.length >= 200 && !showMore ?
-                            <Fragment>
-                                {answer.substring(1, 200)}
-                                <ShowMore>... show full</ShowMore>
-                            </Fragment> :
-                            <Fragment>
-                                {answer}
-                            </Fragment>
-                    }
-                </Answer>
-                {
-                    showMore ?
-                        <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
-                }
-                <PostOptionsWrapper>
-                    <LikeIconWrapper anim={showAnim}>
-                        <div>
-                            <LikeIcon
-                                anim={showAnim}
-                                onClick={likeAnswer}
-                                src={liked || likedByUser ? Clap : UnClap}
-                                alt={'Like'}
-                            />
-                        </div>
-                        <LikesCount><span>{like}</span> people clapped to this answer.</LikesCount>
-                    </LikeIconWrapper>
-                </PostOptionsWrapper>
-            </Post>
+            {
+                answer && answer.length ?
+                    <Post>
+                        <ProfileWrapper>
+                            <ProfileImageWrapper>
+                                <ProfileImage
+                                    bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                            </ProfileImageWrapper>
+                            <ProfileDetailsWrapper>
+                                <ProfileName>{userName}</ProfileName>
+                                <UploadDate>{uploadDate}</UploadDate>
+                            </ProfileDetailsWrapper>
+                        </ProfileWrapper>
+                        <YesNoWrapper>
+                            <YesNoAnswer selected>
+                                <YesNoIconWrapper>
+                                    <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
+                                </YesNoIconWrapper>
+                                <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
+                            </YesNoAnswer>
+                        </YesNoWrapper>
+                        <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
+                            {
+                                answer && answer.length >= 200 && !showMore ?
+                                    <Fragment>
+                                        {answer.substring(1, 200)}
+                                        <ShowMore>... show full</ShowMore>
+                                    </Fragment> :
+                                    <Fragment>
+                                        {answer}
+                                    </Fragment>
+                            }
+                        </Answer>
+                        {
+                            showMore ?
+                                <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
+                        }
+                        <PostOptionsWrapper>
+                            <LikeIconWrapper anim={showAnim}>
+                                <div>
+                                    <LikeIcon
+                                        anim={showAnim}
+                                        onClick={likeAnswer}
+                                        src={liked || likedByUser ? Clap : UnClap}
+                                        alt={'Like'}
+                                    />
+                                </div>
+                                <LikesCount><span>{like}</span> people clapped to this answer.</LikesCount>
+                            </LikeIconWrapper>
+                        </PostOptionsWrapper>
+                    </Post>
+                    :
+                    <ContentLoader count={5} />
+            }
             <HR />
         </PostWrapper>
     );
