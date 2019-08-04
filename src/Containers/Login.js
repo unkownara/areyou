@@ -333,10 +333,9 @@ function Login() {
                         onKeyPress={(e) => enterPressed(e)}
                     />
                     {
-                        !passwordErrorMsg.length ?
-                            <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
-                                onClick={togglePassword}
-                                alt={'pass'} /> : null
+                        <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
+                            onClick={togglePassword}
+                            alt={'pass'} />
                     }
                     {
                         passwordErrorMsg.length ?
