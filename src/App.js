@@ -29,9 +29,9 @@ function App() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     console.log('data from signup ', props.location.state.detail);
-    // });
+    useEffect(() => {
+        console.log('data from signup ');
+    });
 
     return (
         <Suspense fallback={<></>}>

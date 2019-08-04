@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import history from '../history';
 import { getRandomColor } from '../Functions/Generics';
 import WallPost from '../Components/Post';
+import {getApiRequestCall} from '../backend/ApiRequests';
+import {user_profile_url} from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 
 import Login from '../Images/login.png';
@@ -126,14 +128,29 @@ const LoginWrapper = styled.div`
 export default function Profile() {
     // Api call for my answers
 
-    var answers = []
+    let answers = [];
     const [userInfo, setUserInfo] = useState(null);
+    const [userPosts, setUsersPost] = useState([]);
+    const [postMsg, setPostMsg] = useState('');
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
             // history.push('/login');
         } else {
-            setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
+            const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
+            setUserInfo(uInfo);
+            let params = {
+                userId: uInfo.userId
+            };
+            getApiRequestCall(user_profile_url, params, function (response) {
+                if(response && response.data && response.data.Items && response.data.Items.length > 0) {
+                    response.data.Items.sort((a,b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
+                    let posts = userPosts.concat(response.data.Items);
+                    setUsersPost(posts);
+                } else {
+                    setPostMsg('Not answered yet');
+                }
+            })
         }
     }, []);
 
