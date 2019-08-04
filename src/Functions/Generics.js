@@ -77,7 +77,9 @@ export function getDate() {
     return nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate();
 }
 
-export async function s3UrlToText(key) {
-    console.log('s3 key ', key);
-
+export function getDate1(date) {
+    let dateString = new Date(parseInt(date));
+    dateString = new Date(dateString).toUTCString();
+    dateString = dateString.split(' ').slice(0, 4).join(' ');
+    return dateString;
 }

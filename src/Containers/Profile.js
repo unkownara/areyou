@@ -249,10 +249,10 @@ export default function Profile(props) {
                                                 userPosts.map((data, index) =>
                                                     <WallPost
                                                         path={data.path}
-                                                        liked={true}
-                                                        likesCount={`1.2 k`}
-                                                        userName={`Aravind Manoharan`}
-                                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                                                        likesCount={data.likes}
+                                                        userName={data.userName}
+                                                        uploadDate={data.createdOn}
+                                                        postId={data.postId}
                                                     />
                                                 )
                                                 :
@@ -264,7 +264,7 @@ export default function Profile(props) {
                                         }
                                     </Fragment>
                                     :
-                                    <ContentLoader count={5} />
+                                    <DotLoader />
                             }
                             <SkipWrapper>
                                 <OR>or</OR>

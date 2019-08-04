@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import ContentLoader from './ContentLoader';
-import { getRandomColor } from '../Functions/Generics';
+import {getDate1, getRandomColor} from '../Functions/Generics';
 import { user_post_delete_url, user_post_edit_url, user_post_like_url } from '../backend/Apis';
 import { postApiRequestCall } from "../backend/ApiRequests";
 
@@ -227,7 +227,7 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
         setShowAnim(true);
         setTimeout(() => {
             setShowAnim(false);
-        }, 400)
+        }, 400);
 
         import('../backend/ApiRequests').then(obj => {
             let payload = {
@@ -320,7 +320,7 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
                             </ProfileImageWrapper>
                             <ProfileDetailsWrapper>
                                 <ProfileName>{userName}</ProfileName>
-                                <UploadDate>{uploadDate}</UploadDate>
+                                <UploadDate>{getDate1(uploadDate)}</UploadDate>
                             </ProfileDetailsWrapper>
                         </ProfileWrapper>
                         <YesNoWrapper>

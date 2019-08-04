@@ -155,13 +155,6 @@ function Wall({ props }) {
         }
     };
 
-    function getDate1(date) {
-        var dateString = new Date(parseInt(date));
-        dateString = new Date(dateString).toUTCString();
-        dateString = dateString.split(' ').slice(0, 4).join(' ');
-        return dateString;
-    }
-
     useEffect(() => {
         props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
     }, [props.location.state])
@@ -175,7 +168,7 @@ function Wall({ props }) {
             }
             {
                 posts && posts.length && questionResponse.qId !== '' ?
-                    <Suspense fallback={<ContentLoader count={1} />}>
+                    <Suspense fallback={<DotLoader />}>
                         <Fragment>
                             <WallContainer>
                                 <WallWrapper>
@@ -187,7 +180,7 @@ function Wall({ props }) {
                                                 liked={false}
                                                 likesCount={data.likes}
                                                 userName={data.userName}
-                                                uploadDate={getDate1(data.createdOn)}
+                                                uploadDate={data.createdOn}
                                                 postId={data.postId}
                                             />
                                         )
@@ -211,7 +204,7 @@ function Wall({ props }) {
                             </WallContainer>
                         </Fragment>
                     </Suspense>
-                    : <ContentLoader count={5} />
+                    : <DotLoader />
             }
             <SnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
         </Fragment>
