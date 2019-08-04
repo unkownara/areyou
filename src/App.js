@@ -16,28 +16,13 @@ const AppWrapper = styled.div`
   height: 100%;
 `
 
-function App() {
-
-    const [isUserLogged, setIsUserLogged] = useState(false);
-
-    useEffect(() => {
-        if (cookie.load('__u_id__')) {
-            setIsUserLogged(true);
-        } else {
-            setIsUserLogged(false);
-            // history.push('/login');
-        }
-    }, []);
-
-    useEffect(() => {
-        console.log('data from signup ');
-    });
-
+function App(props) {
+    
     return (
         <Suspense fallback={<></>}>
             <Fragment>
                 <AppWrapper>
-                    <WallPage />
+                    <WallPage props={props} />
                 </AppWrapper>
             </Fragment>
         </Suspense>
