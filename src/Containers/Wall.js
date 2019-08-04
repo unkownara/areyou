@@ -5,10 +5,13 @@ import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
 
 import SnackBar from '../Components/SnackBar';
-import history from '../history';
 import Header from '../Components/Header';
+import DotLoader from '../Components/DotLoader';
+
+import More from '../Images/more.png';
 
 const WallPost = lazy(() => import('../Components/Post'));
+
 
 const WallContainer = styled.div`
     padding: 20px;
@@ -19,26 +22,40 @@ const WallWrapper = styled.div`
 `
 
 const LoadMore = styled.div`
-    background: #09198A;
-    height: ${props => props.login ? '60px' : '40px'};
-    vertical-align: middle;
-    line-height: 40px;
-    width: 300px;
+    width: 200px;
     text-align: center;
     padding: 0 10px;
     border-radius: 5px;
-    color: #fff;
+    color: #09198A;
     font-weight: bold;
     margin: 20px auto;
     cursor: pointer;
     pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+
+    &>p{
+        margin: 5px;
+    }
 
     @media(max-width: 700px){
         cursor: default;
     }
 `
 
-const Ans = 'My parents did exactly that. They did not have any plan for me to come first in life. They just took things as  they came, eveling in the beautiful journey of teaching their child to talk and talk more. They did not compete with anyone nor did they push me to compete. I ambled along at my own pace, going from strength to strength as I moved up the classes. I was never a good student in school. In fact my class reports had begun to worry my teachers who were sensitive of their school’s reputation. So, when I got through my boards in the 1st Division, they were elated. I have never looked back since then! I completed my Masters in Social Work from the Tata Institute of Social Sciences, Mumbai and am currently pursuing a PhD in Social Work as a UGC JRF from Visva-Bharati University, the university set up by the poet Nobel Laureate Rabindranath Tagore in Santiniketan, West Bengal. I also teach BSW and MSW students at the university as part of my duties as a PhD Fellow. The beautiful irony is that I was not supposed to speak, but here I was, poised to make a living from speaking and teaching. Without the solid base in language that was prepared for me early in life, I am sure I would not have been able to make my own choices in life so naturally. So, though my parents didn’t plan for me to come first in life, things fell into place and worked out in the end.'
+const End = styled.div`
+    margin: 20px auto;
+    color: gray;
+    font-weight: bold;
+    text-align: center;
+`
+
+const LoadMoreIcon = styled.img`
+    height: 30px;
+    width: 30px;
+`
+
+const LoaderWrapper = styled.div`
+    margin-bottom: 30px;
+`
 
 function Wall() {
 
@@ -46,6 +63,8 @@ function Wall() {
     const [postApiDate, setPostApiDate] = useState(Date.now());
     const [posts, setPosts] = useState([]);
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
+    const [endOfPosts, setEndOfPosts] = useState(false);
+    const [postsLoading, setPostsLoading] = useState(false);
 
     function openSnackBar() {
         setOpen(true)
@@ -57,6 +76,7 @@ function Wall() {
 
     useEffect(() => {
         if (questionResponse.qId !== '') {
+            setPostsLoading(true);
             let params = {
                 date: postApiDate,
                 questionId: questionResponse.qId
@@ -64,14 +84,16 @@ function Wall() {
             getApiRequestCall(user_post_url, params, function (response) {
                 try {
                     if (response && response.data && response.data.Items && response.data.Items.length > 0) {
-                        console.log('response value ', response.data.Items);
                         let newPosts = posts.length === 0 ? response.data.Items : posts.concat(response.data.Items);
-                        console.log('new posts ', newPosts);
+                        setPostsLoading(false);
                         setPosts(newPosts);
                     } else {
                         console.log('No posts are available');
+                        setPostsLoading(false);
+                        setEndOfPosts(true);
                     }
                 } catch (e) {
+                    setPostsLoading(false);
                     console.log('Something went wrong', e);
                 }
             });
@@ -107,16 +129,16 @@ function Wall() {
         <Fragment>
             <Header openSnackBar={openSnackBar} />
             {
-                questionResponse.qId !== '' ?
-                    <Suspense fallback={<>Loading </>}>
+                posts && posts.length && questionResponse.qId !== '' ?
+                    <Suspense fallback={<DotLoader />}>
                         <Fragment>
                             <WallContainer>
                                 <WallWrapper>
                                     {
-                                        posts.map((data, index) =>
+                                        posts.map((data) =>
                                             <WallPost
                                                 key={data.postId}
-                                                answer={Ans}
+                                                answer={'zexrcytfvgybihunjimkijnohibyguvtfycrdxetdrcyfvtugbyihnuojimnhubgyvutfycdrfvtugybihnojimponhuibyguvftycdrtxedcryfvutgbyihnuojinhubiyguvtfycrdxestdcryfvtugbyihnjjkdnjidkbbeibjdfreifbruehgfbrhegfbrfehgbrhfgbrehgbyurehgfbvu fgbreuvbry'}
                                                 liked={false}
                                                 likesCount={data.likes}
                                                 userName={data.userName}
@@ -125,50 +147,28 @@ function Wall() {
                                             />
                                         )
                                     }
-                                    {/*<WallPost*/}
-                                    {/*    answer={Ans}*/}
-                                    {/*    liked={false}*/}
-                                    {/*    likesCount={1}*/}
-                                    {/*    userName={`Aravind Manoharan`}*/}
-                                    {/*    uploadDate={getDate(1564849054294)}*/}
-                                    {/*    postId={'0J1Cs4RRnU'}*/}
-                                    {/*/>*/}
-                                    {/*<WallPost*/}
-                                    {/*    answer={Ans}*/}
-                                    {/*    liked={true}*/}
-                                    {/*    likesCount={`1.2 k`}*/}
-                                    {/*    userName={`Aravind Manoharan`}*/}
-                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
-                                    {/*/>*/}
-                                    {/*<WallPost*/}
-                                    {/*    answer={Ans}*/}
-                                    {/*    liked={true}*/}
-                                    {/*    likesCount={`1.2 k`}*/}
-                                    {/*    userName={`Aravind Manoharan`}*/}
-                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
-                                    {/*/>*/}
-                                    {/*<WallPost*/}
-                                    {/*    answer={Ans}*/}
-                                    {/*    liked={true}*/}
-                                    {/*    likesCount={`1.2 k`}*/}
-                                    {/*    userName={`Aravind Manoharan`}*/}
-                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
-                                    {/*/>*/}
-                                    {/*<WallPost*/}
-                                    {/*    answer={Ans}*/}
-                                    {/*    liked={true}*/}
-                                    {/*    likesCount={`1.2 k`}*/}
-                                    {/*    userName={`Aravind Manoharan`}*/}
-                                    {/*    uploadDate={'May 23rd, 2019 at 3:57 PM'}*/}
-                                    {/*/>*/}
-                                    <LoadMore onClick={loadMoreHandler}>Load more</LoadMore>
+                                    {
+                                        postsLoading ?
+                                            <LoaderWrapper>
+                                                <DotLoader height={'10px'} />
+                                            </LoaderWrapper>
+                                            :
+                                            endOfPosts ?
+                                                <End>End of posts.</End>
+                                                :
+                                                posts && posts.length ?
+                                                    <LoadMore onClick={loadMoreHandler}>
+                                                        <LoadMoreIcon src={More} />
+                                                        <p>Load more</p>
+                                                    </LoadMore> : null
+                                    }
                                 </WallWrapper>
                             </WallContainer>
                         </Fragment>
                     </Suspense>
-                    : <>Loading...</>
+                    : <DotLoader />
             }
-            {/*<SnackBar open={open} handleClose={handleClose} />*/}
+            <SnackBar open={open} handleClose={handleClose} />
         </Fragment>
     );
 }

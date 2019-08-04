@@ -8,7 +8,7 @@ import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
 import { user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
-import SnackBar from '../Components/Header';
+import SnackBar from '../Components/SnackBar';
 
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
