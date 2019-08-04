@@ -13,6 +13,7 @@ import SnackBar from '../Components/SnackBar';
 
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
+import DotLoader from '../Components/DotLoader';
 
 
 const LiftUp = keyframes`
@@ -73,7 +74,7 @@ const Email = styled.div`
 `
 
 const HR = styled.div`
-    margin: 10px auto 30px auto;
+    margin: 10px auto 20px auto;
     border-bottom: 1px solid #D0D0D0;
 `
 
@@ -84,6 +85,7 @@ const Info = styled.div`
     letter-spacing: 1px;
     font-size: 14px;
     text-align: center;
+    margin-bottom: 30px;
 
     @media(max-width: 700px){
         width: 100%;
@@ -153,6 +155,7 @@ export default function Profile(props) {
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
     const [open, setOpen] = useState(false);
+    const [loadingPosts, setLoadingPosts] = useState(false)
 
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
@@ -183,11 +186,13 @@ export default function Profile(props) {
         let params = {
             userId: uId
         };
+        setLoadingPosts(true);
         getApiRequestCall(user_profile_url, params, function (response) {
             if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                 response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
                 let posts = userPosts.concat(response.data.Items);
                 setUsersPost(posts);
+                setLoadingPosts(false);
             } else {
                 setPostMsg('Not answered yet');
             }
@@ -232,25 +237,38 @@ export default function Profile(props) {
                             <Email>{userInfo.userId || ''}</Email>
                             <HR />
                             {
-                                userPosts && userPosts.length > 0 ?
-                                    userPosts.map((data, index) =>
-                                        <WallPost
-                                            path={data.path}
-                                            liked={true}
-                                            likesCount={`1.2 k`}
-                                            userName={`Aravind Manoharan`}
-                                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                        />
-                                    )
-                                    :
+                                !loadingPosts ?
                                     <Fragment>
-                                        <ImageWrapper>
-                                            <NoDataIcon src={Login} />
-                                        </ImageWrapper>
-                                        {/* <Info>No Answers</Info> */}
+                                        <Info>
+                                            {
+                                                userInfo && uId === userInfo.userId ?
+                                                    userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`
+                                                    :
+                                                    userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
+                                            }
+                                        </Info>
+                                        {
+                                            userPosts && userPosts.length > 0 ?
+                                                userPosts.map((data, index) =>
+                                                    <WallPost
+                                                        path={data.path}
+                                                        liked={true}
+                                                        likesCount={`1.2 k`}
+                                                        userName={`Aravind Manoharan`}
+                                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                                                    />
+                                                )
+                                                :
+                                                <Fragment>
+                                                    <ImageWrapper>
+                                                        <NoDataIcon src={Login} />
+                                                    </ImageWrapper>
+                                                </Fragment>
+                                        }
                                     </Fragment>
+                                    :
+                                    <DotLoader height={'30px'} />
                             }
-                            <Info>{userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
                             <SkipWrapper>
                                 <OR>or</OR>
                                 <SkipToAnswers origin={'Profile Page'} />

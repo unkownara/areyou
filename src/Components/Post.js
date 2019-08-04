@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
+import ContentLoader from './ContentLoader';
 import {getRandomColor, s3UrlToText} from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
 
@@ -73,6 +74,7 @@ const Answer = styled.div`
     margin: 20px 0 0 0;
     letter-spacing: 0.5px;
     line-height: 22px;
+    padding-left: 10px;
     text-align: left;
     word-break: break-word;
     font-family: 'Raleway', sans-serif;
