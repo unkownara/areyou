@@ -148,7 +148,7 @@ const UserIcon = styled.img`
     }
 `
 
-export default function Header() {
+export default function Header({ openSnackBar }) {
 
     const [userInfo, setUserInfo] = useState(null);
 
@@ -164,17 +164,17 @@ export default function Header() {
         });
     }
 
+    function redirectToWallPage() {
+        history.push('/');
+    }
+
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            // history.push('/login');
         } else {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
         }
     }, []);
 
-    function redirectToWallPage() {
-        history.push('/');
-    }
 
     return (
         <Headroom>
@@ -182,10 +182,11 @@ export default function Header() {
                 <AppName onClick={redirectToWallPage}>Are You</AppName>
                 <Wrapper>
                     <LogoWrapper>
-                        <AnswerTrigger onClick={redirectToQnAPage}>Answer</AnswerTrigger>
+                        <AnswerTrigger
+                            onClick={(userInfo !== undefined && userInfo !== null) ? redirectToQnAPage : openSnackBar}>Answer</AnswerTrigger>
                         <ProfileName onClick={redirectToProfilePage}>
                             {
-                                userInfo ?
+                                userInfo !== undefined && userInfo !== null ?
                                     <Fragment>
                                         <ProfileImage
                                             bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>

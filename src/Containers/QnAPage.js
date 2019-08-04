@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
 
-import history from "../history";
+import SnackBar from '../Components/Header';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid, getDate } from '../Functions/Generics';
@@ -126,7 +126,7 @@ const Info = styled.div`
     letter-spacing: 0.5px;
 `
 
-function QnAPage(props) {
+function QnAPage() {
 
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [userInfo, setUserInfo] = useState(null);
@@ -134,8 +134,17 @@ function QnAPage(props) {
     const [yesSelected, setYesSelected] = useState(false);
     const [noSelected, setNoSelected] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const [open, setOpen] = useState(false);
 
     const answerInput = useInput('');
+
+    function openSnackBar() {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
@@ -216,7 +225,7 @@ function QnAPage(props) {
 
     return (
         <Fragment>
-            <Header />
+            <Header openSnackBar={openSnackBar} />
             {
                 userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '' ?
                     <QnAContainer>
@@ -250,9 +259,9 @@ function QnAPage(props) {
                     :
                     <p>Loading</p>
             }
+            <SnackBar open={open} handleClose={handleClose} />
         </Fragment>
     );
-
 }
 
 export default QnAPage;

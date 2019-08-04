@@ -1,7 +1,6 @@
-import React, { Suspense, lazy, useState, useEffect, Fragment } from 'react';
+import React, { Suspense, lazy, Fragment } from 'react';
 import history from './history';
 import { Router, Switch, Route } from 'react-router';
-import Header from './Components/Header';
 
 const App = lazy(() => import('./App'));
 const Login = lazy(() => import('./Containers/Login'));
@@ -10,8 +9,6 @@ const QnAPage = lazy(() => import('./Containers/QnAPage'));
 const Profile = lazy(() => import('./Containers/Profile'));
 
 function Routers() {
-
-
     return (
         <Fragment>
             <Router history={history}>

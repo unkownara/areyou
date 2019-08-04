@@ -4,6 +4,7 @@ import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
 
+import SnackBar from '../Components/SnackBar';
 import history from '../history';
 import Header from '../Components/Header';
 
@@ -41,9 +42,18 @@ const Ans = 'My parents did exactly that. They did not have any plan for me to c
 
 function Wall() {
 
+    const [open, setOpen] = useState(false);
     const [postApiDate, setPostApiDate] = useState(Date.now());
     const [posts, setPosts] = useState([]);
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
+
+    function openSnackBar() {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         if (questionResponse.qId !== '') {
@@ -93,10 +103,9 @@ function Wall() {
         return dateString;
     }
 
-
     return (
         <Fragment>
-            <Header />
+            <Header openSnackBar={openSnackBar} />
             {
                 questionResponse.qId !== '' ?
                     <Suspense fallback={<>Loading </>}>
@@ -146,8 +155,8 @@ function Wall() {
                     </Suspense>
                     : <>Loading...</>
             }
+            <SnackBar open={open} handleClose={handleClose} />
         </Fragment>
     );
-
 }
 export default Wall;

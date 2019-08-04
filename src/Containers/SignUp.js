@@ -217,15 +217,6 @@ function SignUp() {
                 setNameErrorMsg('Enter correct name')
             }
         }
-        // Number validation
-        if (
-            !phone.value.match(/^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$/) ||
-            phone.value.length !== 10
-        ) {
-            errFlag = false;
-            setPhoneErrorMsg('Invalid number')
-        }
-
 
         // Email Validation
         let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -335,6 +326,7 @@ function SignUp() {
                     <Input
                         {...name}
                         placeholder={'Name'}
+                        onKeyPress={(e) => enterPressed(e)}
                     />
                     {
                         nameErrorMsg.length ?
@@ -346,6 +338,7 @@ function SignUp() {
                     <Input
                         {...email}
                         placeholder={'Email'}
+                        onKeyPress={(e) => enterPressed(e)}
                     />
                     {
                         emailErrorMsg.length ?
@@ -358,6 +351,7 @@ function SignUp() {
                         {...phone}
                         type="number"
                         placeholder={'Phone (Optional)'}
+                        onKeyPress={(e) => enterPressed(e)}
                     />
                     {
                         phoneErrorMsg.length ?
@@ -372,7 +366,7 @@ function SignUp() {
                         type={showPass ? 'text' : 'password'}
                         autoComplete="off"
                         placeholder="Password"
-                        onKeyPress={(e) => enterPressed(e, 'password')}
+                        onKeyPress={(e) => enterPressed(e)}
                     />
                     {
                         !passwordErrorMsg.length ?
