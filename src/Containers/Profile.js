@@ -2,10 +2,11 @@ import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 
 import history from '../history';
+import Header from '../Components/Header';
 import { getRandomColor } from '../Functions/Generics';
 import WallPost from '../Components/Post';
-import {getApiRequestCall} from '../backend/ApiRequests';
-import {user_profile_url} from "../backend/Apis";
+import { getApiRequestCall } from '../backend/ApiRequests';
+import { user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 
 import Login from '../Images/login.png';
@@ -143,8 +144,8 @@ export default function Profile() {
                 userId: uInfo.userId
             };
             getApiRequestCall(user_profile_url, params, function (response) {
-                if(response && response.data && response.data.Items && response.data.Items.length > 0) {
-                    response.data.Items.sort((a,b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
+                if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                    response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
                     let posts = userPosts.concat(response.data.Items);
                     setUsersPost(posts);
                 } else {
@@ -163,57 +164,54 @@ export default function Profile() {
         history.push('/login');
     }
 
-    if (userInfo !== undefined && userInfo !== null) {
-        const userName = userInfo.userName;
-        const userEmail = userInfo.userId;
-        return (
-            <Fragment>
-                <ProfileContainer>
-                    <ProfileWrapper>
-                        <ImageWrapper>
-                            <ProfileImage bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                        </ImageWrapper>
-                        <ProfileName>{userName || 'User'}</ProfileName>
-                        <Email>{userEmail || ''}</Email>
-                        <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
-                        <SkipWrapper>
-                            <OR>or</OR>
-                            <SkipToAnswers />
-                        </SkipWrapper>
-                        <HR />
-                        {
-                            answers && answers.length ?
-                                <WallPost
-                                    answer={'Ans'}
-                                    liked={true}
-                                    likesCount={`1.2 k`}
-                                    userName={`Aravind Manoharan`}
-                                    uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                />
-                                :
-                                <Fragment>
-                                    <ImageWrapper>
-                                        <NoDataIcon src={NoData} />
-                                    </ImageWrapper>
-                                    <Info>No Answers</Info>
-                                </Fragment>
-                        }
-                        <Button onClick={logout}>Logout</Button>
-                    </ProfileWrapper>
-                </ProfileContainer>
-            </Fragment>
-        );
-    } else {
-        return (
+
+    return (
+        <Fragment>
+            <Header />
             <ProfileContainer>
-                <LoginWrapper>
-                    <ImageWrapper>
-                        <NoDataIcon src={Login} />
-                    </ImageWrapper>
-                    <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question or to like/unlike other answers, you have to login.</Info>
-                    <Button onClick={redirectToLoginPage}>Login</Button>
-                </LoginWrapper>
+                {
+                    userInfo !== undefined && userInfo !== null ?
+                        <ProfileWrapper>
+                            <ImageWrapper>
+                                <ProfileImage bg={getRandomColor(userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo.userName.substring(0, 1)}</ProfileImage>
+                            </ImageWrapper>
+                            <ProfileName>{userInfo.userName || 'User'}</ProfileName>
+                            <Email>{userInfo.userId || ''}</Email>
+                            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
+                            <SkipWrapper>
+                                <OR>or</OR>
+                                <SkipToAnswers />
+                            </SkipWrapper>
+                            <HR />
+                            {
+                                answers && answers.length ?
+                                    <WallPost
+                                        answer={'Ans'}
+                                        liked={true}
+                                        likesCount={`1.2 k`}
+                                        userName={`Aravind Manoharan`}
+                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                                    />
+                                    :
+                                    <Fragment>
+                                        <ImageWrapper>
+                                            <NoDataIcon src={NoData} />
+                                        </ImageWrapper>
+                                        <Info>No Answers</Info>
+                                    </Fragment>
+                            }
+                            <Button onClick={logout}>Logout</Button>
+                        </ProfileWrapper>
+                        :
+                        <LoginWrapper>
+                            <ImageWrapper>
+                                <NoDataIcon src={Login} />
+                            </ImageWrapper>
+                            <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question or to like/unlike other answers, you have to login.</Info>
+                            <Button onClick={redirectToLoginPage}>Login</Button>
+                        </LoginWrapper>
+                }
             </ProfileContainer>
-        )
-    }
+        </Fragment>
+    );
 }

@@ -259,9 +259,9 @@ function Login() {
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__',JSON.stringify(response.data.Items[0]));
                             history.push({
-                                pathname: '/qns',
-                                search: `wall?u_id=${makeid(6)}`,
-                                state: { detail: response.data.Items[0] }
+                                pathname: '/wall',
+                                // search: `wall?u_id=${makeid(6)}`,
+                                // state: { detail: response.data.Items[0] }
                             });
                             setVerifyingCredentials(false);
                         } else if (response.data === "incorrect password") {
