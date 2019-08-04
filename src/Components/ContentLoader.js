@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const PlaceHolderShimmer = keyframes`
@@ -46,7 +46,6 @@ const ProfileNameWrapper = styled.div`
     grid-template-columns: 1fr 4fr;
     grid-gap: 10px;
 `
-
 
 const Avatar = styled.div`
     height: 45px;
