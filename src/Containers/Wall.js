@@ -35,7 +35,7 @@ const WallContainer = styled.div`
 `
 
 const WallWrapper = styled.div`
-    margin-top: 30px;
+    margin-top: 50px;
 `
 
 const LoadMore = styled.div`
