@@ -30,14 +30,14 @@ function TransitionUp(props) {
     return <Slide {...props} direction="up" />;
 }
 
-export default function DirectionSnackbar({ open, handleClose }) {
+export default function DirectionSnackbar({ open, handleClose, origin }) {
 
     const [transition, setTransition] = useState(undefined);
 
     useEffect(() => {
         setTransition(() => TransitionUp);
     }, [])
-    
+
     return (
         <Snackbar
             id="snackbarLoginTiggerr"
@@ -49,7 +49,7 @@ export default function DirectionSnackbar({ open, handleClose }) {
             ContentProps={{
                 'aria-describedby': 'message-id',
             }}
-            message={<Button onClick={() => {history.push('/login')}}>Please Login!</Button>}
+            message={<Button onClick={() => { history.push('/login') }}>Please Login!</Button>}
         />
     );
 }

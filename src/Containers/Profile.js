@@ -4,10 +4,10 @@ import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
 import history from '../history';
 import Header from '../Components/Header';
-import {getRandomColor, s3UrlToText} from '../Functions/Generics';
+import { getRandomColor, s3UrlToText } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import { user_profile_url} from "../backend/Apis";
+import { user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import SnackBar from '../Components/SnackBar';
 
@@ -219,7 +219,7 @@ export default function Profile(props) {
 
     return (
         <Fragment>
-            <Header openSnackBar={openSnackBar}/>
+            <Header openSnackBar={openSnackBar} />
             <ProfileContainer>
                 {
                     userInfo !== undefined && userInfo !== null ?
@@ -253,7 +253,7 @@ export default function Profile(props) {
                             <Info>{userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
                             <SkipWrapper>
                                 <OR>or</OR>
-                                <SkipToAnswers />
+                                <SkipToAnswers origin={'Profile Page'} />
                             </SkipWrapper>
                             <Button onClick={logout}>Logout</Button>
                         </ProfileWrapper>
@@ -268,7 +268,7 @@ export default function Profile(props) {
                         </LoginWrapper>
                 }
             </ProfileContainer>
-            <SnackBar open={open} handleClose={handleClose}/>
+            <SnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />
         </Fragment>
     );
 }

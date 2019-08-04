@@ -53,9 +53,10 @@ const Question = styled.p`
     font-size: 22px;
     font-weight: 500;
     width: 100%;
-    letter-spacing: 0.22px;
+    letter-spacing: 0.5px;
     line-height: 29px;
     word-break: break-word;
+    font-family: 'Raleway', sans-serif;
 `
 
 const AnswerInput = styled.textarea`
@@ -342,13 +343,13 @@ function QnAPage() {
                             </Button>
                             <ErrMsg>{errorMsg}</ErrMsg>
                             <OR>or</OR>
-                            <SkipToAnswers />
+                            <SkipToAnswers origin={'QnA Page'} />
                         </QnAWrapper>
                     </QnAContainer>
                     :
                     <DotLoader />
             }
-            <SnackBar open={open} handleClose={handleClose} />
+            <SnackBar open={open} handleClose={handleClose} origin={'QnA Page'} />
         </Fragment>
     );
 }

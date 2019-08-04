@@ -399,7 +399,7 @@ function SignUp() {
             </Button>
             <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
             <OR>or</OR>
-            <SkipToAnswers />
+            <SkipToAnswers origin={'Sign Up Page'} />
         </SignUpWrapper>
     );
 }

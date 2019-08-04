@@ -357,7 +357,7 @@ function Login() {
             </Button>
             <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
-            <SkipToAnswers />
+            <SkipToAnswers origin={'Login Page'} />
         </LoginWrapper>
     );
 }

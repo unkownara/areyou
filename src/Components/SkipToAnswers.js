@@ -44,9 +44,14 @@ const Skip = styled.div`
     }
 `
 
-export default function SkipToAnswers() {
+export default function SkipToAnswers({ origin }) {
+
+    function redirectToWall() {
+        history.push("/")
+    }
+
     return (
-        <SkipWrapper onClick={() => { history.push("/") }}>
+        <SkipWrapper onClick={redirectToWall}>
             <Skip>Skip to see answers</Skip>
             <LeftIconWrapper>
                 <LeftIcon src={Left} />
