@@ -154,7 +154,7 @@ export default function Header({ openSnackBar }) {
 
     function redirectToQnAPage() {
         history.push({
-            pathname: '/qns'
+            pathname: '/qna'
         });
     }
 

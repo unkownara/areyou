@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import styled, {keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { getRandomColor } from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
@@ -8,6 +8,8 @@ import Like from '../Images/like.png';
 import UnLike from '../Images/unlike.png';
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
+import Clap from '../Images/clap.png';
+import UnClap from '../Images/unclap.png';
 
 const LiftUp = keyframes`
     0% {
@@ -118,13 +120,27 @@ const PostOptionsWrapper = styled.div`
 const LikeIconWrapper = styled.div`
     display: flex;
     justify-content: flex-start;
-    align-items: center;`
+    align-items: center;
+    
+    &>div:nth-child(1){
+        background: ${props => props.anim ? "#BBFFD9" : "FFF"};
+        border-radius: 50%;
+        height: 38px;
+        width: 38px;
+        display: flex;
+        justify-content: center;
+        align-items: center;    
+        transition: all 0.15s ease-in-out;
+    }
+`
 
 const LikeIcon = styled.img`
     height: 25px;
     width: 25px;
     cursor: pointer;
-
+    transform: ${props => props.anim ? 'scale(1.1)' : 'scale(1)'};   
+    transition: all 0.15s ease-in-out;
+    
     @media(max-width: 700px){
         cursor: default;
     }
@@ -190,6 +206,8 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
+    const [likedByUser, setLikedByUser] = useState(false);
+    const [showAnim, setShowAnim] = useState(false);
 
     function showFullAnswer() {
         setShowMore(true)
@@ -201,6 +219,12 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
 
     const likeAnswer = () => {
         setLike(like => like + 1);
+        setLikedByUser(true);
+        setShowAnim(true);
+        setTimeout(() => {
+            setShowAnim(false);
+        }, 400)
+
         import('../backend/ApiRequests').then(obj => {
             let payload = {
                 postId: postId,
@@ -249,13 +273,16 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                         <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
                 }
                 <PostOptionsWrapper>
-                    <LikeIconWrapper>
-                        <LikeIcon
-                            onClick={likeAnswer}
-                            src={liked ? Like : UnLike}
-                            alt={'Like'}
-                        />
-                        <LikesCount><span>{like}</span> people liked this answer.</LikesCount>
+                    <LikeIconWrapper anim={showAnim}>
+                        <div>
+                            <LikeIcon
+                                anim={showAnim}
+                                onClick={likeAnswer}
+                                src={liked || likedByUser ? Clap : UnClap}
+                                alt={'Like'}
+                            />
+                        </div>
+                        <LikesCount><span>{like}</span> people clapped to this answer.</LikesCount>
                     </LikeIconWrapper>
                 </PostOptionsWrapper>
             </Post>

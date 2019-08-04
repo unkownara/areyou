@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
+import ReactGA from 'react-ga';
 
 import history from '../history';
 import Header from '../Components/Header';
@@ -153,6 +154,11 @@ export default function Profile() {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/profile');
+    }, [])
+
+    useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
         } else {
             const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
@@ -181,6 +187,10 @@ export default function Profile() {
     }
 
     function logout() {
+        ReactGA.event({
+            category: 'Authentication',
+            action: 'Logout clicked'
+        });
         localStorage.setItem('__u_info__', null);
         window.location.href = '/';
     }

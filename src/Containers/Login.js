@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from "react-cookies";
+import ReactGA from 'react-ga';
 
 import { useInput } from "../Components/hooks";
 import { user_info_url } from '../backend/Apis';
@@ -208,6 +209,11 @@ function Login() {
     const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
     const [verifyingCredentials, setVerifyingCredentials] = useState(false);
     const passswordRef = useRef(null);
+
+    useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/login');
+    }, [])
 
     function ValidateEmailAndPassword() {
 
