@@ -1,5 +1,7 @@
 import React, { useEffect, useState, lazy, Fragment, Suspense } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import ReactGA from 'react-ga';
+
 import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
@@ -12,9 +14,23 @@ import More from '../Images/more.png';
 
 const WallPost = lazy(() => import('../Components/Post'));
 
+const LiftUp = keyframes`
+    0% {
+        opacity: 0;
+        transform: translate(0%, 20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0%, 0px);
+    }
+`
 
 const WallContainer = styled.div`
     padding: 20px;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 const WallWrapper = styled.div`
@@ -57,7 +73,21 @@ const LoaderWrapper = styled.div`
     margin-bottom: 30px;
 `
 
-function Wall() {
+const Info = styled.div`
+    border: 1px solid #09198A;
+    border-radius: 5px;
+    width: max-content;
+    word-break: break-word;
+    padding: 15px;
+    color: #09198A;
+    font-weight: 16px;
+    margin: 40px auto 20px auto;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+`
+
+function Wall({ props }) {
 
     const [open, setOpen] = useState(false);
     const [postApiDate, setPostApiDate] = useState(Date.now());
@@ -65,14 +95,20 @@ function Wall() {
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
 
     function openSnackBar() {
         setOpen(true)
     }
 
-    const handleClose = () => {
+    function handleClose() {
         setOpen(false);
     };
+
+    useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/');
+    }, [])
 
     useEffect(() => {
         if (questionResponse.qId !== '') {
@@ -125,9 +161,17 @@ function Wall() {
         return dateString;
     }
 
+    useEffect(() => {
+        props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
+    }, [props.location.state])
+
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} />
+            {
+                showInfo ?
+                    <Info>Your answer has been successfully shared.</Info> : null
+            }
             {
                 posts && posts.length && questionResponse.qId !== '' ?
                     <Suspense fallback={<DotLoader />}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import styled from 'styled-components';
-import * as qs from 'query-string';
+import styled, { keyframes } from 'styled-components';
+import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
 import history from '../history';
 import Header from '../Components/Header';
@@ -14,8 +14,24 @@ import SnackBar from '../Components/SnackBar';
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
 
+
+const LiftUp = keyframes`
+    0% {
+        opacity: 0;
+        transform: translate(0%, 20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0%, 0px);
+    }
+`
+
 const ProfileContainer = styled.div`
     padding: 20px;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 const ProfileWrapper = styled.div`
@@ -139,13 +155,27 @@ export default function Profile(props) {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        console.log('user id', uId);
-    });
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/profile');
+    }, [])
 
     useEffect(() => {
-        const userInfo = JSON.parse(localStorage.getItem('__u_info__'));
-        if(userInfo) {
-            setUserInfo(userInfo);
+        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
+        } else {
+            const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
+            setUserInfo(uInfo);
+            let params = {
+                userId: uInfo.userId
+            };
+            getApiRequestCall(user_profile_url, params, function (response) {
+                if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                    response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
+                    let posts = userPosts.concat(response.data.Items);
+                    setUsersPost(posts);
+                } else {
+                    setPostMsg('Not answered yet');
+                }
+            })
         }
     }, [uId]);
 
@@ -173,6 +203,10 @@ export default function Profile(props) {
     }
 
     function logout() {
+        ReactGA.event({
+            category: 'Authentication',
+            action: 'Logout clicked'
+        });
         localStorage.setItem('__u_info__', null);
         cookie.remove('__u_id__');
         window.location.href = '/';

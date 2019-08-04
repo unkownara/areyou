@@ -6,13 +6,13 @@ const AppWrapper = styled.div`
   height: 100%;
 `
 
-function App() {
-
+function App(props) {
+    
     return (
         <Suspense fallback={<></>}>
             <Fragment>
                 <AppWrapper>
-                    <WallPage />
+                    <WallPage props={props} />
                 </AppWrapper>
             </Fragment>
         </Suspense>

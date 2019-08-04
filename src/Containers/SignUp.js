@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
+import ReactGA from 'react-ga';
 
 import { useInput } from '../Components/hooks';
 import SkipToAnswers from '../Components/SkipToAnswers';
@@ -203,6 +204,11 @@ function SignUp() {
     const [verifyingCredentials, setVerifyingCredentials] = useState(false);
     const passswordRef = useRef(null);
 
+    useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/signup');
+    }, [])
+
     function ValidateSignUpFields() {
 
         let errFlag = false;
@@ -268,7 +274,7 @@ function SignUp() {
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__', JSON.stringify(payload));
                             history.push({
-                                pathname: '/qns',
+                                pathname: '/qna',
                                 search: `wall?u_id=${makeid(6)}`,
                                 state: { detail: payload }
                             });

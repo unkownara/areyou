@@ -1,8 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import AWS from 'aws-sdk';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
-import history from "../history";
+import ReactGA from 'react-ga';
+
+import history from '../history';
 import SnackBar from '../Components/SnackBar';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
@@ -14,8 +16,23 @@ import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
 import { user_post_url, user_question_url } from '../backend/Apis';
 
+
+const LiftUp = keyframes`
+    0% {
+        opacity: 0;
+        transform: translate(0%, 20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0%, 0px);
+    }
+`
 const QnAContainer = styled.div`
     padding: 20px;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 const QnAWrapper = styled.div`
@@ -51,7 +68,7 @@ const AnswerInput = styled.textarea`
 
 const Button = styled.div`
     background: #09198A;
-    height: 40px;
+    height: ${props => props.submitting ? '60px' : '40px'};
     vertical-align: middle;
     line-height: 40px;
     width: 300px;
@@ -127,6 +144,47 @@ const Info = styled.div`
     letter-spacing: 0.5px;
 `
 
+const LoaderLine = keyframes`
+    0% {
+        margin-left: 0px;
+        width: 10px;
+    }
+
+    25% {
+        width: 30px;
+    }
+
+    50% {
+        width: 50px;
+    }
+
+    75% {
+        width: 30px;
+    }
+
+    100% {
+        margin-left: 260px;
+        width: 10px;
+    }
+`
+
+const LineLoader = styled.div`
+    width: 10px;
+    height: 5px;
+    border-radius: 30px;
+    background: white;
+    animation: ${LoaderLine} .7s alternate infinite ease-in-out;
+`
+
+const ErrMsg = styled.div`
+    color: red;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 0 auto 15px auto;
+
+
+`
+
 function QnAPage() {
 
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
@@ -136,8 +194,14 @@ function QnAPage() {
     const [noSelected, setNoSelected] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [open, setOpen] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     const answerInput = useInput('');
+
+    useEffect(() => {
+        ReactGA.initialize('UA-145111269-1');
+        ReactGA.pageview('/qna');
+    }, [])
 
     function openSnackBar() {
         setOpen(true)
@@ -176,10 +240,13 @@ function QnAPage() {
             setYesSelected(false);
             setNoSelected(true);
         }
+        setErrorMsg('')
     }
 
-    const onSubmit = () => {
+    const SubmitAnswer = () => {
         if (yesSelected || noSelected) {
+            setSubmitting(true);
+            setErrorMsg('')
             AWS.config = new AWS.Config();
             AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
             AWS.config.secretAccessKey = "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";
@@ -198,8 +265,8 @@ function QnAPage() {
             s3Bucket.putObject(s3Obj, function (err, data) {
                 if (err) {
                     console.log('Error message', err);
+                    setSubmitting(false);
                 } else {
-                    console.log('S3 upload successful', data);
                     import('../backend/ApiRequests').then(obj => {
                         let payload = {
                             postId: postId,
@@ -211,18 +278,28 @@ function QnAPage() {
                         obj.postApiRequestCall(user_post_url, payload, function (response) {
                             if (response.data === true) {
                                 setPostUploadStatus('success');
-                                history.push('/');
+                                setSubmitting(false);
+                                history.push({
+                                    pathname: '/',
+                                    state: { answerSubmitted: true }
+                                })
                             } else {
                                 setPostUploadStatus('failure');
+                                setSubmitting(false);
                             }
                         });
                     });
                 }
             });
         } else {
-            setErrorMsg('Please select yes or no');
+            setErrorMsg('Please select Yes or No.');
+            setSubmitting(false);
         }
     };
+
+    useEffect(() => {
+        setErrorMsg('')
+    }, [answerInput.value]);
 
 
     return (
@@ -252,8 +329,17 @@ function QnAPage() {
                                 rows={7}
                                 {...answerInput}
                             />
-                            <Button onClick={onSubmit}>Submit Answer</Button>
-                            {errorMsg}
+                            <Button
+                                onClick={SubmitAnswer}
+                                submitting={submitting}
+                            >
+                                <span>{!submitting ? "Submit Answer" : 'Submitting ...'}</span>
+                                {
+                                    submitting ?
+                                        <LineLoader /> : null
+                                }
+                            </Button>
+                            <ErrMsg>{errorMsg}</ErrMsg>
                             <OR>or</OR>
                             <SkipToAnswers />
                         </QnAWrapper>
