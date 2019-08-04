@@ -125,8 +125,8 @@ const LikeIconWrapper = styled.div`
     &>div:nth-child(1){
         background: ${props => props.anim ? "#BBFFD9" : "FFF"};
         border-radius: 50%;
-        height: 38px;
-        width: 38px;
+        height: 41px;
+        width: 41px;
         display: flex;
         justify-content: center;
         align-items: center;    
