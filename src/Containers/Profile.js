@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-
+import * as qs from 'query-string';
+import cookie from 'react-cookies';
 import history from '../history';
 import Header from '../Components/Header';
 import { getRandomColor } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import { user_profile_url } from "../backend/Apis";
+import {user_info_url, user_profile_url} from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import SnackBar from '../Components/SnackBar';
 
@@ -127,34 +128,41 @@ const LoginWrapper = styled.div`
     flex-direction: column;
 `
 
-export default function Profile() {
+export default function Profile(props) {
     // Api call for my answers
 
-    let answers = [];
     const [userInfo, setUserInfo] = useState(null);
+    const [uId, setUId] = useState((qs.parse(props.location.search)).u_id);
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-        } else {
-            const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
-            setUserInfo(uInfo);
-            let params = {
-                userId: uInfo.userId
-            };
-            getApiRequestCall(user_profile_url, params, function (response) {
-                if (response && response.data && response.data.Items && response.data.Items.length > 0) {
-                    response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
-                    let posts = userPosts.concat(response.data.Items);
-                    setUsersPost(posts);
-                } else {
-                    setPostMsg('Not answered yet');
-                }
-            })
+        console.log(uId);
+    });
+
+
+    useEffect(() => {
+        const userInfo = JSON.parse(localStorage.getItem('__u_info__'));
+        if(userInfo) {
+            setUserInfo(userInfo);
         }
-    }, []);
+    }, [uId]);
+
+    useEffect(() => {
+        let params = {
+            userId: uId
+        };
+        getApiRequestCall(user_profile_url, params, function (response) {
+            if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
+                let posts = userPosts.concat(response.data.Items);
+                setUsersPost(posts);
+            } else {
+                setPostMsg('Not answered yet');
+            }
+        })
+    }, [uId]);
 
     function openSnackBar() {
         setOpen(true)
@@ -166,6 +174,7 @@ export default function Profile() {
 
     function logout() {
         localStorage.setItem('__u_info__', null);
+        cookie.remove('__u_id__');
         window.location.href = '/';
     }
 
@@ -176,35 +185,38 @@ export default function Profile() {
 
     return (
         <Fragment>
-            <Header openSnackBar={openSnackBar} />
+            <Header openSnackBar={openSnackBar}/>
             <ProfileContainer>
                 {
                     userInfo !== undefined && userInfo !== null ?
                         <ProfileWrapper>
                             <ImageWrapper>
-                                <ProfileImage bg={getRandomColor(userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo.userName.substring(0, 1)}</ProfileImage>
+                                <ProfileImage
+                                    bg={getRandomColor(userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo.userName.substring(0, 1)}</ProfileImage>
                             </ImageWrapper>
                             <ProfileName>{userInfo.userName || 'User'}</ProfileName>
                             <Email>{userInfo.userId || ''}</Email>
-                            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
+                            <Info>{userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
                             <SkipWrapper>
                                 <OR>or</OR>
-                                <SkipToAnswers />
+                                <SkipToAnswers/>
                             </SkipWrapper>
-                            <HR />
+                            <HR/>
                             {
-                                answers && answers.length ?
-                                    <WallPost
-                                        answer={'Ans'}
-                                        liked={true}
-                                        likesCount={`1.2 k`}
-                                        userName={`Aravind Manoharan`}
-                                        uploadDate={'May 23rd, 2019 at 3:57 PM'}
-                                    />
+                                userPosts && userPosts.length > 0 ?
+                                    userPosts.map((data, index) =>
+                                        <WallPost
+                                            answer={'Ans'}
+                                            liked={true}
+                                            likesCount={`1.2 k`}
+                                            userName={`Aravind Manoharan`}
+                                            uploadDate={'May 23rd, 2019 at 3:57 PM'}
+                                        />
+                                    )
                                     :
                                     <Fragment>
                                         <ImageWrapper>
-                                            <NoDataIcon src={NoData} />
+                                            <NoDataIcon src={NoData}/>
                                         </ImageWrapper>
                                         <Info>No Answers</Info>
                                     </Fragment>
@@ -214,14 +226,15 @@ export default function Profile() {
                         :
                         <LoginWrapper>
                             <ImageWrapper>
-                                <NoDataIcon src={Login} />
+                                <NoDataIcon src={Login}/>
                             </ImageWrapper>
-                            <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question or to like/unlike other answers, you have to login.</Info>
+                            <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question
+                                or to like/unlike other answers, you have to login.</Info>
                             <Button onClick={redirectToLoginPage}>Login</Button>
                         </LoginWrapper>
                 }
             </ProfileContainer>
-            <SnackBar open={open} handleClose={handleClose} />
+            <SnackBar open={open} handleClose={handleClose}/>
         </Fragment>
     );
 }

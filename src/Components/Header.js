@@ -159,9 +159,12 @@ export default function Header({ openSnackBar }) {
     }
 
     function redirectToProfilePage() {
-        history.push({
-            pathname: '/profile'
-        });
+        if(userInfo !== null) {
+            history.push({
+                pathname: '/profile',
+                search: `?u_id=${userInfo.userId}`
+            });
+        }
     }
 
     function redirectToWallPage() {
@@ -170,6 +173,7 @@ export default function Header({ openSnackBar }) {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
+
         } else {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
         }
