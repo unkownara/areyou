@@ -9,7 +9,7 @@ import Header from '../Components/Header';
 import { getRandomColor, s3UrlToText } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import {user_info_url, user_profile_url} from "../backend/Apis";
+import { user_info_url, user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import SnackBar from '../Components/SnackBar';
 
@@ -165,11 +165,11 @@ export default function Profile(props) {
     }, []);
 
     useEffect(() => {
-        let params  = {
+        let params = {
             userId: uId
         };
-        getApiRequestCall(user_info_url, params, function(response) {
-            if(response && response.data && response.data.Items && response.data.Items.length > 0) {
+        getApiRequestCall(user_info_url, params, function (response) {
+            if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                 setUserInfo(response.data.Items[0]);
             } else {
                 console.log('User does not exit');
@@ -253,6 +253,7 @@ export default function Profile(props) {
                                                         userName={data.userName}
                                                         uploadDate={data.createdOn}
                                                         postId={data.postId}
+                                                        showQuestion
                                                     />
                                                 )
                                                 :

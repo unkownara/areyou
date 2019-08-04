@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import ContentLoader from './ContentLoader';
-import {getDate1, getRandomColor} from '../Functions/Generics';
+import { getDate1, getRandomColor } from '../Functions/Generics';
 import { user_post_delete_url, user_post_edit_url, user_post_like_url } from '../backend/Apis';
 import { postApiRequestCall } from "../backend/ApiRequests";
 
@@ -107,7 +107,7 @@ const ShowLess = styled.div`
 const ProfileName = styled.div`
     font-weight: bold;
     font-size: 16px;
-    padding-top: 2px;
+    padding-top: 4px;
 `
 
 const UploadDate = styled.div`
@@ -134,14 +134,23 @@ const LikeIconWrapper = styled.div`
         justify-content: center;
         align-items: center;    
         transition: all 0.15s ease-in-out;
+
+        &:hover{
+            background: #BBFFD9;
+        }
     }
+
+    @media(max-width: 700px){
+
+    }
+
 `
 
 const LikeIcon = styled.img`
     height: 25px;
     width: 25px;
     cursor: pointer;
-    transform: ${props => props.anim ? 'scale(1.1)' : 'scale(1)'};   
+    transform: ${props => props.anim ? 'scale(1.3)' : 'scale(1)'};   
     transition: all 0.15s ease-in-out;
     
     @media(max-width: 700px){
@@ -169,6 +178,7 @@ const YesNoWrapper = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     margin-top: 20px;
+    padding-left: 10px;
     align-items: center;
 `
 
@@ -204,8 +214,17 @@ const YesNoText = styled.div`
     }
 `
 
+const Question = styled.div`
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 0 10px;
+    letter-spacing: 1px;
+    line-height: 20px;
+    word-break: break-word;
+`
 
-export default function WallPost({ liked, path, likesCount, userName, uploadDate, yesNoAnswer, postId }) {
+export default function WallPost({ showQuestion, liked, path, likesCount, userName, uploadDate, yesNoAnswer, postId }) {
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
@@ -323,6 +342,12 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
                                 <UploadDate>{getDate1(uploadDate)}</UploadDate>
                             </ProfileDetailsWrapper>
                         </ProfileWrapper>
+                        {
+                            showQuestion ?
+                                <Question>
+                                    I'm trying to do something like the following in React JSX (where ObjectRow is a separate component
+                            </Question> : null
+                        }
                         <YesNoWrapper>
                             <YesNoAnswer selected>
                                 <YesNoIconWrapper>
@@ -357,7 +382,7 @@ export default function WallPost({ liked, path, likesCount, userName, uploadDate
                                         alt={'Like'}
                                     />
                                 </div>
-                                <LikesCount><span>{like}</span> people clapped to this answer.</LikesCount>
+                                <LikesCount><span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer.</LikesCount>
                             </LikeIconWrapper>
                         </PostOptionsWrapper>
                     </Post>
