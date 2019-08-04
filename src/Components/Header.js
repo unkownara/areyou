@@ -38,6 +38,7 @@ const AppName = styled.div`
     vertical-align: middle;
     line-height: 60px;
     margin-left: 10px;
+    padding-left: 10px;
     cursor: pointer;
     width: max-content;
 
