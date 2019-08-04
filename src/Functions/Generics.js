@@ -1,3 +1,5 @@
+import AWS from "aws-sdk";
+
 export function makeid(length) {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -73,4 +75,9 @@ export const GA_ID = 'UA-145111269-1';
 export function getDate() {
     let nowDate = new Date();
     return nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate();
+}
+
+export async function s3UrlToText(key) {
+    console.log('s3 key ', key);
+
 }
