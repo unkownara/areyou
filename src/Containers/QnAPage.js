@@ -55,6 +55,7 @@ const Question = styled.p`
     width: 100%;
     letter-spacing: 0.22px;
     line-height: 29px;
+    word-break: break-word;
 `
 
 const AnswerInput = styled.textarea`
