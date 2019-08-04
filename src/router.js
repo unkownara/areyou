@@ -34,8 +34,7 @@ function Routers() {
                             component={QnAPage}
                         />
                         <Route
-                            exact
-                            path="/profile/:id"
+                            path="/profile"
                             component={Profile}
                         />
 

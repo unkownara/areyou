@@ -9,7 +9,7 @@ import Header from '../Components/Header';
 import { getRandomColor, s3UrlToText } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import {user_guest_profile_info_url, user_info_url, user_profile_url} from "../backend/Apis";
+import { user_guest_profile_info_url, user_info_url, user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import SnackBar from '../Components/SnackBar';
 
@@ -89,6 +89,10 @@ const Info = styled.div`
     text-align: center;
     margin-bottom: 30px;
 
+    &>span{
+        font-weight: bold;
+    }
+
     @media(max-width: 700px){
         width: 100%;
     }
@@ -140,12 +144,15 @@ const Button = styled.div`
     }
 `
 
-const LoginWrapper = styled.div`
+const UserNotFound = styled.div`
     margin-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 export default function Profile(props) {
@@ -157,7 +164,10 @@ export default function Profile(props) {
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
     const [open, setOpen] = useState(false);
-    const [loadingPosts, setLoadingPosts] = useState(false)
+    const [loadingPosts, setLoadingPosts] = useState(false);
+    const [checkingUser, setCheckingUser] = useState(false);
+    const [userNotFound, setUserNotFound] = useState(false);
+
 
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
@@ -168,17 +178,21 @@ export default function Profile(props) {
         let params = {
             userId: uId
         };
-        getApiRequestCall(user_guest_profile_info_url, params, function(response) {
-            if(response && response.data && response.data.Items && response.data.Items.length > 0) {
+        setCheckingUser(true);
+        getApiRequestCall(user_guest_profile_info_url, params, function (response) {
+            if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                 setUserInfo(response.data.Items[0]);
+                setCheckingUser(false);
             } else {
+                setUserNotFound(true);
+                setCheckingUser(false);
                 console.log('User does not exit');
             }
         })
     }, [uId]);
 
     useEffect(() => {
-        if(userInfo !== null) {
+        if (userInfo !== null) {
             let params = {
                 userId: uId
             };
@@ -224,64 +238,67 @@ export default function Profile(props) {
             <Header openSnackBar={openSnackBar} />
             <ProfileContainer>
                 {
-                    userInfo !== undefined && userInfo !== null ?
-                        <ProfileWrapper>
-                            <ImageWrapper>
-                                <ProfileImage
-                                    bg={getRandomColor(userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo.userName.substring(0, 1)}</ProfileImage>
-                            </ImageWrapper>
-                            <ProfileName>{userInfo.userName || 'User'}</ProfileName>
-                            <Email>{userInfo.userId || ''}</Email>
-                            <HR />
-                            {
-                                !loadingPosts ?
-                                    <Fragment>
-                                        <Info>
+                    !checkingUser ?
+                        !userNotFound ?
+                            <ProfileWrapper>
+                                <ImageWrapper>
+                                    <ProfileImage
+                                        bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo && userInfo.userName.substring(0, 1)}</ProfileImage>
+                                </ImageWrapper>
+                                <ProfileName>{(userInfo && userInfo.userName) || 'User'}</ProfileName>
+                                <Email>{(userInfo && userInfo.userId) || ''}</Email>
+                                <HR />
+                                {
+                                    !loadingPosts ?
+                                        <Fragment>
+                                            <Info>
+                                                {
+                                                    userInfo && uId === userInfo.userId ?
+                                                        userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`
+                                                        :
+                                                        userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
+                                                }
+                                            </Info>
                                             {
-                                                userInfo && uId === userInfo.userId ?
-                                                    userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`
+                                                !loadingPosts && userPosts && userPosts.length > 0 ?
+                                                    userPosts.map((data, data_index) =>
+                                                        <WallPost
+                                                            key={data_index}
+                                                            path={data.path}
+                                                            likesCount={data.likes}
+                                                            userName={data.userName}
+                                                            uploadDate={data.createdOn}
+                                                            postId={data.postId}
+                                                            showQuestion
+                                                        />
+                                                    )
                                                     :
-                                                    userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
+                                                    <Fragment>
+                                                        <ImageWrapper>
+                                                            <NoDataIcon src={Login} />
+                                                        </ImageWrapper>
+                                                    </Fragment>
                                             }
-                                        </Info>
-                                        {
-                                            !loadingPosts && userPosts && userPosts.length > 0 ?
-                                                userPosts.map((data, index) =>
-                                                    <WallPost
-                                                        path={data.path}
-                                                        likesCount={data.likes}
-                                                        userName={data.userName}
-                                                        uploadDate={data.createdOn}
-                                                        postId={data.postId}
-                                                        showQuestion
-                                                    />
-                                                )
-                                                :
-                                                <Fragment>
-                                                    <ImageWrapper>
-                                                        <NoDataIcon src={Login} />
-                                                    </ImageWrapper>
-                                                </Fragment>
-                                        }
-                                    </Fragment>
-                                    :
-                                    <DotLoader />
-                            }
-                            <SkipWrapper>
-                                <OR>or</OR>
+                                        </Fragment>
+                                        :
+                                        <DotLoader />
+                                }
+                                <SkipWrapper>
+                                    <OR>or</OR>
+                                    <SkipToAnswers origin={'Profile Page'} />
+                                </SkipWrapper>
+                                <Button onClick={logout}>Logout</Button>
+                            </ProfileWrapper>
+                            :
+                            <UserNotFound>
+                                <ImageWrapper>
+                                    <NoDataIcon src={NoData} />
+                                </ImageWrapper>
+                                <Info width={'600px'}><span>User Not Found!</span> Looks like you have hit a wrong profile name.</Info>
                                 <SkipToAnswers origin={'Profile Page'} />
-                            </SkipWrapper>
-                            <Button onClick={logout}>Logout</Button>
-                        </ProfileWrapper>
+                            </UserNotFound>
                         :
-                        <LoginWrapper>
-                            <ImageWrapper>
-                                <NoDataIcon src={NoData} />
-                            </ImageWrapper>
-                            <Info width={'600px'}>Hey there! Looks like you have not logged in. To answer the question
-                                or to like/unlike other answers, you have to login.</Info>
-                            <Button onClick={redirectToLoginPage}>Login</Button>
-                        </LoginWrapper>
+                        <DotLoader />
                 }
             </ProfileContainer>
             <SnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />

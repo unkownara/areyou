@@ -35,7 +35,7 @@ const WallContainer = styled.div`
 `
 
 const WallWrapper = styled.div`
-    margin-top: 30px;
+    margin-top: 50px;
 `
 
 const LoadMore = styled.div`
@@ -86,6 +86,20 @@ const Info = styled.div`
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
+`
+
+const Question = styled.div`
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    margin: 20px auto;
+    letter-spacing: 1px;
+    line-height: 25px;
+    word-break: break-word;
+    width: 600px;
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
 `
 
 function Wall({ props }) {
@@ -157,6 +171,10 @@ function Wall({ props }) {
 
     useEffect(() => {
         props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
+        setTimeout(() => {
+            setShowInfo(false)
+        }, 3000);
+        clearTimeout();
     }, [props.location.state])
 
     return (
@@ -171,6 +189,9 @@ function Wall({ props }) {
                     <Suspense fallback={<DotLoader />}>
                         <Fragment>
                             <WallContainer>
+                                <Question>
+                                    I'm trying to do something like the following in React JSX (where ObjectRow is a separate component
+                            </Question>
                                 <WallWrapper>
                                     {
                                         posts.map((data) =>
