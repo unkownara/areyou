@@ -42,7 +42,6 @@ function App() {
             </Fragment>
         </Suspense>
     );
-
 }
 
 export default App;
