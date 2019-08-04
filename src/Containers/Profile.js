@@ -7,7 +7,7 @@ import Header from '../Components/Header';
 import { getRandomColor, s3UrlToText } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import { user_profile_url } from "../backend/Apis";
+import {user_info_url, user_profile_url} from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import SnackBar from '../Components/SnackBar';
 
@@ -157,31 +157,26 @@ export default function Profile(props) {
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/profile');
-    }, [])
+    }, []);
 
     useEffect(() => {
-        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-        } else {
-            const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
-            setUserInfo(uInfo);
-            let params = {
-                userId: uInfo.userId
-            };
-            getApiRequestCall(user_profile_url, params, function (response) {
-                if (response && response.data && response.data.Items && response.data.Items.length > 0) {
-                    response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
-                    let posts = userPosts.concat(response.data.Items);
-                    setUsersPost(posts);
-                } else {
-                    setPostMsg('Not answered yet');
-                }
-            })
-        }
+        let params  = {
+            userId: uId
+        };
+        getApiRequestCall(user_info_url, params, function(response) {
+            if(response && response.data && response.data.Items && response.data.Items.length > 0) {
+                setUserInfo(response.data.Items[0]);
+            } else {
+                console.log('User does not exit');
+            }
+        })
     }, [uId]);
 
     useEffect(() => {
+        const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
+        setUserInfo(uInfo);
         let params = {
-            userId: uId
+            userId: uInfo.userId
         };
         getApiRequestCall(user_profile_url, params, function (response) {
             if (response && response.data && response.data.Items && response.data.Items.length > 0) {
@@ -191,7 +186,7 @@ export default function Profile(props) {
             } else {
                 setPostMsg('Not answered yet');
             }
-        })
+        });
     }, [uId]);
 
     function openSnackBar() {
