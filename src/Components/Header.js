@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import styled from 'styled-components';
 import Headroom from 'react-headroom';
 
 import history from '../history';
 import { getRandomColor } from '../Functions/Generics';
+
+import User from '../Images/user.png';
 
 const HeaderWrapper = styled.div`
     height: 60px;
@@ -124,9 +126,25 @@ const ProfileImage = styled.div`
     @media(max-width: 700px){
         cursor: default;
         height: 25px;
-        font-size: 15px;
         width: 25px;
+        font-size: 15px;
         margin: 0 10px;
+    }
+`
+
+const UserImageWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+const UserIcon = styled.img`
+    height: 35px;
+    width: 35px;
+
+    @media(max-width: 700px){
+        height: 25px;
+        width: 25px;
     }
 `
 
@@ -166,9 +184,19 @@ export default function Header() {
                     <LogoWrapper>
                         <AnswerTrigger onClick={redirectToQnAPage}>Answer</AnswerTrigger>
                         <ProfileName onClick={redirectToProfilePage}>
-                            <ProfileImage
-                                bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{(userInfo && userInfo.userName.substring(0, 1)) || '-'}</ProfileImage>
-                            <span>{userInfo ? 'You' : ''}</span>
+                            {
+                                userInfo ?
+                                    <Fragment>
+                                        <ProfileImage
+                                            bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>
+                                            {(userInfo && userInfo.userName.substring(0, 1)) || '-'}
+                                        </ProfileImage>
+                                        <span>{userInfo ? 'You' : ''}</span>
+                                    </Fragment> :
+                                    <UserImageWrapper>
+                                        <UserIcon src={User} />
+                                    </UserImageWrapper>
+                            }
                         </ProfileName>
                     </LogoWrapper>
                 </Wrapper>

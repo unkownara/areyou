@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import cookie from 'react-cookies';
 
 import history from "../history";
+import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid, getDate } from '../Functions/Generics';
 import { useInput } from "../Components/hooks";
@@ -212,46 +213,46 @@ function QnAPage(props) {
         }
     };
 
-    if (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') {
-        return (
-            <Fragment>
-                <QnAContainer>
-                    <QnAWrapper>
-                        <Question> {questionResponse.question} </Question>
-                        <ToggleButtonWrapper>
-                            <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
-                                <ToggleIconWrapper>
-                                    <ToggleIcon src={Happy} />
-                                </ToggleIconWrapper>
-                                <ToggleText selected={yesSelected}>Yes</ToggleText>
-                            </ToggleButton>
-                            <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
-                                <ToggleIconWrapper>
-                                    <ToggleIcon src={Sad} />
-                                </ToggleIconWrapper>
-                                <ToggleText selected={noSelected}>No</ToggleText>
-                            </ToggleButton>
-                        </ToggleButtonWrapper>
-                        <Info>Express your answer in words.</Info>
-                        <AnswerInput
-                            rows={7}
-                            {...answerInput}
-                        />
-                        <Button onClick={onSubmit}>Submit Answer</Button>
-                        {errorMsg}
-                        <OR>or</OR>
-                        <SkipToAnswers />
-                    </QnAWrapper>
-                </QnAContainer>
-            </Fragment>
-        );
-    } else {
-        return (
-            <QnAContainer>
-                <p>Loading</p>
-            </QnAContainer>
-        );
-    }
+
+    return (
+        <Fragment>
+            <Header />
+            {
+                userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '' ?
+                    <QnAContainer>
+                        <QnAWrapper>
+                            <Question> {questionResponse.question} </Question>
+                            <ToggleButtonWrapper>
+                                <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
+                                    <ToggleIconWrapper>
+                                        <ToggleIcon src={Happy} />
+                                    </ToggleIconWrapper>
+                                    <ToggleText selected={yesSelected}>Yes</ToggleText>
+                                </ToggleButton>
+                                <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
+                                    <ToggleIconWrapper>
+                                        <ToggleIcon src={Sad} />
+                                    </ToggleIconWrapper>
+                                    <ToggleText selected={noSelected}>No</ToggleText>
+                                </ToggleButton>
+                            </ToggleButtonWrapper>
+                            <Info>Express your answer in words.</Info>
+                            <AnswerInput
+                                rows={7}
+                                {...answerInput}
+                            />
+                            <Button onClick={onSubmit}>Submit Answer</Button>
+                            {errorMsg}
+                            <OR>or</OR>
+                            <SkipToAnswers />
+                        </QnAWrapper>
+                    </QnAContainer>
+                    :
+                    <p>Loading</p>
+            }
+        </Fragment>
+    );
+
 }
 
 export default QnAPage;

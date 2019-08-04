@@ -11,24 +11,9 @@ const Profile = lazy(() => import('./Containers/Profile'));
 
 function Routers() {
 
-    const [showHeader, setShowHeader] = useState(true);
-
-    useEffect(() => {
-        if (window.location.pathname === '/login' || window.location.pathname === '/signup') {
-            setShowHeader(false);
-            console.log(window.location.pathname)
-        } else {
-            setShowHeader(true);
-            console.log(window.location.pathname)
-        }
-    }, []);
 
     return (
         <Fragment>
-            {
-                showHeader ?
-                    <Header /> : null
-            }
             <Router history={history}>
                 <Suspense fallback={<></>}>
                     <Switch>
