@@ -250,7 +250,7 @@ export default function Profile(props) {
                                         {/* <Info>No Answers</Info> */}
                                     </Fragment>
                             }
-                            <Info>{answers && answers.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
+                            <Info>{userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`}</Info>
                             <SkipWrapper>
                                 <OR>or</OR>
                                 <SkipToAnswers />

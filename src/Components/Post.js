@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import {getRandomColor, s3UrlToText} from '../Functions/Generics';
