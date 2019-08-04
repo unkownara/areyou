@@ -3,11 +3,12 @@ import AWS from 'aws-sdk';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
 
-import SnackBar from '../Components/Header';
+import SnackBar from '../Components/SnackBar';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid, getDate } from '../Functions/Generics';
 import { useInput } from "../Components/hooks";
+import DotLoader from '../Components/DotLoader';
 
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
@@ -257,7 +258,7 @@ function QnAPage() {
                         </QnAWrapper>
                     </QnAContainer>
                     :
-                    <p>Loading</p>
+                    <DotLoader />
             }
             <SnackBar open={open} handleClose={handleClose} />
         </Fragment>

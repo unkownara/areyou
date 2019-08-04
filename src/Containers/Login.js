@@ -257,9 +257,9 @@ function Login() {
                         if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                             setEmailErrorMsg('');
                             cookie.save('__u_id__', email.value);
-                            localStorage.setItem('__u_info__',JSON.stringify(response.data.Items[0]));
+                            localStorage.setItem('__u_info__', JSON.stringify(response.data.Items[0]));
                             history.push({
-                                pathname: '/wall',
+                                pathname: '/',
                                 // search: `wall?u_id=${makeid(6)}`,
                                 // state: { detail: response.data.Items[0] }
                             });

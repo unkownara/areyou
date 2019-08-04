@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
 import { getRandomColor } from '../Functions/Generics';
-import {user_post_like_url} from '../backend/Apis';
+import { user_post_like_url } from '../backend/Apis';
 
 import Like from '../Images/like.png';
 import UnLike from '../Images/unlike.png';
@@ -56,6 +56,7 @@ const Answer = styled.div`
     letter-spacing: 0.8px;
     line-height: 22px;
     text-align: left;
+    word-break: break-word;
     cursor: ${props => !props.pointer ? 'pointer' : 'default'};
 
     @media(max-width: 700px){
@@ -146,15 +147,6 @@ const YesNoAnswer = styled.div`
     padding: 6px 10px;
     border: ${props => props.selected ? 'none' : '1px solid #eee'};
     background: ${props => props.selected ? '#c7f9ff' : '#fff'};
-    cursor: pointer;
-
-    &:hover {
-        background: #BDF0FF;
-    }
-
-    @media(max-width: 700px){
-        cursor: default;
-    }
 `
 
 const YesNoIconWrapper = styled.div`
@@ -200,7 +192,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                 createdOn: uploadDate,
                 likes: likesCount
             };
-            obj.postApiRequestCall(user_post_like_url, payload, function(response) {
+            obj.postApiRequestCall(user_post_like_url, payload, function (response) {
             });
         })
     };
@@ -225,7 +217,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                         <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
                     </YesNoAnswer>
                 </YesNoWrapper>
-                <Answer onClick={showFullAnswer} pointer={showMore}>
+                <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
                     {
                         answer && answer.length >= 200 && !showMore ?
                             <Fragment>
