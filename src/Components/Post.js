@@ -75,7 +75,7 @@ const Answer = styled.div`
     text-align: left;
     word-break: break-word;
     cursor: ${props => !props.pointer ? 'pointer' : 'default'};
-
+    
     @media(max-width: 700px){
         cursor: default;
     }
@@ -261,7 +261,7 @@ export default function WallPost({ liked, answer, likesCount, userName, uploadDa
                         answer && answer.length >= 200 && !showMore ?
                             <Fragment>
                                 {answer.substring(1, 200)}
-                                <ShowMore>... show more</ShowMore>
+                                <ShowMore>... show full</ShowMore>
                             </Fragment> :
                             <Fragment>
                                 {answer}
