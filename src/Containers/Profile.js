@@ -8,6 +8,7 @@ import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
 import { user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
+import SnackBar from '../Components/Header';
 
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
@@ -133,10 +134,10 @@ export default function Profile() {
     const [userInfo, setUserInfo] = useState(null);
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            // history.push('/login');
         } else {
             const uInfo = JSON.parse(localStorage.getItem('__u_info__'));
             setUserInfo(uInfo);
@@ -155,9 +156,17 @@ export default function Profile() {
         }
     }, []);
 
+    function openSnackBar() {
+        setOpen(true)
+    }
+
+    function handleClose() {
+        setOpen(false);
+    }
+
     function logout() {
         localStorage.setItem('__u_info__', null);
-        history.push('/');
+        window.location.href = '/';
     }
 
     function redirectToLoginPage() {
@@ -167,7 +176,7 @@ export default function Profile() {
 
     return (
         <Fragment>
-            <Header />
+            <Header openSnackBar={openSnackBar} />
             <ProfileContainer>
                 {
                     userInfo !== undefined && userInfo !== null ?
@@ -212,6 +221,7 @@ export default function Profile() {
                         </LoginWrapper>
                 }
             </ProfileContainer>
+            <SnackBar open={open} handleClose={handleClose} />
         </Fragment>
     );
 }

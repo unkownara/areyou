@@ -309,6 +309,7 @@ function Login() {
                     <Input
                         {...email}
                         placeholder={'Email'}
+                        onKeyPress={(e) => enterPressed(e)}
                     />
                     {
                         emailErrorMsg.length ?
@@ -323,7 +324,7 @@ function Login() {
                         type={showPass ? 'text' : 'password'}
                         autoComplete="off"
                         placeholder="Password"
-                        onKeyPress={(e) => enterPressed(e, 'password')}
+                        onKeyPress={(e) => enterPressed(e)}
                     />
                     {
                         !passwordErrorMsg.length ?
