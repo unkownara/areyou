@@ -215,7 +215,7 @@ function QnAPage() {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            // history.push('/login');
+            history.push('/login');
         } else if (!(cookie.load('__q_id__'))) {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
             import('../backend/ApiRequests').then(obj => {
@@ -275,7 +275,8 @@ function QnAPage() {
                             path: key,
                             userId: userInfo.userId,
                             userName: userInfo.userName,
-                            questionId: questionResponse.qId
+                            questionId: questionResponse.qId,
+                            question: questionResponse.question
                         };
                         obj.postApiRequestCall(user_post_url, payload, function (response) {
                             if (response.data === true) {

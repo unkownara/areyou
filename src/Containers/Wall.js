@@ -228,7 +228,7 @@ function Wall({ props }) {
                         <Fragment>
                             <WallContainer>
                                 <Question>
-                                    I'm trying to do something like the following in React JSX (where ObjectRow is a separate component
+                                    {questionResponse.question}
                             </Question>
                                 <WallWrapper>
                                     {
