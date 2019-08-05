@@ -275,7 +275,8 @@ function QnAPage() {
                             path: key,
                             userId: userInfo.userId,
                             userName: userInfo.userName,
-                            questionId: questionResponse.qId
+                            questionId: questionResponse.qId,
+                            question: questionResponse.question
                         };
                         obj.postApiRequestCall(user_post_url, payload, function (response) {
                             if (response.data === true) {
