@@ -215,7 +215,7 @@ function QnAPage() {
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
-            // history.push('/login');
+            history.push('/login');
         } else if (!(cookie.load('__q_id__'))) {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
             import('../backend/ApiRequests').then(obj => {
