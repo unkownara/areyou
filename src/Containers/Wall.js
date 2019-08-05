@@ -2,15 +2,16 @@ import React, { useEffect, useState, lazy, Fragment, Suspense } from 'react';
 import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 
+import history from '../history';
 import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
 
-import ContentLoader from '../Components/ContentLoader';
 import SnackBar from '../Components/SnackBar';
 import Header from '../Components/Header';
 import DotLoader from '../Components/DotLoader';
 
+import First from '../Images/first.png';
 import More from '../Images/more.png';
 
 const WallPost = lazy(() => import('../Components/Post'));
@@ -86,6 +87,11 @@ const Info = styled.div`
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const Question = styled.div`
@@ -96,6 +102,34 @@ const Question = styled.div`
     line-height: 25px;
     word-break: break-word;
     width: 600px;
+
+    @media(max-width: 700px){
+        width: 100%;
+    }
+`
+
+const ImageWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+`
+
+const FirstIcon = styled.img`
+    height: 250px;
+    width: 300px;
+`
+
+const NoPosts = styled.div`
+    color: gray;
+    width: ${props => props.width || '100%'};
+    line-height: 24px;
+    letter-spacing: 1px;
+    font-size: 14px;
+    text-align: center;
 
     @media(max-width: 700px){
         width: 100%;
@@ -177,12 +211,16 @@ function Wall({ props }) {
         clearTimeout();
     }, [props.location.state])
 
+    function hideInfo() {
+        setShowInfo(false)
+    }
+
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} />
             {
                 showInfo ?
-                    <Info>Your answer has been successfully shared.</Info> : null
+                    <Info onClick={hideInfo}>Your answer has been successfully shared.</Info> : null
             }
             {
                 posts && posts.length && questionResponse.qId !== '' ?
@@ -225,7 +263,16 @@ function Wall({ props }) {
                             </WallContainer>
                         </Fragment>
                     </Suspense>
-                    : <DotLoader />
+                    :
+                    posts && posts.length === 0 ?
+                        <Fragment>
+                            <ImageWrapper>
+                                <FirstIcon src={First} />
+                            </ImageWrapper>
+                            <NoPosts>No answers found.</NoPosts>
+                            <Info onClick={() => history.push("/qna")}>Be the first to answer</Info>
+                        </Fragment> :
+                        <DotLoader />
             }
             <SnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
         </Fragment>

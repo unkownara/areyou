@@ -207,6 +207,7 @@ function Login() {
     const [showPass, setShowPass] = useState(false);
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
+    const [loginErrorMsg, setLoginErrorMsg] = useState('');
     const [verifyingCredentials, setVerifyingCredentials] = useState(false);
     const passswordRef = useRef(null);
 
@@ -270,12 +271,12 @@ function Login() {
                                 // state: { detail: response.data.Items[0] }
                             });
                             setVerifyingCredentials(false);
-                        } else if (response.data === "incorrect password") {
+                        } else if (response.data === "Incorrect password") {
                             setVerifyingCredentials(false);
-                            setPasswordErrorMsg(response.data);
+                            setLoginErrorMsg(response.data);
                         } else if (response.data === "Email doesn't exists") {
                             setVerifyingCredentials(false);
-                            setEmailErrorMsg(response.data);
+                            setLoginErrorMsg(response.data);
                         }
                     } catch (e) {
                         setVerifyingCredentials(false);
@@ -354,6 +355,7 @@ function Login() {
                         <LineLoader /> : null
                 }
             </Button>
+            <ErrorLabel margin={'20px auto'}>{loginErrorMsg}</ErrorLabel>
             <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
             <SkipToAnswers origin={'Login Page'} />
