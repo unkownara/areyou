@@ -39,6 +39,9 @@ const ProfileContainer = styled.div`
 
 const ProfileWrapper = styled.div`
     margin-top: 40px;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 const ImageWrapper = styled.div`

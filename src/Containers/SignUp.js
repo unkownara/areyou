@@ -19,7 +19,7 @@ const SignUpWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
-  /* padding-bottom: 30px; */
+  padding-bottom: 50px;
 `
 
 const AppName = styled.div`

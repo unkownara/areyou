@@ -30,7 +30,7 @@ const Skip = styled.div`
     font-weight: bold;
     color: #09198A;
     font-size: 13px;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     cursor: pointer;
 
     &:hover{
