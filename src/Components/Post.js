@@ -224,7 +224,7 @@ const Question = styled.div`
     word-break: break-word;
 `
 
-export default function WallPost({ showQuestion, liked, path, likesCount, userName, uploadDate, yesNoAnswer, postId }) {
+export default function WallPost({ showQuestion, liked, path, likesCount, userName, uploadDate, yesNoAnswer, postId, question }) {
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
@@ -345,7 +345,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
                         {
                             showQuestion ?
                                 <Question>
-                                    I'm trying to do something like the following in React JSX (where ObjectRow is a separate component
+                                    {question}
                             </Question> : null
                         }
                         <YesNoWrapper>

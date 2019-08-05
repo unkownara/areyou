@@ -241,6 +241,7 @@ function Wall({ props }) {
                                                 userName={data.userName}
                                                 uploadDate={data.createdOn}
                                                 postId={data.postId}
+                                                question={data.question}
                                             />
                                         )
                                     }
