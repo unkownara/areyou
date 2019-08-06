@@ -272,6 +272,7 @@ export default function Profile(props) {
                                                             userName={data.userName}
                                                             uploadDate={data.createdOn}
                                                             postId={data.postId}
+                                                            question={data.question}
                                                             showQuestion
                                                         />
                                                     )
