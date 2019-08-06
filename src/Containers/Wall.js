@@ -137,12 +137,13 @@ const NoPosts = styled.div`
 `
 
 const EditButton = styled.div`
-    background: #FF4343;
+    background: #FFF;
+    border: 1px solid #FF4343;
+    color: #FF4343;
     height: 40px;
     vertical-align: middle;
     line-height: 40px;
     width: 300px;
-    color: #fff;
     text-align: center;
     padding: 0 10px;
     border-radius: 5px;
@@ -156,8 +157,8 @@ const EditButton = styled.div`
 `
 
 const DeleteButton = styled.div`
-    background: #FFF;
-    border: 1px solid #FF4343;
+    background: #FF4343;
+    color: #fff;
     height: 40px;
     vertical-align: middle;
     line-height: 40px;
@@ -165,7 +166,6 @@ const DeleteButton = styled.div`
     text-align: center;
     padding: 0 10px;
     border-radius: 5px;
-    color: #FF4343;
     font-weight: bold;
     margin: 20px auto;
     cursor: pointer;
@@ -183,7 +183,6 @@ function Wall({ props }) {
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(true);
-    const [showInfo, setShowInfo] = useState(false);
     const [openSnackBarOptions, setOpenSnackBar] = useState(false);
 
     function openSnackBar() {
@@ -243,25 +242,21 @@ function Wall({ props }) {
         }
     };
 
-    useEffect(() => {
-        props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
-        setTimeout(() => {
-            setShowInfo(false)
-        }, 3000);
-        clearTimeout();
-    }, [props.location.state])
+    // useEffect(() => {
+    //     props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
+    //     setTimeout(() => {
+    //         setShowInfo(false)
+    //     }, 3000);
+    //     clearTimeout();
+    // }, [props.location.state])
 
-    function hideInfo() {
-        setShowInfo(false)
-    }
+    // function hideInfo() {
+    //     setShowInfo(false)
+    // }
 
     return (
         <Fragment>
             <Header />
-            {
-                showInfo ?
-                    <Info onClick={hideInfo}>Your answer has been successfully shared.</Info> : null
-            }
             {
                 posts && posts.length && questionResponse.qId !== '' ?
                     <Suspense fallback={<DotLoader />}>

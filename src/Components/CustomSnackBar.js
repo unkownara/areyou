@@ -20,7 +20,7 @@ export default function CustomSnackbar({ open, handleClose, origin, children }) 
             style={{ background: '#fff' }}
             open={open}
             onClose={handleClose}
-            autoHideDuration={6000}
+            autoHideDuration={5000}
             TransitionComponent={transition}
             ContentProps={{
                 'aria-describedby': 'message-id',

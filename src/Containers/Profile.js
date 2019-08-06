@@ -159,7 +159,9 @@ const UserNotFound = styled.div`
 `
 
 const EditButton = styled.div`
-    background: #FF4343;
+    background: #FFF;
+    border: 1px solid #FF4343;
+    color: #FF4343;
     height: 40px;
     vertical-align: middle;
     line-height: 40px;
@@ -167,7 +169,6 @@ const EditButton = styled.div`
     text-align: center;
     padding: 0 10px;
     border-radius: 5px;
-    color: #FF4343;
     font-weight: bold;
     margin: 20px auto;
     cursor: pointer;
@@ -178,8 +179,8 @@ const EditButton = styled.div`
 `
 
 const DeleteButton = styled.div`
-    background: #FFF;
-    border: 1px solid #FF4343;
+    background: #FF4343;
+    color: #fff;
     height: 40px;
     vertical-align: middle;
     line-height: 40px;
@@ -187,7 +188,6 @@ const DeleteButton = styled.div`
     text-align: center;
     padding: 0 10px;
     border-radius: 5px;
-    color: #fff;
     font-weight: bold;
     margin: 20px auto;
     cursor: pointer;
