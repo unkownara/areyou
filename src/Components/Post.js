@@ -247,13 +247,14 @@ const Question = styled.div`
     word-break: break-word;
 `
 
-export default function WallPost({ showQuestion, liked, path, likesCount, userName, uploadDate, yesNoAnswer, postId, question }) {
+export default function WallPost({ showQuestion, liked, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, openSnackBar }) {
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [answer, setAnswer] = useState('');
     const [likedByUser, setLikedByUser] = useState(false);
     const [showAnim, setShowAnim] = useState(false);
+    const [showPostOptions, setShowPostOptions] = useState(false);
 
     function showFullAnswer() {
         setShowMore(true)
@@ -329,6 +330,15 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
     };
 
     useEffect(() => {
+        if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
+            setShowPostOptions(false);
+        } else {
+            var userInfo = JSON.parse(localStorage.getItem('__u_info__'));
+            (userInfo !== undefined && (userInfo.userId === userId)) ? setShowPostOptions(true) : setShowPostOptions(false);
+        }
+    }, [])
+
+    useEffect(() => {
         AWS.config = new AWS.Config();
         AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
         AWS.config.secretAccessKey = "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";
@@ -367,14 +377,17 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
                                 </ProfileDetailsWrapper>
                             </ProfileContainer>
                             <OptionsIconWrapper>
-                                <OptionsIcon src={Options} />
+                                {
+                                    showPostOptions ?
+                                        <OptionsIcon onClick={openSnackBar} src={Options} /> : null
+                                }
                             </OptionsIconWrapper>
                         </ProfileWrapper>
                         {
                             showQuestion ?
                                 <Question>
                                     {question}
-                            </Question> : null
+                                </Question> : null
                         }
                         <YesNoWrapper>
                             <YesNoAnswer selected>
