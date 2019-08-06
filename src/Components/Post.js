@@ -11,6 +11,7 @@ import Sad from '../Images/sad1.png';
 import AWS from "aws-sdk";
 import Clap from '../Images/clap.png';
 import UnClap from '../Images/unclap.png';
+import Options from '../Images/options.png';
 
 const LiftUp = keyframes`
     0% {
@@ -40,6 +41,12 @@ const Post = styled.div``
 
 const ProfileWrapper = styled.div`
     display: grid;
+    grid-template-columns: 4.5fr 0.5fr;
+`
+
+const ProfileContainer = styled.div`
+    
+    display: grid;
     grid-template-columns: 0.4fr 4.6fr;
     grid-gap: 10px;
     
@@ -47,6 +54,8 @@ const ProfileWrapper = styled.div`
         grid-template-columns: 0.7fr 4.3fr;
     }
 `
+
+const ProfileDetailsWrapper = styled.div``
 
 const ProfileImageWrapper = styled.div`
     display: flex;
@@ -67,7 +76,21 @@ const ProfileImage = styled.div`
     border-radius: 50%;
 `
 
-const ProfileDetailsWrapper = styled.div``
+const OptionsIconWrapper = styled.div`
+    display: grid;
+    justify-content: center;
+    align-items: center;
+`
+
+const OptionsIcon = styled.img`
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
 
 const Answer = styled.div`
     margin: 20px 0 0 0;
@@ -333,14 +356,19 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
                 answer && answer.length ?
                     <Post>
                         <ProfileWrapper>
-                            <ProfileImageWrapper>
-                                <ProfileImage
-                                    bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                            </ProfileImageWrapper>
-                            <ProfileDetailsWrapper>
-                                <ProfileName>{userName}</ProfileName>
-                                <UploadDate>{getDate1(uploadDate)}</UploadDate>
-                            </ProfileDetailsWrapper>
+                            <ProfileContainer>
+                                <ProfileImageWrapper>
+                                    <ProfileImage
+                                        bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                                </ProfileImageWrapper>
+                                <ProfileDetailsWrapper>
+                                    <ProfileName>{userName}</ProfileName>
+                                    <UploadDate>{getDate1(uploadDate)}</UploadDate>
+                                </ProfileDetailsWrapper>
+                            </ProfileContainer>
+                            <OptionsIconWrapper>
+                                <OptionsIcon src={Options} />
+                            </OptionsIconWrapper>
                         </ProfileWrapper>
                         {
                             showQuestion ?

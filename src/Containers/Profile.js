@@ -11,7 +11,7 @@ import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
 import { user_guest_profile_info_url, user_info_url, user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
-import SnackBar from '../Components/SnackBar';
+import CustomSnackBar from '../Components/CustomSnackBar';
 
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
@@ -304,7 +304,7 @@ export default function Profile(props) {
                         <DotLoader />
                 }
             </ProfileContainer>
-            <SnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />
+            <CustomSnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />
         </Fragment>
     );
 }
