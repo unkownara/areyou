@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
 
 import history from '../history';
-import SnackBar from '../Components/SnackBar';
+import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid, getDate } from '../Functions/Generics';
@@ -350,7 +350,7 @@ function QnAPage() {
                     :
                     <DotLoader />
             }
-            <SnackBar open={open} handleClose={handleClose} origin={'QnA Page'} />
+            <CustomSnackBar open={open} handleClose={handleClose} origin={'QnA Page'} />
         </Fragment>
     );
 }

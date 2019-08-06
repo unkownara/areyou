@@ -30,7 +30,7 @@ function TransitionUp(props) {
     return <Slide {...props} direction="up" />;
 }
 
-export default function DirectionSnackbar({ open, handleClose, origin }) {
+export default function CustomSnackbar({ open, handleClose, origin }) {
 
     const [transition, setTransition] = useState(undefined);
 

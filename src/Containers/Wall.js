@@ -7,7 +7,7 @@ import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
 
-import SnackBar from '../Components/SnackBar';
+import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
 import DotLoader from '../Components/DotLoader';
 
@@ -275,7 +275,7 @@ function Wall({ props }) {
                         </Fragment> :
                         <DotLoader />
             }
-            <SnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
+            <CustomSnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
         </Fragment>
     );
 }
