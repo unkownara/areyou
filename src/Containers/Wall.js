@@ -136,23 +136,62 @@ const NoPosts = styled.div`
     }
 `
 
+const EditButton = styled.div`
+    background: #FFF;
+    border: 1px solid #FF4343;
+    color: #FF4343;
+    height: 40px;
+    vertical-align: middle;
+    line-height: 40px;
+    width: 300px;
+    text-align: center;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
+const DeleteButton = styled.div`
+    background: #FF4343;
+    color: #fff;
+    height: 40px;
+    vertical-align: middle;
+    line-height: 40px;
+    width: 300px;
+    text-align: center;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
+
 function Wall({ props }) {
 
-    const [open, setOpen] = useState(false);
     const [postApiDate, setPostApiDate] = useState(Date.now());
     const [posts, setPosts] = useState([]);
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [endOfPosts, setEndOfPosts] = useState(false);
-    const [postsLoading, setPostsLoading] = useState(false);
-    const [showInfo, setShowInfo] = useState(false);
+    const [postsLoading, setPostsLoading] = useState(true);
+    const [openSnackBarOptions, setOpenSnackBar] = useState(false);
 
     function openSnackBar() {
-        setOpen(true)
+        setOpenSnackBar(true);
     }
 
-    function handleClose() {
-        setOpen(false);
-    };
+    function closeSnackBar() {
+        setOpenSnackBar(false);
+    }
 
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
@@ -203,25 +242,21 @@ function Wall({ props }) {
         }
     };
 
-    useEffect(() => {
-        props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
-        setTimeout(() => {
-            setShowInfo(false)
-        }, 3000);
-        clearTimeout();
-    }, [props.location.state])
+    // useEffect(() => {
+    //     props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
+    //     setTimeout(() => {
+    //         setShowInfo(false)
+    //     }, 3000);
+    //     clearTimeout();
+    // }, [props.location.state])
 
-    function hideInfo() {
-        setShowInfo(false)
-    }
+    // function hideInfo() {
+    //     setShowInfo(false)
+    // }
 
     return (
         <Fragment>
-            <Header openSnackBar={openSnackBar} />
-            {
-                showInfo ?
-                    <Info onClick={hideInfo}>Your answer has been successfully shared.</Info> : null
-            }
+            <Header />
             {
                 posts && posts.length && questionResponse.qId !== '' ?
                     <Suspense fallback={<DotLoader />}>
@@ -229,16 +264,18 @@ function Wall({ props }) {
                             <WallContainer>
                                 <Question>
                                     {questionResponse.question}
-                            </Question>
+                                </Question>
                                 <WallWrapper>
                                     {
                                         posts.map((data) =>
                                             <WallPost
+                                                openSnackBar={openSnackBar}
                                                 key={data.postId}
                                                 path={data.path}
                                                 liked={false}
                                                 likesCount={data.likes}
                                                 userName={data.userName}
+                                                userId={data.userId}
                                                 uploadDate={data.createdOn}
                                                 postId={data.postId}
                                                 question={data.question}
@@ -265,17 +302,21 @@ function Wall({ props }) {
                         </Fragment>
                     </Suspense>
                     :
-                    posts && posts.length === 0 ?
-                        <Fragment>
-                            <ImageWrapper>
-                                <FirstIcon src={First} />
-                            </ImageWrapper>
-                            <NoPosts>No answers found.</NoPosts>
-                            <Info onClick={() => history.push("/qna")}>Be the first to answer</Info>
-                        </Fragment> :
-                        <DotLoader />
+                    postsLoading ? <DotLoader /> :
+                        posts && posts.length === 0 ?
+                            <Fragment>
+                                <ImageWrapper>
+                                    <FirstIcon src={First} />
+                                </ImageWrapper>
+                                <NoPosts>No answers found.</NoPosts>
+                                <Info onClick={() => history.push("/qna")}>Be the first to answer</Info>
+                            </Fragment> :
+                            <DotLoader />
             }
-            <CustomSnackBar open={open} handleClose={handleClose} origin={'Wall Pages'} />
+            <CustomSnackBar open={openSnackBarOptions} handleClose={closeSnackBar}>
+                <DeleteButton>Delete</DeleteButton>
+                <EditButton>Edit</EditButton>
+            </CustomSnackBar>
         </Fragment>
     );
 }

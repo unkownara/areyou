@@ -189,7 +189,7 @@ export default function Header({ openSnackBar }) {
                 <Wrapper>
                     <LogoWrapper>
                         <AnswerTrigger
-                            onClick={(userInfo !== undefined && userInfo !== null) ? redirectToQnAPage : openSnackBar}>Answer</AnswerTrigger>
+                            onClick={redirectToQnAPage}>Answer</AnswerTrigger>
                         <ProfileName onClick={redirectToProfilePage}>
                             {
                                 userInfo !== undefined && userInfo !== null ?

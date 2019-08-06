@@ -158,6 +158,45 @@ const UserNotFound = styled.div`
     animation-fill-mode: forwards;
 `
 
+const EditButton = styled.div`
+    background: #FFF;
+    border: 1px solid #FF4343;
+    color: #FF4343;
+    height: 40px;
+    vertical-align: middle;
+    line-height: 40px;
+    width: 300px;
+    text-align: center;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
+const DeleteButton = styled.div`
+    background: #FF4343;
+    color: #fff;
+    height: 40px;
+    vertical-align: middle;
+    line-height: 40px;
+    width: 300px;
+    text-align: center;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 20px auto;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
+`
+
 export default function Profile(props) {
     // Api call for my answers
     let url = window.location.href.split('/');
@@ -166,11 +205,18 @@ export default function Profile(props) {
     const [uId, setUId] = useState(url[4]);
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
-    const [open, setOpen] = useState(false);
     const [loadingPosts, setLoadingPosts] = useState(false);
     const [checkingUser, setCheckingUser] = useState(false);
     const [userNotFound, setUserNotFound] = useState(false);
+    const [openSnackBarOptions, setOpenSnackBar] = useState(false);
 
+    function openSnackBar() {
+        setOpenSnackBar(true);
+    }
+
+    function closeSnackBar() {
+        setOpenSnackBar(false);
+    }
 
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
@@ -213,14 +259,6 @@ export default function Profile(props) {
         }
     }, [uId, userInfo]);
 
-    function openSnackBar() {
-        setOpen(true)
-    }
-
-    function handleClose() {
-        setOpen(false);
-    }
-
     function logout() {
         ReactGA.event({
             category: 'Authentication',
@@ -229,10 +267,6 @@ export default function Profile(props) {
         localStorage.setItem('__u_info__', null);
         cookie.remove('__u_id__');
         window.location.href = '/';
-    }
-
-    function redirectToLoginPage() {
-        history.push('/login');
     }
 
 
@@ -266,10 +300,12 @@ export default function Profile(props) {
                                                 !loadingPosts && userPosts && userPosts.length > 0 ?
                                                     userPosts.map((data, data_index) =>
                                                         <WallPost
+                                                            openSnackBar={openSnackBar}
                                                             key={data_index}
                                                             path={data.path}
                                                             likesCount={data.likes}
                                                             userName={data.userName}
+                                                            userId={data.userId}
                                                             uploadDate={data.createdOn}
                                                             postId={data.postId}
                                                             question={data.question}
@@ -305,7 +341,10 @@ export default function Profile(props) {
                         <DotLoader />
                 }
             </ProfileContainer>
-            <CustomSnackBar open={open} handleClose={handleClose} origin={'Profile Page'} />
+            <CustomSnackBar open={openSnackBarOptions} handleClose={closeSnackBar}>
+                <DeleteButton>Delete</DeleteButton>
+                <EditButton>Edit</EditButton>
+            </CustomSnackBar>
         </Fragment>
     );
 }
