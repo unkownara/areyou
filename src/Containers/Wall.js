@@ -245,6 +245,7 @@ function Wall({ props }) {
 
     function deletePost() {
         console.log('delete')
+        // deletePost(selectedPostData.postId, selectedPostData.createdOn);
     }
 
     return (
