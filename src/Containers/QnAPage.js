@@ -317,6 +317,7 @@ function QnAPage(props) {
                             userId: userInfo.userId,
                             userName: userInfo.userName,
                             questionId: questionResponse.qId,
+                            yesOrNo: yesSelected ? "yes" : "no",
                             question: questionResponse.question
                         };
                         obj.postApiRequestCall(user_post_url, payload, function (response) {
