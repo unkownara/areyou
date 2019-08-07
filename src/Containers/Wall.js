@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 
 import history from '../history';
+import { deletePost } from '../Functions/PostOptions';
 import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
@@ -143,15 +144,26 @@ function Wall({ props }) {
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(true);
-    const [openSnackBarOptions, setOpenSnackBar] = useState(false);
     const [selectedPostData, setSelectedPostData] = useState({});
+    const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
+    const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false)
 
-    function openSnackBar() {
-        setOpenSnackBar(true);
+    function openSnackBar(type) {
+        if (type === 'post_options') {
+            setOpenPostOptionSnackBar(true)
+        } else if (type === 'confirm_delete') {
+            setOpenConfirmDeleteSnackBar(true)
+            setOpenPostOptionSnackBar(false)
+        }
     }
 
-    function closeSnackBar() {
-        setOpenSnackBar(false);
+    function closeSnackBar(type) {
+        if (type === 'post_options') {
+            setOpenPostOptionSnackBar(false)
+        } else if (type === 'confirm_delete') {
+            setOpenConfirmDeleteSnackBar(false)
+            setOpenPostOptionSnackBar(true)
+        }
     }
 
     useEffect(() => {
@@ -172,6 +184,7 @@ function Wall({ props }) {
                         let newPosts = posts.length === 0 ? response.data.Items : posts.concat(response.data.Items);
                         setPostsLoading(false);
                         setPosts(newPosts);
+                        console.log(newPosts)
                     } else {
                         console.log('No posts are available');
                         setPostsLoading(false);
@@ -203,33 +216,36 @@ function Wall({ props }) {
         }
     };
 
-    function getPostData(postData) {
-        setSelectedPostData(postData)
-        openSnackBar();
-    }
-
-    function editPost() {
+    function redirectToQnAPage() {
         history.push({
             pathname: '/qna',
-            state: { postOption: 'edit', postData: selectedPostData }
+            state: {
+                postOption: 'edit',
+                postData: selectedPostData
+            }
         })
     }
 
-    function deletePost() {
-
+    function getPostOption(questionId, question, postId, answer, yesNoAnswer, createdOn) {
+        setSelectedPostData({
+            questionId: questionId,
+            question: question,
+            postId: postId,
+            answer: answer,
+            yesNoAnswer: yesNoAnswer,
+            createdOn: createdOn,
+            postOrigin: 'wall_page'
+        })
+        openSnackBar('post_options');
     }
 
-    // useEffect(() => {
-    //     props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
-    //     setTimeout(() => {
-    //         setShowInfo(false)
-    //     }, 3000);
-    //     clearTimeout();
-    // }, [props.location.state])
+    function deletePostConfirmation() {
+        openSnackBar('confirm_delete')
+    }
 
-    // function hideInfo() {
-    //     setShowInfo(false)
-    // }
+    function deletePost() {
+        console.log('delete')
+    }
 
     return (
         <Fragment>
@@ -246,7 +262,7 @@ function Wall({ props }) {
                                     {
                                         posts.map((data) =>
                                             <WallPost
-                                                openPostOptions={() => getPostData(data)}
+                                                getPostOptions={getPostOption}
                                                 key={data.postId}
                                                 path={data.path}
                                                 liked={false}
@@ -256,6 +272,8 @@ function Wall({ props }) {
                                                 uploadDate={data.createdOn}
                                                 postId={data.postId}
                                                 question={data.question}
+                                                questionId={data.questionId}
+                                                yesNoAnswer={'yes'}
                                             />
                                         )
                                     }
@@ -290,9 +308,13 @@ function Wall({ props }) {
                             </Fragment> :
                             <DotLoader />
             }
-            <CustomSnackBar open={openSnackBarOptions} handleClose={closeSnackBar}>
-                <DeleteButton onClick={deletePost}>Delete</DeleteButton>
-                <EditButton onClick={editPost}>Edit</EditButton>
+            <CustomSnackBar open={openPostOptionSnackBar} handleClose={() => closeSnackBar('post_options')}>
+                <DeleteButton onClick={deletePostConfirmation}>Delete</DeleteButton>
+                <EditButton onClick={redirectToQnAPage}>Edit</EditButton>
+            </CustomSnackBar>
+            <CustomSnackBar open={openConfirmDeleteSnackBar} handleClose={() => closeSnackBar('confirm_delete')}>
+                <DeleteButton onClick={deletePost}>Yes</DeleteButton>
+                <EditButton onClick={() => closeSnackBar('confirm_delete')}>No</EditButton>
             </CustomSnackBar>
         </Fragment>
     );

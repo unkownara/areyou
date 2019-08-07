@@ -4,6 +4,8 @@ import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
 
+import { editPost } from '../Functions/PostOptions';
+import { getDate1 } from '../Functions/Generics';
 import history from '../history';
 import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
@@ -68,7 +70,7 @@ const AnswerInput = styled.textarea`
     padding: 5px;
 `
 
-const Button = styled.div`
+const SubmitButton = styled.div`
     background: #09198A;
     height: ${props => props.submitting ? '60px' : '40px'};
     vertical-align: middle;
@@ -85,6 +87,13 @@ const Button = styled.div`
     @media(max-width: 700px){
         cursor: default;
     }
+`
+
+const CancelButton = styled(SubmitButton)`
+    color: #09198A;
+    background: #fff;
+    border: 1px solid #09198A;
+    margin: 0px auto 20px auto;
 `
 
 const OR = styled.div`
@@ -183,8 +192,14 @@ const ErrMsg = styled.div`
     font-weight: 500;
     font-size: 14px;
     margin: 0 auto 15px auto;
+`
 
-
+const AskedOn = styled.div`
+    font-size: 14px;
+    color: gray;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 15px;
 `
 
 function QnAPage(props) {
@@ -192,54 +207,60 @@ function QnAPage(props) {
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [userInfo, setUserInfo] = useState(null);
     const [postUploadStatus, setPostUploadStatus] = useState('not_yet');
-    const [yesSelected, setYesSelected] = useState(false);
-    const [noSelected, setNoSelected] = useState(false);
+    const [yesSelected, setYesSelected] = useState(null);
+    const [noSelected, setNoSelected] = useState(null);
     const [errorMsg, setErrorMsg] = useState('');
     const [open, setOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [postEdit, setPostEdit] = useState(false);
     const [postData, setPostData] = useState({});
-
-    const answerInput = useInput('');
+    const [answerInput, setAnswerInput] = useState('');
 
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/qna');
+        console.log(props)
     }, [])
 
     useEffect(() => {
         setErrorMsg('')
-    }, [answerInput.value]);
+    }, [answerInput]);
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
             history.push('/login');
         } else if (!(cookie.load('__q_id__'))) {
             setUserInfo(JSON.parse(localStorage.getItem('__u_info__')));
-            import('../backend/ApiRequests').then(obj => {
-                let params = {
-                    date: getDate()
-                };
-                obj.getApiRequestCall(user_question_url, params, function (response) {
-                    if (response.data && response.data.Items && response.data.Items.length > 0) {
-                        setQuestionResponse(response.data.Items[0]);
-                    } else {
-                        console.log('Error ', response);
-                    }
+            if (!checkPostOptions()) {
+                import('../backend/ApiRequests').then(obj => {
+                    let params = {
+                        date: getDate()
+                    };
+                    obj.getApiRequestCall(user_question_url, params, function (response) {
+                        if (response.data && response.data.Items && response.data.Items.length > 0) {
+                            setQuestionResponse(response.data.Items[0]);
+                        } else {
+                            console.log('Error ', response);
+                        }
+                    })
                 })
-            })
+            }
         }
     }, []);
 
-    useEffect(() => {
-
-        props.location.state && props.location.state.postOption === 'edit' ? setPostEdit(true) : setPostEdit(false);
-
-        if (props.location.state && props.location.state.postData) {
+    function checkPostOptions() {
+        if (props.location.state && props.location.state.postOption === 'edit' && props.location.state && props.location.state.postData !== undefined && props.location.state.postData !== null) {
             setPostData(props.location.state.postData)
-            console.log(props.location.state.postData)
+            setPostEdit(true)
+            setAnswerInput(props.location.state.postData.answer)
+            props.location.state.postData.yesNoAnswer === 'yes' ? setYesSelected(true) : setYesSelected(false)
+            console.log(answerInput)
+            return true
+        } else {
+            setPostEdit(false)
+            return false
         }
-    }, [])
+    }
 
     function openSnackBar() {
         setOpen(true)
@@ -259,6 +280,10 @@ function QnAPage(props) {
             setNoSelected(true);
         }
         setErrorMsg('')
+    }
+
+    function setAnswer(e) {
+        setAnswerInput(e.target.value)
     }
 
     const SubmitAnswer = () => {
@@ -317,20 +342,34 @@ function QnAPage(props) {
         }
     };
 
+    function cancelEdit() {
+        postData.postOrigin === 'wall_page' ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
+    }
+
+    function updateNewAnswer() {
+        editPost(postData.postId, postData.createdOn, postData.questionId, answerInput, yesSelected, userInfo.userId)
+    }
+
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} />
             {
-                userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '' ?
+                (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') || (userInfo !== undefined && userInfo !== null && postEdit) ?
                     <QnAContainer>
                         <QnAWrapper>
-                            <Question> {questionResponse.question} </Question>
+                            <Question> {postEdit ? postData.question : questionResponse.question} </Question>
+                            {
+                                postEdit ?
+                                    <AskedOn>Asked on {getDate1(postData.createdOn)}</AskedOn> : null
+                            }
                             <ToggleButtonWrapper>
-                                <ToggleButton selected={yesSelected} onClick={() => toggleYesNo('yes')}>
+                                <ToggleButton
+                                    selected={yesSelected} onClick={() => toggleYesNo('yes')}>
                                     <ToggleIconWrapper>
                                         <ToggleIcon src={Happy} />
                                     </ToggleIconWrapper>
-                                    <ToggleText selected={yesSelected}>Yes</ToggleText>
+                                    <ToggleText
+                                        selected={yesSelected}>Yes</ToggleText>
                                 </ToggleButton>
                                 <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
                                     <ToggleIconWrapper>
@@ -342,18 +381,25 @@ function QnAPage(props) {
                             <Info>Express your answer in words.</Info>
                             <AnswerInput
                                 rows={7}
-                                {...answerInput}
+                                name="answer"
+                                value={answerInput}
+                                onChange={setAnswer}
                             />
-                            <Button
-                                onClick={SubmitAnswer}
+                            <SubmitButton
+                                onClick={postEdit ? updateNewAnswer : SubmitAnswer}
                                 submitting={submitting}
                             >
-                                <span>{!submitting ? "Submit Answer" : 'Submitting ...'}</span>
+                                <span>{!submitting ? postEdit ? 'Update Answer' : 'Submit Answer' : postEdit ? 'Updating ...' : 'Submitting ...'}</span>
                                 {
                                     submitting ?
                                         <LineLoader /> : null
                                 }
-                            </Button>
+                            </SubmitButton>
+                            {
+                                postEdit ?
+                                    <CancelButton onClick={cancelEdit}>Cancel</CancelButton>
+                                    : null
+                            }
                             <ErrMsg>{errorMsg}</ErrMsg>
                             <OR>or</OR>
                             <SkipToAnswers origin={'QnA Page'} />
