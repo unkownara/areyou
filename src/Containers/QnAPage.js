@@ -237,8 +237,8 @@ function QnAPage(props) {
 
         if (props.location.state && props.location.state.postData) {
             setPostData(props.location.state.postData)
+            console.log(props.location.state.postData)
         }
-        console.log(props.location.state.postData)
     }, [])
 
     function openSnackBar() {
@@ -292,6 +292,7 @@ function QnAPage(props) {
                             userId: userInfo.userId,
                             userName: userInfo.userName,
                             questionId: questionResponse.qId,
+                            yesOrNo: yesSelected ? "yes" : "no",
                             question: questionResponse.question
                         };
                         obj.postApiRequestCall(user_post_url, payload, function (response) {
