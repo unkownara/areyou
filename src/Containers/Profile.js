@@ -3,13 +3,12 @@ import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
 
-import ContentLoader from '../Components/ContentLoader';
-import history from '../history';
+import { DeleteButton, EditButton } from '../Components/Buttons';
 import Header from '../Components/Header';
-import { getRandomColor, s3UrlToText } from '../Functions/Generics';
+import { getRandomColor } from '../Functions/Generics';
 import WallPost from '../Components/Post';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import { user_guest_profile_info_url, user_info_url, user_profile_url } from "../backend/Apis";
+import { user_guest_profile_info_url, user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import CustomSnackBar from '../Components/CustomSnackBar';
 
@@ -156,45 +155,6 @@ const UserNotFound = styled.div`
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
-`
-
-const EditButton = styled.div`
-    background: #FFF;
-    border: 1px solid #FF4343;
-    color: #FF4343;
-    height: 40px;
-    vertical-align: middle;
-    line-height: 40px;
-    width: 300px;
-    text-align: center;
-    padding: 0 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin: 20px auto;
-    cursor: pointer;
-
-    @media(max-width: 700px){
-        cursor: default;
-    }
-`
-
-const DeleteButton = styled.div`
-    background: #FF4343;
-    color: #fff;
-    height: 40px;
-    vertical-align: middle;
-    line-height: 40px;
-    width: 300px;
-    text-align: center;
-    padding: 0 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin: 20px auto;
-    cursor: pointer;
-
-    @media(max-width: 700px){
-        cursor: default;
-    }
 `
 
 export default function Profile(props) {
