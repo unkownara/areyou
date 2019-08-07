@@ -6,7 +6,7 @@ import history from '../history';
 import { getDate } from "../Functions/Generics";
 import { user_post_url, user_question_url } from "../backend/Apis";
 import { getApiRequestCall } from '../backend/ApiRequests';
-
+import { DeleteButton, EditButton } from '../Components/Buttons';
 import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
 import DotLoader from '../Components/DotLoader';
@@ -136,46 +136,6 @@ const NoPosts = styled.div`
     }
 `
 
-const EditButton = styled.div`
-    background: #FFF;
-    border: 1px solid #FF4343;
-    color: #FF4343;
-    height: 40px;
-    vertical-align: middle;
-    line-height: 40px;
-    width: 300px;
-    text-align: center;
-    padding: 0 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin: 20px auto;
-    cursor: pointer;
-
-    @media(max-width: 700px){
-        cursor: default;
-    }
-`
-
-const DeleteButton = styled.div`
-    background: #FF4343;
-    color: #fff;
-    height: 40px;
-    vertical-align: middle;
-    line-height: 40px;
-    width: 300px;
-    text-align: center;
-    padding: 0 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin: 20px auto;
-    cursor: pointer;
-
-    @media(max-width: 700px){
-        cursor: default;
-    }
-`
-
-
 function Wall({ props }) {
 
     const [postApiDate, setPostApiDate] = useState(Date.now());
@@ -184,6 +144,7 @@ function Wall({ props }) {
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(true);
     const [openSnackBarOptions, setOpenSnackBar] = useState(false);
+    const [selectedPostData, setSelectedPostData] = useState({});
 
     function openSnackBar() {
         setOpenSnackBar(true);
@@ -242,6 +203,22 @@ function Wall({ props }) {
         }
     };
 
+    function getPostData(postData) {
+        setSelectedPostData(postData)
+        openSnackBar();
+    }
+
+    function editPost() {
+        history.push({
+            pathname: '/qna',
+            state: { postOption: 'edit', postData: selectedPostData }
+        })
+    }
+
+    function deletePost() {
+
+    }
+
     // useEffect(() => {
     //     props.location.state && props.location.state.answerSubmitted ? setShowInfo(true) : setShowInfo(false);
     //     setTimeout(() => {
@@ -269,7 +246,7 @@ function Wall({ props }) {
                                     {
                                         posts.map((data) =>
                                             <WallPost
-                                                openSnackBar={openSnackBar}
+                                                openPostOptions={() => getPostData(data)}
                                                 key={data.postId}
                                                 path={data.path}
                                                 liked={false}
@@ -314,8 +291,8 @@ function Wall({ props }) {
                             <DotLoader />
             }
             <CustomSnackBar open={openSnackBarOptions} handleClose={closeSnackBar}>
-                <DeleteButton>Delete</DeleteButton>
-                <EditButton>Edit</EditButton>
+                <DeleteButton onClick={deletePost}>Delete</DeleteButton>
+                <EditButton onClick={editPost}>Edit</EditButton>
             </CustomSnackBar>
         </Fragment>
     );

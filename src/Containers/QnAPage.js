@@ -187,7 +187,7 @@ const ErrMsg = styled.div`
 
 `
 
-function QnAPage() {
+function QnAPage(props) {
 
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
     const [userInfo, setUserInfo] = useState(null);
@@ -197,6 +197,8 @@ function QnAPage() {
     const [errorMsg, setErrorMsg] = useState('');
     const [open, setOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [postEdit, setPostEdit] = useState(false);
+    const [postData, setPostData] = useState({});
 
     const answerInput = useInput('');
 
@@ -205,13 +207,9 @@ function QnAPage() {
         ReactGA.pageview('/qna');
     }, [])
 
-    function openSnackBar() {
-        setOpen(true)
-    }
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    useEffect(() => {
+        setErrorMsg('')
+    }, [answerInput.value]);
 
     useEffect(() => {
         if (!(JSON.parse(localStorage.getItem('__u_info__')))) {
@@ -232,6 +230,24 @@ function QnAPage() {
             })
         }
     }, []);
+
+    useEffect(() => {
+
+        props.location.state && props.location.state.postOption === 'edit' ? setPostEdit(true) : setPostEdit(false);
+
+        if (props.location.state && props.location.state.postData) {
+            setPostData(props.location.state.postData)
+        }
+        console.log(props.location.state.postData)
+    }, [])
+
+    function openSnackBar() {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     function toggleYesNo(type) {
         if (type === 'yes') {
@@ -299,11 +315,6 @@ function QnAPage() {
             setSubmitting(false);
         }
     };
-
-    useEffect(() => {
-        setErrorMsg('')
-    }, [answerInput.value]);
-
 
     return (
         <Fragment>
