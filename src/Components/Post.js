@@ -1,15 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+import AWS from "aws-sdk";
 
 import ContentLoader from './ContentLoader';
 import { getDate1, getRandomColor } from '../Functions/Generics';
-import { user_post_delete_url, user_post_edit_url, user_post_like_url } from '../backend/Apis';
-import { postApiRequestCall } from "../backend/ApiRequests";
-import history from '../history';
+import { user_post_like_url } from '../backend/Apis';
 
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
-import AWS from "aws-sdk";
 import Clap from '../Images/clap.png';
 import UnClap from '../Images/unclap.png';
 import Options from '../Images/options.png';
@@ -248,7 +246,7 @@ const Question = styled.div`
     word-break: break-word;
 `
 
-export default function WallPost({ showQuestion, liked, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, openPostOptions }) {
+export default function WallPost({ showQuestion, liked, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, questionId, getPostOptions }) {
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
@@ -306,19 +304,20 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
         };
 
         s3.getObject(getParams, function (err, data) {
-            if (err)
+            if (err) {
                 return '';
+            }
             else {
-                console.log('s3 content ', data.Body.toString('utf-8'));
+                console.log('data body ', data.Body.toString('utf-8'))
                 setAnswer(data.Body.toString('utf-8'));
             }
         });
     }, [path]);
-
+    
     return (
         <PostWrapper>
             {
-                answer && answer.length ?
+                answer && answer.length > 0 ?
                     <Post>
                         <ProfileWrapper>
                             <ProfileContainer>
@@ -334,7 +333,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
                             <OptionsIconWrapper>
                                 {
                                     showPostOptions ?
-                                        <OptionsIcon onClick={openPostOptions} src={Options} /> : null
+                                        <OptionsIcon onClick={() => getPostOptions(questionId, question, postId, answer, yesNoAnswer, uploadDate)} src={Options} /> : null
                                 }
                             </OptionsIconWrapper>
                         </ProfileWrapper>
