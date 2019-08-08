@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
 
+import history from '../history';
 import { DeleteButton, EditButton } from '../Components/Buttons';
 import Header from '../Components/Header';
 import { getRandomColor } from '../Functions/Generics';
@@ -168,14 +169,26 @@ export default function Profile(props) {
     const [loadingPosts, setLoadingPosts] = useState(false);
     const [checkingUser, setCheckingUser] = useState(false);
     const [userNotFound, setUserNotFound] = useState(false);
-    const [openSnackBarOptions, setOpenSnackBar] = useState(false);
+    const [selectedPostData, setSelectedPostData] = useState({});
+    const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
+    const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false)
 
-    function openSnackBar() {
-        setOpenSnackBar(true);
+    function openSnackBar(type) {
+        if (type === 'post_options') {
+            setOpenPostOptionSnackBar(true)
+        } else if (type === 'confirm_delete') {
+            setOpenConfirmDeleteSnackBar(true)
+            setOpenPostOptionSnackBar(false)
+        }
     }
 
-    function closeSnackBar() {
-        setOpenSnackBar(false);
+    function closeSnackBar(type) {
+        if (type === 'post_options') {
+            setOpenPostOptionSnackBar(false)
+        } else if (type === 'confirm_delete') {
+            setOpenConfirmDeleteSnackBar(false)
+            setOpenPostOptionSnackBar(true)
+        }
     }
 
     useEffect(() => {
@@ -229,6 +242,39 @@ export default function Profile(props) {
         window.location.href = '/';
     }
 
+    function redirectToQnAPage() {
+        history.push({
+            pathname: '/qna',
+            state: {
+                postOption: 'edit',
+                postData: selectedPostData
+            }
+        })
+    }
+
+    function getPostOptions(questionId, question, postId, answer, yesNoAnswer, createdOn) {
+        setSelectedPostData({
+            questionId: questionId,
+            question: question,
+            postId: postId,
+            answer: answer,
+            yesNoAnswer: yesNoAnswer,
+            createdOn: createdOn,
+            postOrigin: 'profile_page'
+        })
+        openSnackBar('post_options');
+    }
+
+    function deletePostConfirmation() {
+        openSnackBar('confirm_delete')
+    }
+
+    function deletePost() {
+        console.log('delete')
+        // deletePost(selectedPostData.postId, selectedPostData.createdOn);
+    }
+
+
 
     return (
         <Fragment>
@@ -260,16 +306,18 @@ export default function Profile(props) {
                                                 !loadingPosts && userPosts && userPosts.length > 0 ?
                                                     userPosts.map((data, data_index) =>
                                                         <WallPost
-                                                            openSnackBar={openSnackBar}
-                                                            key={data_index}
+                                                            getPostOptions={getPostOptions}
+                                                            key={data.postId}
                                                             path={data.path}
+                                                            liked={false}
                                                             likesCount={data.likes}
                                                             userName={data.userName}
                                                             userId={data.userId}
                                                             uploadDate={data.createdOn}
                                                             postId={data.postId}
                                                             question={data.question}
-                                                            showQuestion
+                                                            questionId={data.questionId}
+                                                            yesNoAnswer={'yes'}
                                                         />
                                                     )
                                                     :
@@ -301,9 +349,13 @@ export default function Profile(props) {
                         <DotLoader />
                 }
             </ProfileContainer>
-            <CustomSnackBar open={openSnackBarOptions} handleClose={closeSnackBar}>
-                <DeleteButton>Delete</DeleteButton>
-                <EditButton>Edit</EditButton>
+            <CustomSnackBar open={openPostOptionSnackBar} handleClose={() => closeSnackBar('post_options')}>
+                <DeleteButton onClick={deletePostConfirmation}>Delete</DeleteButton>
+                <EditButton onClick={redirectToQnAPage}>Edit</EditButton>
+            </CustomSnackBar>
+            <CustomSnackBar open={openConfirmDeleteSnackBar} handleClose={() => closeSnackBar('confirm_delete')}>
+                <DeleteButton onClick={deletePost}>Yes</DeleteButton>
+                <EditButton onClick={() => closeSnackBar('confirm_delete')}>No</EditButton>
             </CustomSnackBar>
         </Fragment>
     );
