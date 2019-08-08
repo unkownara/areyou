@@ -4,6 +4,7 @@ import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
 
+import { EditButton } from '../Components/Buttons';
 import { editPost } from '../Functions/PostOptions';
 import { getDate1 } from '../Functions/Generics';
 import history from '../history';
@@ -11,9 +12,10 @@ import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid, getDate } from '../Functions/Generics';
-import { useInput } from "../Components/hooks";
 import DotLoader from '../Components/DotLoader';
 
+import EditSuccess from '../Images/success4.png';
+import SubmitSuccess from '../Images/success2.png';
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
 import { user_post_url, user_question_url } from '../backend/Apis';
@@ -202,6 +204,17 @@ const AskedOn = styled.div`
     margin-bottom: 15px;
 `
 
+const ImageWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+const SuccessImage = styled.img`
+    height: 200px;
+    width: 200px;
+`
+
 function QnAPage(props) {
 
     const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
@@ -210,11 +223,12 @@ function QnAPage(props) {
     const [yesSelected, setYesSelected] = useState(null);
     const [noSelected, setNoSelected] = useState(null);
     const [errorMsg, setErrorMsg] = useState('');
-    const [open, setOpen] = useState(false);
+    const [open, setOpenSnackBar] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [postEdit, setPostEdit] = useState(false);
     const [postData, setPostData] = useState({});
     const [answerInput, setAnswerInput] = useState('');
+    const [postSuccessType, setPostSuccessType] = useState('');
 
     useEffect(() => {
         ReactGA.initialize('UA-145111269-1');
@@ -224,6 +238,7 @@ function QnAPage(props) {
 
     useEffect(() => {
         setErrorMsg('')
+        setOpenSnackBar(false);
     }, [answerInput]);
 
     useEffect(() => {
@@ -263,11 +278,11 @@ function QnAPage(props) {
     }
 
     function openSnackBar() {
-        setOpen(true)
+        setOpenSnackBar(true)
     }
 
     const handleClose = () => {
-        setOpen(false);
+        setOpenSnackBar(false);
     };
 
     function toggleYesNo(type) {
@@ -280,6 +295,7 @@ function QnAPage(props) {
             setNoSelected(true);
         }
         setErrorMsg('')
+        setOpenSnackBar(false);
     }
 
     function setAnswer(e) {
@@ -287,58 +303,67 @@ function QnAPage(props) {
     }
 
     const SubmitAnswer = () => {
-        if (yesSelected || noSelected) {
-            setSubmitting(true);
-            setErrorMsg('')
-            AWS.config = new AWS.Config();
-            AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
-            AWS.config.secretAccessKey = "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";
-            AWS.config.region = "us-east-2";
-
-            let postId = makeid(10);
-            let key = `${userInfo.userId}/${questionResponse.qId}/${postId}.txt`;
-            let s3Bucket = new AWS.S3();
-            let s3Obj = {
-                Bucket: 'areyou-posts',
-                Key: key,
-                Body: answerInput.value,
-                ACL: 'public-read',
-                ContentType: 'text/plain; charset=us-ascii'
-            };
-            s3Bucket.putObject(s3Obj, function (err, data) {
-                if (err) {
-                    console.log('Error message', err);
-                    setSubmitting(false);
-                } else {
-                    import('../backend/ApiRequests').then(obj => {
-                        let payload = {
-                            postId: postId,
-                            path: key,
-                            userId: userInfo.userId,
-                            userName: userInfo.userName,
-                            questionId: questionResponse.qId,
-                            yesOrNo: yesSelected ? "yes" : "no",
-                            question: questionResponse.question
-                        };
-                        obj.postApiRequestCall(user_post_url, payload, function (response) {
-                            if (response.data === true) {
-                                setPostUploadStatus('success');
-                                setSubmitting(false);
-                                history.push({
-                                    pathname: '/',
-                                    state: { answerSubmitted: true }
-                                })
-                            } else {
-                                setPostUploadStatus('failure');
-                                setSubmitting(false);
-                            }
-                        });
-                    });
-                }
-            });
+        setPostSuccessType('');
+        if (answerInput.length === 0 || answerInput === undefined || answerInput === null) {
+            setErrorMsg('Please give an answer.');
+            setOpenSnackBar(true);
         } else {
-            setErrorMsg('Please select Yes or No.');
-            setSubmitting(false);
+            setOpenSnackBar(false);
+            if (yesSelected || noSelected) {
+                setSubmitting(true);
+                setErrorMsg('');
+                AWS.config = new AWS.Config();
+                AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
+                AWS.config.secretAccessKey = "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";
+                AWS.config.region = "us-east-2";
+
+                let postId = makeid(10);
+                let key = `${userInfo.userId}/${questionResponse.qId}/${postId}.txt`;
+                let s3Bucket = new AWS.S3();
+                let s3Obj = {
+                    Bucket: 'areyou-posts',
+                    Key: key,
+                    Body: answerInput,
+                    ACL: 'public-read',
+                    ContentType: 'text/plain; charset=us-ascii'
+                };
+                s3Bucket.putObject(s3Obj, function (err, data) {
+                    if (err) {
+                        console.log('Error message', err);
+                        setSubmitting(false);
+                    } else {
+                        import('../backend/ApiRequests').then(obj => {
+                            let payload = {
+                                postId: postId,
+                                path: key,
+                                userId: userInfo.userId,
+                                userName: userInfo.userName,
+                                questionId: questionResponse.qId,
+                                yesOrNo: yesSelected ? "yes" : "no",
+                                question: questionResponse.question
+                            };
+                            obj.postApiRequestCall(user_post_url, payload, function (response) {
+                                if (response.data === true) {
+                                    setPostUploadStatus('success');
+                                    setPostSuccessType('answer_submitted');
+                                    setSubmitting(false);
+                                    history.push({
+                                        pathname: '/',
+                                    })
+                                } else {
+                                    setPostUploadStatus('failure');
+                                    setPostSuccessType('');
+                                    setSubmitting(false);
+                                }
+                            });
+                        });
+                    }
+                });
+            } else {
+                setErrorMsg('Please select Yes or No.');
+                setOpenSnackBar(true);
+                setSubmitting(false);
+            }
         }
     };
 
@@ -347,7 +372,13 @@ function QnAPage(props) {
     }
 
     function updateNewAnswer() {
+        setPostSuccessType('');
         editPost(postData.postId, postData.createdOn, postData.questionId, answerInput, yesSelected, userInfo.userId)
+        setPostSuccessType('answer_edited');
+    }
+
+    function redirectToOrigin(){
+        postData.postOrigin === 'wall_page' ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
     }
 
     return (
@@ -356,59 +387,70 @@ function QnAPage(props) {
             {
                 (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') || (userInfo !== undefined && userInfo !== null && postEdit) ?
                     <QnAContainer>
-                        <QnAWrapper>
-                            <Question> {postEdit ? postData.question : questionResponse.question} </Question>
-                            {
-                                postEdit ?
-                                    <AskedOn>Asked on {getDate1(postData.createdOn)}</AskedOn> : null
-                            }
-                            <ToggleButtonWrapper>
-                                <ToggleButton
-                                    selected={yesSelected} onClick={() => toggleYesNo('yes')}>
-                                    <ToggleIconWrapper>
-                                        <ToggleIcon src={Happy} />
-                                    </ToggleIconWrapper>
-                                    <ToggleText
-                                        selected={yesSelected}>Yes</ToggleText>
-                                </ToggleButton>
-                                <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
-                                    <ToggleIconWrapper>
-                                        <ToggleIcon src={Sad} />
-                                    </ToggleIconWrapper>
-                                    <ToggleText selected={noSelected}>No</ToggleText>
-                                </ToggleButton>
-                            </ToggleButtonWrapper>
-                            <Info>Express your answer in words.</Info>
-                            <AnswerInput
-                                rows={7}
-                                name="answer"
-                                value={answerInput}
-                                onChange={setAnswer}
-                            />
-                            <SubmitButton
-                                onClick={postEdit ? updateNewAnswer : SubmitAnswer}
-                                submitting={submitting}
-                            >
-                                <span>{!submitting ? postEdit ? 'Update Answer' : 'Submit Answer' : postEdit ? 'Updating ...' : 'Submitting ...'}</span>
-                                {
-                                    submitting ?
-                                        <LineLoader /> : null
-                                }
-                            </SubmitButton>
-                            {
-                                postEdit ?
-                                    <CancelButton onClick={cancelEdit}>Cancel</CancelButton>
-                                    : null
-                            }
-                            <ErrMsg>{errorMsg}</ErrMsg>
-                            <OR>or</OR>
-                            <SkipToAnswers origin={'QnA Page'} />
-                        </QnAWrapper>
+                        {
+                            postSuccessType.length ?
+                                <QnAWrapper>
+                                    <ImageWrapper>
+                                        <SuccessImage src={postSuccessType === 'answer_submitted' ? SubmitSuccess : EditSuccess} />
+                                    </ImageWrapper>
+                                    <EditButton onClick={redirectToOrigin}>Ok</EditButton>
+                                </QnAWrapper>
+                                :
+                                <QnAWrapper>
+                                    <Question> {postEdit ? postData.question : questionResponse.question} </Question>
+                                    {
+                                        postEdit ?
+                                            <AskedOn>Asked on {getDate1(postData.createdOn)}</AskedOn> : null
+                                    }
+                                    <ToggleButtonWrapper>
+                                        <ToggleButton
+                                            selected={yesSelected} onClick={() => toggleYesNo('yes')}>
+                                            <ToggleIconWrapper>
+                                                <ToggleIcon src={Happy} />
+                                            </ToggleIconWrapper>
+                                            <ToggleText
+                                                selected={yesSelected}>Yes</ToggleText>
+                                        </ToggleButton>
+                                        <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
+                                            <ToggleIconWrapper>
+                                                <ToggleIcon src={Sad} />
+                                            </ToggleIconWrapper>
+                                            <ToggleText selected={noSelected}>No</ToggleText>
+                                        </ToggleButton>
+                                    </ToggleButtonWrapper>
+                                    <Info>Express your answer in words.</Info>
+                                    <AnswerInput
+                                        rows={7}
+                                        name="answer"
+                                        value={answerInput}
+                                        onChange={setAnswer}
+                                    />
+                                    <SubmitButton
+                                        onClick={postEdit ? updateNewAnswer : SubmitAnswer}
+                                        submitting={submitting}
+                                    >
+                                        <span>{!submitting ? postEdit ? 'Update Answer' : 'Submit Answer' : postEdit ? 'Updating ...' : 'Submitting ...'}</span>
+                                        {
+                                            submitting ?
+                                                <LineLoader /> : null
+                                        }
+                                    </SubmitButton>
+                                    {
+                                        postEdit ?
+                                            <CancelButton onClick={cancelEdit}>Cancel</CancelButton>
+                                            : null
+                                    }
+                                    <OR>or</OR>
+                                    <SkipToAnswers origin={'QnA Page'} />
+                                </QnAWrapper>
+                        }
                     </QnAContainer>
                     :
                     <DotLoader />
             }
-            <CustomSnackBar open={open} handleClose={handleClose} origin={'QnA Page'} />
+            <CustomSnackBar open={open} handleClose={handleClose}>
+                <ErrMsg>{errorMsg}</ErrMsg>
+            </CustomSnackBar>
         </Fragment>
     );
 }

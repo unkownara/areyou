@@ -226,7 +226,7 @@ function Wall({ props }) {
         })
     }
 
-    function getPostOption(questionId, question, postId, answer, yesNoAnswer, createdOn) {
+    function getPostOptions(questionId, question, postId, answer, yesNoAnswer, createdOn) {
         setSelectedPostData({
             questionId: questionId,
             question: question,
@@ -263,7 +263,7 @@ function Wall({ props }) {
                                     {
                                         posts.map((data) =>
                                             <WallPost
-                                                getPostOptions={getPostOption}
+                                                getPostOptions={getPostOptions}
                                                 key={data.postId}
                                                 path={data.path}
                                                 liked={false}

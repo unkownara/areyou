@@ -247,7 +247,7 @@ const Question = styled.div`
 `
 
 export default function WallPost({ showQuestion, liked, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, questionId, getPostOptions }) {
-
+    console.log(getPostOptions)
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [answer, setAnswer] = useState('');
@@ -308,7 +308,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
                 return '';
             }
             else {
-                console.log('data body ', data.Body.toString('utf-8'))
+                // console.log('data body ', data.Body.toString('utf-8'))
                 setAnswer(data.Body.toString('utf-8'));
             }
         });
