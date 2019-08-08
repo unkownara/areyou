@@ -4,7 +4,6 @@ import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
 
-import { EditButton } from '../Components/Buttons';
 import { editPost } from '../Functions/PostOptions';
 import { getDate1 } from '../Functions/Generics';
 import history from '../history';
@@ -12,13 +11,13 @@ import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid, getDate } from '../Functions/Generics';
+import { user_post_url, user_question_url } from '../backend/Apis';
 import DotLoader from '../Components/DotLoader';
 
-import EditSuccess from '../Images/success4.png';
-import SubmitSuccess from '../Images/success2.png';
+import EditSuccess from '../Images/success2.png';
+import SubmitSuccess from '../Images/success4.png';
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
-import { user_post_url, user_question_url } from '../backend/Apis';
 
 
 const LiftUp = keyframes`
@@ -191,8 +190,13 @@ const LineLoader = styled.div`
 
 const ErrMsg = styled.div`
     color: red;
+    width: 300px;
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 10px;
     font-weight: 500;
     font-size: 14px;
+    text-align: center;
     margin: 0 auto 15px auto;
 `
 
@@ -208,11 +212,40 @@ const ImageWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+   
+    @media(max-width: 700px){
+        margin-top: 10%;
+    }
 `
 
 const SuccessImage = styled.img`
-    height: 200px;
-    width: 200px;
+    height: 400px;
+    width: 500px;
+
+    @media(max-width: 700px){
+        height: 240px;
+        width: 280px;
+    }
+`
+
+const SuccessInfo = styled.div`
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    margin: 35px 0 40px 0;
+    color: #09198A;
+
+    @media(max-width: 700px){
+        font-size: 14px;
+    }
+`
+
+const OkButton = styled(CancelButton)`
+    animation: ${LiftUp} ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 `
 
 function QnAPage(props) {
@@ -305,7 +338,7 @@ function QnAPage(props) {
     const SubmitAnswer = () => {
         setPostSuccessType('');
         if (answerInput.length === 0 || answerInput === undefined || answerInput === null) {
-            setErrorMsg('Please give an answer.');
+            setErrorMsg('Please write an answer.');
             setOpenSnackBar(true);
         } else {
             setOpenSnackBar(false);
@@ -347,9 +380,9 @@ function QnAPage(props) {
                                     setPostUploadStatus('success');
                                     setPostSuccessType('answer_submitted');
                                     setSubmitting(false);
-                                    history.push({
-                                        pathname: '/',
-                                    })
+                                    // history.push({
+                                    //     pathname: '/',
+                                    // })
                                 } else {
                                     setPostUploadStatus('failure');
                                     setPostSuccessType('');
@@ -377,8 +410,8 @@ function QnAPage(props) {
         setPostSuccessType('answer_edited');
     }
 
-    function redirectToOrigin(){
-        postData.postOrigin === 'wall_page' ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
+    function redirectToOrigin() {
+        !postEdit ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
     }
 
     return (
@@ -393,7 +426,8 @@ function QnAPage(props) {
                                     <ImageWrapper>
                                         <SuccessImage src={postSuccessType === 'answer_submitted' ? SubmitSuccess : EditSuccess} />
                                     </ImageWrapper>
-                                    <EditButton onClick={redirectToOrigin}>Ok</EditButton>
+                                    <SuccessInfo>Answer {postSuccessType === 'answer_submitted' ? 'submitted' : 'edited'} successfully.</SuccessInfo>
+                                    <OkButton onClick={redirectToOrigin}>Back To Answers</OkButton>
                                 </QnAWrapper>
                                 :
                                 <QnAWrapper>
