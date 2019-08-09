@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import AWS from "aws-sdk";
+import cookie from 'react-cookies';
 
 import ContentLoader from './ContentLoader';
 import { getDate1, getRandomColor } from '../Functions/Generics';
@@ -250,6 +251,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
     console.log(getPostOptions)
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
+    const [likeErrMsg, setLikeErrMsg] = useState('');
     const [answer, setAnswer] = useState('');
     const [likedByUser, setLikedByUser] = useState(false);
     const [showAnim, setShowAnim] = useState(false);
@@ -264,23 +266,27 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
     }
 
     const likeAnswer = () => {
-        setLike(like => like + 1);
-        setLikedByUser(true);
-        setShowAnim(true);
-        setTimeout(() => {
-            setShowAnim(false);
-            setLikedByUser(false);
-        }, 200);
+        if(userId !== cookie.load('__u_id__')) {
+            setLike(like => like + 1);
+            setLikedByUser(true);
+            setShowAnim(true);
+            setTimeout(() => {
+                setShowAnim(false);
+                setLikedByUser(false);
+            }, 200);
 
-        import('../backend/ApiRequests').then(obj => {
-            let payload = {
-                postId: postId,
-                createdOn: uploadDate,
-                likes: likesCount
-            };
-            obj.postApiRequestCall(user_post_like_url, payload, function (response) {
-            });
-        })
+            import('../backend/ApiRequests').then(obj => {
+                let payload = {
+                    postId: postId,
+                    createdOn: uploadDate,
+                    likes: likesCount
+                };
+                obj.postApiRequestCall(user_post_like_url, payload, function (response) {
+                });
+            })
+        } else {
+            setLikeErrMsg("You can't like your own post");
+        }
     };
 
     useEffect(() => {
