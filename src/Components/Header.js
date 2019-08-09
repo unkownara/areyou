@@ -58,6 +58,7 @@ const AnswerTrigger = styled.div`
     line-height: 35px;
     width: max-content;
     text-align: center;
+    letter-spacing: 1px;
     padding: 0 20px;
     border-radius: 3px;
     color: #fff;

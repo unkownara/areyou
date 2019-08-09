@@ -158,6 +158,20 @@ const UserNotFound = styled.div`
     animation-fill-mode: forwards;
 `
 
+const DeletedMsg = styled.div`
+    color: #fff;
+    background: #F76969;
+    width: 300px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;    
+    font-size: 14px;
+    text-align: center;
+    margin: 15px auto 15px auto;
+`
+
 export default function Profile(props) {
     // Api call for my answers
     let url = window.location.href.split('/');
@@ -166,12 +180,14 @@ export default function Profile(props) {
     const [uId, setUId] = useState(url[4]);
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
+    const [deletedMsg, setDeletedMsg] = useState('');
     const [loadingPosts, setLoadingPosts] = useState(false);
     const [checkingUser, setCheckingUser] = useState(false);
     const [userNotFound, setUserNotFound] = useState(false);
     const [selectedPostData, setSelectedPostData] = useState({});
     const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
-    const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false)
+    const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false);
+    const [openDeletedMsgSnackBar, setOpenDeletedMsgSnackBar] = useState(false);
 
     function openSnackBar(type) {
         if (type === 'post_options') {
@@ -179,6 +195,8 @@ export default function Profile(props) {
         } else if (type === 'confirm_delete') {
             setOpenConfirmDeleteSnackBar(true)
             setOpenPostOptionSnackBar(false)
+        } else if (type === 'answer_deleted') {
+            setOpenDeletedMsgSnackBar(true);
         }
     }
 
@@ -188,6 +206,8 @@ export default function Profile(props) {
         } else if (type === 'confirm_delete') {
             setOpenConfirmDeleteSnackBar(false)
             setOpenPostOptionSnackBar(true)
+        } else if (type === 'answer_deleted') {
+            setOpenDeletedMsgSnackBar(false);
         }
     }
 
@@ -269,12 +289,14 @@ export default function Profile(props) {
         openSnackBar('confirm_delete')
     }
 
-    function deletePost() {
+    function deleteAnswer() {
         console.log('delete')
         // deletePost(selectedPostData.postId, selectedPostData.createdOn);
+        setDeletedMsg('Answer deleted successfully');
+        closeSnackBar('confirm_delete');
+        closeSnackBar('post_options');
+        openSnackBar('answer_deleted');
     }
-
-
 
     return (
         <Fragment>
@@ -354,8 +376,11 @@ export default function Profile(props) {
                 <EditButton onClick={redirectToQnAPage}>Edit</EditButton>
             </CustomSnackBar>
             <CustomSnackBar open={openConfirmDeleteSnackBar} handleClose={() => closeSnackBar('confirm_delete')}>
-                <DeleteButton onClick={deletePost}>Yes</DeleteButton>
+                <DeleteButton onClick={deleteAnswer}>Yes</DeleteButton>
                 <EditButton onClick={() => closeSnackBar('confirm_delete')}>No</EditButton>
+            </CustomSnackBar>
+            <CustomSnackBar open={openDeletedMsgSnackBar} handleClose={() => closeSnackBar('answer_deleted')}>
+                <DeletedMsg>{deletedMsg}</DeletedMsg>
             </CustomSnackBar>
         </Fragment>
     );

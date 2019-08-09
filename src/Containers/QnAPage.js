@@ -76,6 +76,7 @@ const SubmitButton = styled.div`
     height: ${props => props.submitting ? '60px' : '40px'};
     vertical-align: middle;
     line-height: 40px;
+    letter-spacing: 1px;
     width: 300px;
     text-align: center;
     padding: 0 10px;
@@ -92,6 +93,7 @@ const SubmitButton = styled.div`
 
 const CancelButton = styled(SubmitButton)`
     color: #09198A;
+    letter-spacing: 1px;
     background: #fff;
     border: 1px solid #09198A;
     margin: 0px auto 20px auto;
@@ -189,12 +191,14 @@ const LineLoader = styled.div`
 `
 
 const ErrMsg = styled.div`
-    color: red;
+    color: #fff;
+    background: #F76969;
     width: 300px;
-    border: 1px solid red;
+    border: 1px solid #eee;
     border-radius: 5px;
     padding: 10px;
     font-weight: 500;
+    letter-spacing: 1px;    
     font-size: 14px;
     text-align: center;
     margin: 0 auto 15px auto;
@@ -243,6 +247,7 @@ const SuccessInfo = styled.div`
 `
 
 const OkButton = styled(CancelButton)`
+    letter-spacing: 1px;
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
