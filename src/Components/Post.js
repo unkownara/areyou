@@ -163,7 +163,7 @@ const LikeIconWrapper = styled.div`
     }
 
     @media(max-width: 700px){
-
+        
     }
 
 `
@@ -269,7 +269,8 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
         setShowAnim(true);
         setTimeout(() => {
             setShowAnim(false);
-        }, 400);
+            setLikedByUser(false);
+        }, 200);
 
         import('../backend/ApiRequests').then(obj => {
             let payload = {
@@ -313,7 +314,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
             }
         });
     }, [path]);
-    
+
     return (
         <PostWrapper>
             {
@@ -373,7 +374,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
                                     <LikeIcon
                                         anim={showAnim}
                                         onClick={likeAnswer}
-                                        src={liked || likedByUser ? Clap : UnClap}
+                                        src={likedByUser ? Clap : UnClap}
                                         alt={'Like'}
                                     />
                                 </div>

@@ -137,16 +137,32 @@ const NoPosts = styled.div`
     }
 `
 
+const DeletedMsg = styled.div`
+    color: #fff;
+    background: #F76969;
+    width: 300px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;    
+    font-size: 14px;
+    text-align: center;
+    margin: 15px auto 15px auto;
+`
+
 function Wall({ props }) {
 
     const [postApiDate, setPostApiDate] = useState(Date.now());
     const [posts, setPosts] = useState([]);
-    const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
+    const [deletedMsg, setDeletedMsg] = useState('');
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(true);
     const [selectedPostData, setSelectedPostData] = useState({});
     const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
     const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false)
+    const [openDeletedMsgSnackBar, setOpenDeletedMsgSnackBar] = useState(false);
+    const [questionResponse, setQuestionResponse] = useState({ qId: '', question: '' });
 
     function openSnackBar(type) {
         if (type === 'post_options') {
@@ -154,6 +170,8 @@ function Wall({ props }) {
         } else if (type === 'confirm_delete') {
             setOpenConfirmDeleteSnackBar(true)
             setOpenPostOptionSnackBar(false)
+        } else if (type === 'answer_deleted') {
+            setOpenDeletedMsgSnackBar(true);
         }
     }
 
@@ -163,6 +181,8 @@ function Wall({ props }) {
         } else if (type === 'confirm_delete') {
             setOpenConfirmDeleteSnackBar(false)
             setOpenPostOptionSnackBar(true)
+        } else if (type === 'answer_deleted') {
+            setOpenDeletedMsgSnackBar(false);
         }
     }
 
@@ -243,9 +263,13 @@ function Wall({ props }) {
         openSnackBar('confirm_delete')
     }
 
-    function deletePost() {
+    function deleteAnswer() {
         console.log('delete')
         // deletePost(selectedPostData.postId, selectedPostData.createdOn);
+        setDeletedMsg('Answer deleted successfully');
+        closeSnackBar('confirm_delete');
+        closeSnackBar('post_options');
+        openSnackBar('answer_deleted');
     }
 
     return (
@@ -314,8 +338,11 @@ function Wall({ props }) {
                 <EditButton onClick={redirectToQnAPage}>Edit</EditButton>
             </CustomSnackBar>
             <CustomSnackBar open={openConfirmDeleteSnackBar} handleClose={() => closeSnackBar('confirm_delete')}>
-                <DeleteButton onClick={deletePost}>Yes</DeleteButton>
+                <DeleteButton onClick={deleteAnswer}>Yes</DeleteButton>
                 <EditButton onClick={() => closeSnackBar('confirm_delete')}>No</EditButton>
+            </CustomSnackBar>
+            <CustomSnackBar open={openDeletedMsgSnackBar} handleClose={() => closeSnackBar('answer_deleted')}>
+                <DeletedMsg>{deletedMsg}</DeletedMsg>
             </CustomSnackBar>
         </Fragment>
     );
