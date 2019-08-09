@@ -409,7 +409,7 @@ function QnAPage(props) {
         postData.postOrigin === 'wall_page' ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
     }
 
-    async function updateNewAnswer() {
+    function updateNewAnswer() {
         setPostSuccessType('');
         editPost(postData.postId, postData.createdOn, postData.questionId, answerInput, yesSelected ? "yes" : "no", userInfo.userId, function(res) {
             setPostSuccessType('answer_edited');
