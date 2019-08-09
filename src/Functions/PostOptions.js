@@ -17,7 +17,7 @@ export const deletePost = (postId, createdOn) => {
 };
 
 /* post edit */
-export const editPost = (postId, createdOn, questionId, editedContent, yesNoAnswer, userId) => {
+export const editPost = function (postId, createdOn, questionId, editedContent, yesNoAnswer, userId, callback) {
     AWS.config = new AWS.Config();
     AWS.config.accessKeyId = "AKIAJCVUQBOPFUF54MJQ";
     AWS.config.secretAccessKey = "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";
@@ -38,14 +38,14 @@ export const editPost = (postId, createdOn, questionId, editedContent, yesNoAnsw
             let payload = {
                 postId,
                 createdOn,
-                path: key
+                path: key,
+                yesOrNo: yesNoAnswer
             };
             postApiRequestCall(user_post_edit_url, payload, function (response) {
                 if (response.data === true) {
-                    console.log('updated successfully');
-                    return true;
+                    callback(true);
                 } else {
-                    return false;
+                    callback(false);
                 }
             })
         }
