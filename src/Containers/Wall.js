@@ -298,7 +298,7 @@ function Wall({ props }) {
                                                 postId={data.postId}
                                                 question={data.question}
                                                 questionId={data.questionId}
-                                                yesNoAnswer={'yes'}
+                                                yesNoAnswer={data.yesOrNo}
                                             />
                                         )
                                     }
