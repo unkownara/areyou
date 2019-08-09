@@ -264,12 +264,16 @@ function Wall({ props }) {
     }
 
     function deleteAnswer() {
-        console.log('delete')
-        // deletePost(selectedPostData.postId, selectedPostData.createdOn);
-        setDeletedMsg('Answer deleted successfully');
+        deletePost(selectedPostData.postId, selectedPostData.createdOn, function (res) {
+            if (res === true) {
+                setDeletedMsg('Answer deleted successfully');
+            } else {
+                setDeletedMsg('An unknown error occured.');
+            }
+            openSnackBar('answer_deleted');
+        });
         closeSnackBar('confirm_delete');
         closeSnackBar('post_options');
-        openSnackBar('answer_deleted');
     }
 
     return (
@@ -290,7 +294,6 @@ function Wall({ props }) {
                                                 getPostOptions={getPostOptions}
                                                 key={data.postId}
                                                 path={data.path}
-                                                liked={false}
                                                 likesCount={data.likes}
                                                 userName={data.userName}
                                                 userId={data.userId}

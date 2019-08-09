@@ -85,6 +85,8 @@ const SubmitButton = styled.div`
     font-weight: bold;
     margin: 20px auto;
     cursor: pointer;
+    pointer-events: ${props => props.submitting ? 'none' : 'default'};
+    opacity: ${props => props.submitting ? '0.7' : '1'};
 
     @media(max-width: 700px){
         cursor: default;
@@ -306,8 +308,8 @@ function QnAPage(props) {
             setPostData(props.location.state.postData)
             setPostEdit(true)
             setAnswerInput(props.location.state.postData.answer)
-            props.location.state.postData.yesNoAnswer === 'yes' ? setYesSelected(true) : setYesSelected(false)
-            console.log(answerInput)
+            props.location.state.postData.yesNoAnswer === 'yes' ? setYesSelected(true) : setYesSelected(false);
+            props.location.state.postData.yesNoAnswer === 'no' ? setNoSelected(true) : setNoSelected(false);
             return true
         } else {
             setPostEdit(false)
@@ -411,9 +413,27 @@ function QnAPage(props) {
 
     function updateNewAnswer() {
         setPostSuccessType('');
-        editPost(postData.postId, postData.createdOn, postData.questionId, answerInput, yesSelected ? "yes" : "no", userInfo.userId, function(res) {
-            setPostSuccessType('answer_edited');
-        });
+        if (answerInput.length === 0 || answerInput === undefined || answerInput === null) {
+            setErrorMsg('Please write an answer.');
+            setOpenSnackBar(true);
+            setSubmitting(false);
+        } else if (yesSelected || noSelected) {
+            setOpenSnackBar(false);
+            setSubmitting(true);
+            editPost(postData.postId, postData.createdOn, postData.questionId, answerInput, yesSelected ? "yes" : "no", userInfo.userId, function (res) {
+                if (res === true) {
+                    setPostSuccessType('answer_edited');
+                } else {
+                    setErrorMsg('An unknown error occured.');
+                    setOpenSnackBar(true);
+                }
+                setSubmitting(false);
+            });
+        } else {
+            setErrorMsg('Please select Yes or No.');
+            setOpenSnackBar(true);
+            setSubmitting(false);
+        }
     }
 
     function redirectToOrigin() {
@@ -444,18 +464,18 @@ function QnAPage(props) {
                                     }
                                     <ToggleButtonWrapper>
                                         <ToggleButton
-                                            selected={yesSelected} onClick={() => toggleYesNo('yes')}>
+                                            selected={props.yesNoAnswer === 'yes' || yesSelected} onClick={() => toggleYesNo('yes')}>
                                             <ToggleIconWrapper>
                                                 <ToggleIcon src={Happy} />
                                             </ToggleIconWrapper>
                                             <ToggleText
-                                                selected={yesSelected}>Yes</ToggleText>
+                                                selected={props.yesNoAnswer === 'yes' || yesSelected}>Yes</ToggleText>
                                         </ToggleButton>
-                                        <ToggleButton selected={noSelected} onClick={() => toggleYesNo('no')}>
+                                        <ToggleButton selected={props.yesNoAnswer === 'no' || noSelected} onClick={() => toggleYesNo('no')}>
                                             <ToggleIconWrapper>
                                                 <ToggleIcon src={Sad} />
                                             </ToggleIconWrapper>
-                                            <ToggleText selected={noSelected}>No</ToggleText>
+                                            <ToggleText selected={props.yesNoAnswer === 'no' || noSelected}>No</ToggleText>
                                         </ToggleButton>
                                     </ToggleButtonWrapper>
                                     <Info>Express your answer in words.</Info>

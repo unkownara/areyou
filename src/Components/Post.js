@@ -247,8 +247,8 @@ const Question = styled.div`
     word-break: break-word;
 `
 
-export default function WallPost({ showQuestion, liked, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, questionId, getPostOptions }) {
-    console.log(getPostOptions)
+export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, questionId, getPostOptions }) {
+
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [likeErrMsg, setLikeErrMsg] = useState('');
@@ -266,7 +266,7 @@ export default function WallPost({ showQuestion, liked, path, likesCount, userNa
     }
 
     const likeAnswer = () => {
-        if(userId !== cookie.load('__u_id__')) {
+        if (userId !== cookie.load('__u_id__')) {
             setLike(like => like + 1);
             setLikedByUser(true);
             setShowAnim(true);
