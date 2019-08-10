@@ -134,7 +134,8 @@ const Button = styled.div`
     margin: 20px auto;
     cursor: pointer;
     pointer-events: ${props => props.disabled ? 'none' : 'auto'};
-
+    opacity: ${props => props.submitting ? '0.7' : '1'};
+    
     @media(max-width: 700px){
         cursor: default;
     }
