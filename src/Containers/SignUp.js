@@ -296,7 +296,7 @@ function SignUp() {
                 };
                 obj.postApiRequestCall(user_info_url, payload, function (response) {
                     try {
-                        if (response && response.data) {
+                        if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                             setErrorMsg('');
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__', JSON.stringify(payload));
@@ -306,13 +306,17 @@ function SignUp() {
                                 label: `User Signed Up on ${(new Date()).toDateString()} at ${(new Date()).getHours()}:${(new Date()).getMinutes()}`
                             });
                             history.push({
-                                pathname: '/qna',
-                                search: `wall?u_id=${makeid(6)}`,
-                                state: { detail: payload }
+                                pathname: '/qna'
                             });
                             setVerifyingCredentials(false);
                         } else {
-                            setErrorMsg('Something wrong');
+                            let errMsg = '';
+                            if(response.data === "user already exists") {
+                                errMsg = "Email alredy exists";
+                            } else {
+                                errMsg = 'Something went wrong';
+                            }
+                            setErrorMsg(errMsg);
                             setVerifyingCredentials(false);
                             ReactGA.event({
                                 category: 'Auth',
@@ -417,7 +421,7 @@ function SignUp() {
                     {
                         nameErrorMsg.length ?
                             <ErrorLabel
-                                margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter correct name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
+                                margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter valid name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
                     }
                     {
                         showResponse ?
