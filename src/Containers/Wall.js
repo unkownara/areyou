@@ -223,20 +223,22 @@ function Wall({ props }) {
                         let newPosts = posts.length === 0 ? response.data.Items : posts.concat(response.data.Items);
 
                         let oldPosts = JSON.parse(localStorage.getItem('userAnswers'));
-
-                        if (oldPosts.length !== newPosts.length || JSON.stringify(oldPosts) !== JSON.stringify(newPosts)) {
-                            if (props.location.state !== undefined && props.location.state !== null && props.location.state.newAnswers !== undefined && props.location.state.newAnswers) {
-                                localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                                setPosts(newPosts)
-                            } else {
-                                localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                                setUpdatedPosts(newPosts);
-                                setShowRefreshPost(true);
+                        if (oldPosts !== undefined && oldPosts !== null) {
+                            if (oldPosts.length !== newPosts.length || JSON.stringify(oldPosts) !== JSON.stringify(newPosts)) {
+                                if ((props.location.state !== undefined && props.location.state !== null && props.location.state.newAnswers !== undefined && props.location.state.newAnswers) || (oldPosts.length === 0)) {
+                                    localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                                    setPosts(newPosts);
+                                } else {
+                                    localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                                    setUpdatedPosts(newPosts);
+                                    setShowRefreshPost(true);
+                                }
                             }
+                        } else {
+                            localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                            setPosts(newPosts);
+                            setPostsLoading(false);
                         }
-
-                        localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                        setPostsLoading(false);
                     } else {
                         console.log('No posts are available');
                         setPostsLoading(false);
