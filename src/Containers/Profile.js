@@ -13,11 +13,11 @@ import { getApiRequestCall } from '../backend/ApiRequests';
 import { user_guest_profile_info_url, user_profile_url } from "../backend/Apis";
 import SkipToAnswers from '../Components/SkipToAnswers';
 import CustomSnackBar from '../Components/CustomSnackBar';
+import ContentLoader from '../Components/ContentLoader';
+import DotLoader from '../Components/DotLoader';
 
 import Login from '../Images/login.png';
 import NoData from '../Images/no-data.png';
-import DotLoader from '../Components/DotLoader';
-
 
 const LiftUp = keyframes`
     0% {
@@ -370,7 +370,7 @@ export default function Profile(props) {
                                             }
                                         </Fragment>
                                         :
-                                        <DotLoader />
+                                        <ContentLoader />
                                 }
                                 <SkipWrapper>
                                     <OR>or</OR>

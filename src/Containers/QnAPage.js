@@ -387,9 +387,6 @@ function QnAPage(props) {
                                     setPostUploadStatus('success');
                                     setPostSuccessType('answer_submitted');
                                     setSubmitting(false);
-                                    // history.push({
-                                    //     pathname: '/',
-                                    // })
                                 } else {
                                     setPostUploadStatus('failure');
                                     setPostSuccessType('');
