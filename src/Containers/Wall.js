@@ -156,6 +156,11 @@ const DeletedMsg = styled.div`
 
 const RefreshButton = styled(DeletedMsg)`
     background: #58D68D;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 function Wall({ props }) {
@@ -201,7 +206,6 @@ function Wall({ props }) {
     }
 
     useEffect(() => {
-        ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/');
     }, [])
 
@@ -275,10 +279,20 @@ function Wall({ props }) {
         let lastEvaluatedKey = posts[posts.length - 1];
         if (lastEvaluatedKey !== undefined && lastEvaluatedKey !== null) {
             setPostApiDate(lastEvaluatedKey.createdOn);
+            ReactGA.event({
+                category: 'Answer View',
+                action: 'Load More',
+                label: `User clicked on load more answers`
+            });
         }
     };
 
     function redirectToQnAPage() {
+        ReactGA.event({
+            category: 'Edit Answer',
+            action: 'Answer Edit Triggered',
+            label: `User triggered to edit his answer`
+        });
         history.push({
             pathname: '/qna',
             state: {
@@ -303,6 +317,11 @@ function Wall({ props }) {
     }
 
     function deletePostConfirmation() {
+        ReactGA.event({
+            category: 'Delete Answer',
+            action: 'Answer Delete Triggered',
+            label: `User triggered to delete his answer`
+        });
         openSnackBar('confirm_delete')
     }
 
@@ -311,13 +330,32 @@ function Wall({ props }) {
             if (res === true) {
                 setDeletedMsg('Answer deleted successfully');
                 posts.splice(selectedPostData.postIndex, 1);
+                ReactGA.event({
+                    category: 'Delete Answer',
+                    action: 'Answer Deleted',
+                    label: `User deleted his answer`
+                });
             } else {
                 setDeletedMsg('An unknown error occured.');
+                ReactGA.event({
+                    category: 'Delete Answer',
+                    action: 'Answer Delete Error',
+                    label: `Answer Delete Error`
+                });
             }
             openSnackBar('answer_deleted');
         });
         closeSnackBar('confirm_delete');
         closeSnackBar('post_options');
+    }
+
+    function cancelDelete() {
+        ReactGA.event({
+            category: 'Delete Answer',
+            action: 'Cancel Delete',
+            label: `User cancelled delete`
+        });
+        closeSnackBar('confirm_delete')
     }
 
     function ownPostLikeError() {
@@ -398,7 +436,7 @@ function Wall({ props }) {
             </CustomSnackBar>
             <CustomSnackBar open={openConfirmDeleteSnackBar} handleClose={() => closeSnackBar('confirm_delete')}>
                 <DeleteButton onClick={deleteAnswer}>Yes</DeleteButton>
-                <EditButton onClick={() => closeSnackBar('confirm_delete')}>No</EditButton>
+                <EditButton onClick={cancelDelete}>No</EditButton>
             </CustomSnackBar>
             <CustomSnackBar open={openDeletedMsgSnackBar} handleClose={() => closeSnackBar('answer_deleted')}>
                 <DeletedMsg>{deletedMsg}</DeletedMsg>

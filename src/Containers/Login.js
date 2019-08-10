@@ -219,7 +219,6 @@ function Login() {
     const passswordRef = useRef(null);
 
     useEffect(() => {
-        ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/login');
     }, [])
 
@@ -273,6 +272,11 @@ function Login() {
                             setEmailErrorMsg('');
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__', JSON.stringify(response.data.Items[0]));
+                            ReactGA.event({
+                                category: 'Auth',
+                                action: 'User Login',
+                                label: `User Logged in on ${(new Date()).toDateString()} at ${(new Date()).getHours()}:${(new Date()).getMinutes()}`
+                            });
                             history.push({
                                 pathname: '/',
                                 // search: `wall?u_id=${makeid(6)}`,
@@ -282,13 +286,28 @@ function Login() {
                         } else if (response.data === "Incorrect password") {
                             setVerifyingCredentials(false);
                             setLoginErrorMsg(response.data);
+                            ReactGA.event({
+                                category: 'Auth',
+                                action: 'User Login',
+                                label: 'Invalid Credentials Entered'
+                            });
                         } else if (response.data === "Email doesn't exists") {
                             setVerifyingCredentials(false);
                             setLoginErrorMsg(response.data);
+                            ReactGA.event({
+                                category: 'Auth',
+                                action: 'User Login',
+                                label: 'Invalid Credentials Entered'
+                            });
                         }
                     } catch (e) {
                         setVerifyingCredentials(false);
                         console.log('oops something went wrong');
+                        ReactGA.event({
+                            category: 'Auth',
+                            action: 'User Login',
+                            label: `Login Error ${e}`
+                        });
                     }
                 })
             })

@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Routers from './router';
 import * as serviceWorker from './serviceWorker';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-145111269-1');
 
 ReactDOM.render(<Routers />, document.getElementById('root'));
 

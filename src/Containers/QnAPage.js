@@ -266,14 +266,15 @@ function QnAPage(props) {
     const [open, setOpenSnackBar] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [postEdit, setPostEdit] = useState(false);
+    const [answerEditFlag, setAnswerEditFlag] = useState(false);
     const [postData, setPostData] = useState({});
     const [answerInput, setAnswerInput] = useState('');
+    const [pageStartTime, setPageStartTime] = useState(0);
     const [postSuccessType, setPostSuccessType] = useState('');
 
     useEffect(() => {
-        ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/qna');
-        console.log(props)
+        setPageStartTime((new Date()).getTime());
     }, [])
 
     useEffect(() => {
@@ -329,17 +330,56 @@ function QnAPage(props) {
         if (type === 'yes') {
             setYesSelected(true);
             setNoSelected(false);
+            ReactGA.event({
+                category: 'New Answer',
+                action: 'Yes/No Selected',
+                label: `User selected YES after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+            });
+            if (postEdit) {
+                ReactGA.event({
+                    category: 'Edit Answer',
+                    action: 'Answer Edited',
+                    label: `User changed answer to YES in edit`
+                });
+            }
         }
         else if (type === 'no') {
             setYesSelected(false);
             setNoSelected(true);
+            ReactGA.event({
+                category: 'New Answer',
+                action: 'Yes/No Selected',
+                label: `User selected NO after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+            });
+            if (postEdit) {
+                ReactGA.event({
+                    category: 'Edit Answer',
+                    action: 'Answer Edited',
+                    label: `User changed answer to NO in edit`
+                });
+            }
         }
         setErrorMsg('')
         setOpenSnackBar(false);
     }
 
     function setAnswer(e) {
-        setAnswerInput(e.target.value)
+        setAnswerInput(e.target.value);
+        if (answerInput <= 1) {
+            ReactGA.event({
+                category: 'New Answer',
+                action: 'Answer Typing',
+                label: `User started Typing Answer after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+            });
+        }
+        if (postEdit && !answerEditFlag) {
+            ReactGA.event({
+                category: 'Edit Answer',
+                action: 'Answer Edited',
+                label: `User changed answer in edit`
+            });
+            setAnswerEditFlag(true);
+        }
     }
 
     const SubmitAnswer = () => {
@@ -347,6 +387,11 @@ function QnAPage(props) {
         if (answerInput.length === 0 || answerInput === undefined || answerInput === null) {
             setErrorMsg('Please write an answer.');
             setOpenSnackBar(true);
+            ReactGA.event({
+                category: 'New Answer',
+                action: 'Answer Filling',
+                label: `User submitting an answer without content.`
+            });
         } else {
             setOpenSnackBar(false);
             if (yesSelected || noSelected) {
@@ -367,6 +412,7 @@ function QnAPage(props) {
                     ACL: 'public-read',
                     ContentType: 'text/plain; charset=us-ascii'
                 };
+
                 s3Bucket.putObject(s3Obj, function (err, data) {
                     if (err) {
                         console.log('Error message', err);
@@ -387,6 +433,11 @@ function QnAPage(props) {
                                     setPostUploadStatus('success');
                                     setPostSuccessType('answer_submitted');
                                     setSubmitting(false);
+                                    ReactGA.event({
+                                        category: 'New Answer',
+                                        action: 'Answer Submitted',
+                                        label: `User Submitted Answer after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+                                    });
                                 } else {
                                     setPostUploadStatus('failure');
                                     setPostSuccessType('');
@@ -400,12 +451,22 @@ function QnAPage(props) {
                 setErrorMsg('Please select Yes or No.');
                 setOpenSnackBar(true);
                 setSubmitting(false);
+                ReactGA.event({
+                    category: 'New Answer',
+                    action: 'Answer Filling',
+                    label: `User submitting an answer without YES/NO.`
+                });
             }
         }
     };
 
     function cancelEdit() {
-        postData.postOrigin === 'wall_page' ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
+        ReactGA.event({
+            category: 'Edit Answer',
+            action: 'Cancel Edit',
+            label: `User cancelled edit`
+        });
+        postData.postOrigin === 'wall_page' ? history.push({ pathname: '/' }) : history.push({ pathname: `/profile/${userInfo.userId}`, state: { directProfileLanding: false } })
     }
 
     function updateNewAnswer() {
@@ -420,9 +481,19 @@ function QnAPage(props) {
             editPost(postData.postId, postData.createdOn, postData.questionId, answerInput, yesSelected ? "yes" : "no", userInfo.userId, function (res) {
                 if (res === true) {
                     setPostSuccessType('answer_edited');
+                    ReactGA.event({
+                        category: 'Edit Answer',
+                        action: 'Answer Edited',
+                        label: `User edited his answer`
+                    });
                 } else {
                     setErrorMsg('An unknown error occured.');
                     setOpenSnackBar(true);
+                    ReactGA.event({
+                        category: 'Edit Answer',
+                        action: 'Answer Edit Error',
+                        label: `Answer Edit Error`
+                    });
                 }
                 setSubmitting(false);
             });

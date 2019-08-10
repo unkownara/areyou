@@ -7,6 +7,7 @@ import ContentLoader from './ContentLoader';
 import { getDate1, getRandomColor } from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
 import history from '../history';
+import ReactGA from 'react-ga';
 
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
@@ -263,14 +264,25 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
     const [showPostOptions, setShowPostOptions] = useState(false);
 
     function showFullAnswer() {
-        setShowMore(true)
+        setShowMore(true);
+        ReactGA.event({
+            category: 'Answer View',
+            action: 'Show Full Answer',
+            label: 'User clicked on show full answer'
+        });
     }
 
     function hideFullAnswer() {
-        setShowMore(false)
+        setShowMore(false);
+        ReactGA.event({
+            category: 'Answer View',
+            action: 'Show Less Answer',
+            label: 'User clicked on show less answer'
+        });
     }
 
     const likeAnswer = () => {
+        var userInfo = JSON.parse(localStorage.getItem('__u_info__'));
         if (userId !== cookie.load('__u_id__')) {
             setLike(like => like + 1);
             setLikedByUser(true);
@@ -287,10 +299,20 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                     likes: likesCount
                 };
                 obj.postApiRequestCall(user_post_like_url, payload, function (response) {
+                    ReactGA.event({
+                        category: 'Answer Clap',
+                        action: 'Clap',
+                        label: (userInfo !== undefined && userInfo !== null ? `User clapped to an answer` : `Logged out user clapped to an answer`)
+                    });
                 });
             })
         } else {
             ownPostLikeError();
+            ReactGA.event({
+                category: 'Answer Clap',
+                action: 'Clap',
+                label: `User clapping for his own answer`
+            });
         }
     };
 
@@ -327,7 +349,13 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
     }, [path]);
 
     function redirectToUserProfile() {
-        history.push(`/profile/${userId}`);
+        var userInfo = JSON.parse(localStorage.getItem('__u_info__'));
+        ReactGA.event({
+            category: 'User Profile Visit',
+            action: 'Profile Visit',
+            label: (userInfo !== undefined && userInfo !== null ? `User ${cookie.load('__u_id__')} visited ${userInfo.userId} from Wall Page` : `Logged out user visited ${userInfo.userId} from Wall Page`)
+        });
+        history.push({ pathname: `/profile/${userId}`, state: { directProfileLanding: false } });
     }
 
     return (
@@ -393,7 +421,9 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                         alt={'Like'}
                                     />
                                 </div>
-                                <LikesCount><span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer.</LikesCount>
+                                <LikesCount>
+                                    <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer.
+                                </LikesCount>
                             </LikeIconWrapper>
                         </PostOptionsWrapper>
                     </Post>
@@ -401,6 +431,6 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                     <ContentLoader count={5} />
             }
             <HR />
-        </PostWrapper >
+        </PostWrapper>
     );
 }

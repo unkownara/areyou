@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import styled from 'styled-components';
 import Headroom from 'react-headroom';
+import ReactGA from 'react-ga';
 
 import history from '../history';
 import { getRandomColor } from '../Functions/Generics';
@@ -161,9 +162,15 @@ export default function Header({ openSnackBar }) {
     }
 
     function redirectToProfilePage() {
-        if(userInfo !== null) {
+        if (userInfo !== null) {
+            ReactGA.event({
+                category: 'User Profile Visit',
+                action: 'Profile Visit',
+                label: `User visiting his profile`
+            });
             history.push({
-                pathname: `/profile/${userInfo.userId}`
+                pathname: `/profile/${userInfo.userId}`,
+                state: { directProfileLanding: false }
             });
         } else {
             history.push('/login');
@@ -171,6 +178,11 @@ export default function Header({ openSnackBar }) {
     }
 
     function redirectToWallPage() {
+        ReactGA.event({
+            category: 'Answer View',
+            action: 'App Name Clicked',
+            label: `User clicked on app name`
+        });
         history.push('/');
     }
 

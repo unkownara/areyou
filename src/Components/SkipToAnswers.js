@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import ReactGA from 'react-ga';
 
 import history from '../history';
 
@@ -47,6 +48,11 @@ const Skip = styled.div`
 export default function SkipToAnswers({ origin }) {
 
     function redirectToWall() {
+        ReactGA.event({
+            category: 'Answer View',
+            action: 'Skip to Answers',
+            label: `User skipped to wall page from ${origin}`
+        });
         history.push("/")
     }
 
