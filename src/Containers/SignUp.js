@@ -229,7 +229,6 @@ function SignUp() {
     const passswordRef = useRef(null);
 
     useEffect(() => {
-        ReactGA.initialize('UA-145111269-1');
         ReactGA.pageview('/signup');
     }, [])
 
@@ -301,6 +300,11 @@ function SignUp() {
                             setErrorMsg('');
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__', JSON.stringify(payload));
+                            ReactGA.event({
+                                category: 'Auth',
+                                action: 'User SignUp',
+                                label: `User Signed Up on ${(new Date()).toDateString()} at ${(new Date()).getHours()}:${(new Date()).getMinutes()}`
+                            });
                             history.push({
                                 pathname: '/qna',
                                 search: `wall?u_id=${makeid(6)}`,
@@ -310,10 +314,20 @@ function SignUp() {
                         } else {
                             setErrorMsg('Something wrong');
                             setVerifyingCredentials(false);
+                            ReactGA.event({
+                                category: 'Auth',
+                                action: 'User Sign Up',
+                                label: `Sign Up Error`
+                            });
                         }
                     } catch (e) {
                         setErrorMsg('Something wrong');
                         setVerifyingCredentials(false);
+                        ReactGA.event({
+                            category: 'Auth',
+                            action: 'User Sign Up',
+                            label: `Sign Up Error ${e}`
+                        });
                     }
                 })
             });
@@ -338,10 +352,20 @@ function SignUp() {
                     } else {
                         setUsernameAvailable(false);
                         setValidatingUsername(false);
+                        ReactGA.event({
+                            category: 'Auth',
+                            action: 'User Sign Up',
+                            label: `User tried for existing username.`
+                        });
                     }
                 } catch (e) {
                     setUsernameAvailable(true);
                     setValidatingUsername(false);
+                    ReactGA.event({
+                        category: 'Auth',
+                        action: 'User Sign Up',
+                        label: `Username Check Error ${e}`
+                    });
                 }
             });
         } else {

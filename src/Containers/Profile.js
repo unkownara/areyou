@@ -130,9 +130,9 @@ const OR = styled.div`
 
 const Button = styled.div`
     margin: 40px auto 20px auto;
-    border: 1px solid #09198A;
+    border: 1px solid red;
     border-radius: 5px;
-    color: #09198A;
+    color: red;
     font-weight: bold;
     font-size: 16px;
     text-align: center;
@@ -141,6 +141,7 @@ const Button = styled.div`
     vertical-align: middle;
     width: 300px;
     cursor: pointer;
+    opacity: 0.7;
 
     @media(max-width: 700px){
         width: 100%;
@@ -218,8 +219,15 @@ export default function Profile(props) {
     }
 
     useEffect(() => {
-        ReactGA.initialize('UA-145111269-1');
-        ReactGA.pageview('/profile');
+        ReactGA.pageview(`/profile/${uId}`);
+        var userInfo = JSON.parse(localStorage.getItem('__u_info__'));
+        if (props.location.state === undefined || props.location.state === null) {
+            ReactGA.event({
+                category: 'User Profile Visit',
+                action: 'Profile Visit',
+                label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from URL` : `Logged out user visited ${userInfo.userId} from URL`)
+            });
+        }
     }, []);
 
     useEffect(() => {
@@ -234,6 +242,11 @@ export default function Profile(props) {
             } else {
                 setUserNotFound(true);
                 setCheckingUser(false);
+                ReactGA.event({
+                    category: 'User Profile Visit',
+                    action: 'Invalid Profile Visit',
+                    label: `User not found`
+                });
                 console.log('User does not exit');
             }
         })
@@ -260,8 +273,9 @@ export default function Profile(props) {
 
     function logout() {
         ReactGA.event({
-            category: 'Authentication',
-            action: 'Logout clicked'
+            category: 'Auth',
+            action: 'Logout clicked',
+            label: `User logged out`
         });
         localStorage.setItem('__u_info__', null);
         cookie.remove('__u_id__');
@@ -293,6 +307,11 @@ export default function Profile(props) {
     }
 
     function deletePostConfirmation() {
+        ReactGA.event({
+            category: 'Delete Answer',
+            action: 'Answer Delete Triggered',
+            label: `User triggered to delete his answer`
+        });
         openSnackBar('confirm_delete')
     }
 
@@ -301,13 +320,32 @@ export default function Profile(props) {
             if (res === true) {
                 setDeletedMsg('Answer deleted successfully');
                 userPosts.splice(selectedPostData.postIndex, 1);
+                ReactGA.event({
+                    category: 'Delete Answer',
+                    action: 'Answer Deleted',
+                    label: `User deleted his answer`
+                });
             } else {
                 setDeletedMsg('An unknown error occured.');
+                ReactGA.event({
+                    category: 'Delete Answer',
+                    action: 'Answer Delete Error',
+                    label: `Answer Delete Error`
+                });
             }
             openSnackBar('answer_deleted');
         });
         closeSnackBar('confirm_delete');
         closeSnackBar('post_options');
+    }
+
+    function cancelDelete() {
+        ReactGA.event({
+            category: 'Delete Answer',
+            action: 'Cancel Delete',
+            label: `User cancelled delete`
+        });
+        closeSnackBar('confirm_delete')
     }
 
     function ownPostLikeError() {
@@ -328,6 +366,7 @@ export default function Profile(props) {
                                 </ImageWrapper>
                                 <ProfileName>{(userInfo && userInfo.userName) || 'User'}</ProfileName>
                                 <Email>{(userInfo && userInfo.userId) || ''}</Email>
+                                <Info style={{ margin: 0 }}>You can enter thes email id of your friend directly in the URL to visit their profie.</Info>
                                 <HR />
                                 {
                                     !loadingPosts ?
@@ -397,7 +436,7 @@ export default function Profile(props) {
             </CustomSnackBar>
             <CustomSnackBar open={openConfirmDeleteSnackBar} handleClose={() => closeSnackBar('confirm_delete')}>
                 <DeleteButton onClick={deleteAnswer}>Yes</DeleteButton>
-                <EditButton onClick={() => closeSnackBar('confirm_delete')}>No</EditButton>
+                <EditButton onClick={cancelDelete}>No</EditButton>
             </CustomSnackBar>
             <CustomSnackBar open={openDeletedMsgSnackBar} handleClose={() => closeSnackBar('answer_deleted')}>
                 <DeletedMsg>{deletedMsg}</DeletedMsg>
