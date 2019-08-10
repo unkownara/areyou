@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
 
+import { deletePost } from '../Functions/PostOptions';
 import history from '../history';
 import { DeleteButton, EditButton } from '../Components/Buttons';
 import Header from '../Components/Header';
@@ -185,6 +186,7 @@ export default function Profile(props) {
     const [checkingUser, setCheckingUser] = useState(false);
     const [userNotFound, setUserNotFound] = useState(false);
     const [selectedPostData, setSelectedPostData] = useState({});
+    const [openOwnPostLikeErrorSnackBar, setOpenOwnPostLikeErrorSnackBar] = useState(false);
     const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
     const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false);
     const [openDeletedMsgSnackBar, setOpenDeletedMsgSnackBar] = useState(false);
@@ -197,7 +199,9 @@ export default function Profile(props) {
             setOpenPostOptionSnackBar(false)
         } else if (type === 'answer_deleted') {
             setOpenDeletedMsgSnackBar(true);
-        }
+        } else if (type === 'own_post_like') {
+            setOpenOwnPostLikeErrorSnackBar(true);
+        } 
     }
 
     function closeSnackBar(type) {
@@ -208,7 +212,9 @@ export default function Profile(props) {
             setOpenPostOptionSnackBar(true)
         } else if (type === 'answer_deleted') {
             setOpenDeletedMsgSnackBar(false);
-        }
+        } else if (type === 'own_post_like') {
+            setOpenOwnPostLikeErrorSnackBar(false);
+        } 
     }
 
     useEffect(() => {
@@ -241,7 +247,7 @@ export default function Profile(props) {
             setLoadingPosts(true);
             getApiRequestCall(user_profile_url, params, function (response) {
                 if (response && response.data && response.data.Items && response.data.Items.length > 0) {
-                    response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? 1 : ((b.createdOn > a.createdOn) ? -1 : 0));
+                    response.data.Items.sort((a, b) => (a.createdOn > b.createdOn) ? -1 : ((b.createdOn > a.createdOn) ? 1 : 0));
                     let posts = userPosts.concat(response.data.Items);
                     setUsersPost(posts);
                     setLoadingPosts(false);
@@ -272,7 +278,7 @@ export default function Profile(props) {
         })
     }
 
-    function getPostOptions(questionId, question, postId, answer, yesNoAnswer, createdOn) {
+    function getPostOptions(questionId, question, postId, answer, yesNoAnswer, createdOn, postIndex) {
         setSelectedPostData({
             questionId: questionId,
             question: question,
@@ -280,7 +286,8 @@ export default function Profile(props) {
             answer: answer,
             yesNoAnswer: yesNoAnswer,
             createdOn: createdOn,
-            postOrigin: 'profile_page'
+            postOrigin: 'profile_page',
+            postIndex: postIndex
         })
         openSnackBar('post_options');
     }
@@ -290,12 +297,21 @@ export default function Profile(props) {
     }
 
     function deleteAnswer() {
-        console.log('delete')
-        // deletePost(selectedPostData.postId, selectedPostData.createdOn);
-        setDeletedMsg('Answer deleted successfully');
+        deletePost(selectedPostData.postId, selectedPostData.createdOn, function (res) {
+            if (res === true) {
+                setDeletedMsg('Answer deleted successfully');
+                userPosts.splice(selectedPostData.postIndex, 1);
+            } else {
+                setDeletedMsg('An unknown error occured.');
+            }
+            openSnackBar('answer_deleted');
+        });
         closeSnackBar('confirm_delete');
         closeSnackBar('post_options');
-        openSnackBar('answer_deleted');
+    }
+
+    function ownPostLikeError() {
+        openSnackBar('own_post_like');
     }
 
     return (
@@ -330,16 +346,19 @@ export default function Profile(props) {
                                                         <WallPost
                                                             getPostOptions={getPostOptions}
                                                             key={data.postId}
+                                                            postIndex={data_index}
                                                             path={data.path}
                                                             liked={false}
                                                             likesCount={data.likes}
                                                             userName={data.userName}
                                                             userId={data.userId}
+                                                            showQuestion
                                                             uploadDate={data.createdOn}
                                                             postId={data.postId}
                                                             question={data.question}
                                                             questionId={data.questionId}
                                                             yesNoAnswer={data.yesOrNo}
+                                                            ownPostLikeError={ownPostLikeError}
                                                         />
                                                     )
                                                     :
@@ -381,6 +400,9 @@ export default function Profile(props) {
             </CustomSnackBar>
             <CustomSnackBar open={openDeletedMsgSnackBar} handleClose={() => closeSnackBar('answer_deleted')}>
                 <DeletedMsg>{deletedMsg}</DeletedMsg>
+            </CustomSnackBar>
+            <CustomSnackBar open={openOwnPostLikeErrorSnackBar} handleClose={() => closeSnackBar('own_post_like')}>
+                <DeletedMsg>You can't clap for your own answer.</DeletedMsg>
             </CustomSnackBar>
         </Fragment>
     );
