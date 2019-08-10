@@ -206,6 +206,10 @@ const ValidatingUsername = styled.div`
     margin: 5px 0 0 5px;
 `
 
+const ErrMsg = styled(UsernameTaken)`
+    margin: 0px auto 20px auto;
+`
+
 function SignUp() {
 
     const [errorMsg, setErrorMsg] = useState('');
@@ -214,9 +218,9 @@ function SignUp() {
     const phone = useInput('');
     const name = useInput('');
     const [validatingUsername, setValidatingUsername] = useState(false);
-    const [usernameAvailable, setUsernameAvailable] = useState(false);
     const [showPass, setShowPass] = useState(false);
-    const [isUserNameExist, setIsUserNameExist] = useState(false);
+    const [showResponse, setShowResponse] = useState(false);
+    const [usernameAvailable, setUsernameAvailable] = useState(false);
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [nameErrorMsg, setNameErrorMsg] = useState('');
     const [phoneErrorMsg, setPhoneErrorMsg] = useState('');
@@ -282,7 +286,7 @@ function SignUp() {
     }
 
     const SignUpNewUser = () => {
-        if (!ValidateSignUpFields()) {
+        if (!ValidateSignUpFields() && usernameAvailable) {
             setVerifyingCredentials(true);
             import('../backend/ApiRequests').then(obj => {
                 let payload = {
@@ -320,23 +324,29 @@ function SignUp() {
     };
 
     function validateUsername() {
-        console.log('validation ');
         let params = {
             userName: name.value
         }
-        getApiRequestCall(user_name_checking_url, params, function(response) {
-            try {
-                if(response.data === true) {
-                    setIsUserNameExist(false);
-                    setValidatingUsername(true);
-                } else {
-                    setIsUserNameExist(true);
+        setValidatingUsername(true);
+        if (name.value.length) {
+            setShowResponse(true);
+            getApiRequestCall(user_name_checking_url, params, function (response) {
+                try {
+                    if (response.data === true) {
+                        setUsernameAvailable(true);
+                        setValidatingUsername(false);
+                    } else {
+                        setUsernameAvailable(false);
+                        setValidatingUsername(false);
+                    }
+                } catch (e) {
+                    setUsernameAvailable(true);
                     setValidatingUsername(false);
                 }
-            } catch(e) {
-                setIsUserNameExist(true);
-            }
-        });
+            });
+        } else {
+            setShowResponse(false);
+        }
     }
 
     const logInRedirect = () => {
@@ -386,10 +396,11 @@ function SignUp() {
                                 margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter correct name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
                     }
                     {
-                        validatingUsername ?
-                            <ValidatingUsername>Validating username...</ValidatingUsername> :
-                            usernameAvailable ? <ValidatingUsername>Username Available.</ValidatingUsername> :
-                                <UsernameTaken>Username already taken.</UsernameTaken>
+                        showResponse ?
+                            validatingUsername ?
+                                <ValidatingUsername>Validating username...</ValidatingUsername> :
+                                usernameAvailable ? <ValidatingUsername>Username Available.</ValidatingUsername> :
+                                    <UsernameTaken>Username already taken.</UsernameTaken> : null
                     }
                 </InputContainer>
                 <InputContainer>
@@ -451,6 +462,10 @@ function SignUp() {
                         <LineLoader /> : null
                 }
             </Button>
+            {
+                errorMsg.length ?
+                    <ErrMsg>{errorMsg}</ErrMsg> : null
+            }
             <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers origin={'Sign Up Page'} />
