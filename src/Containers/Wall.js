@@ -159,6 +159,7 @@ function Wall({ props }) {
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(true);
     const [selectedPostData, setSelectedPostData] = useState({});
+    const [openOwnPostLikeErrorSnackBar, setOpenOwnPostLikeErrorSnackBar] = useState(false);
     const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
     const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false)
     const [openDeletedMsgSnackBar, setOpenDeletedMsgSnackBar] = useState(false);
@@ -172,7 +173,9 @@ function Wall({ props }) {
             setOpenPostOptionSnackBar(false)
         } else if (type === 'answer_deleted') {
             setOpenDeletedMsgSnackBar(true);
-        }
+        } else if (type === 'own_post_like') {
+            setOpenOwnPostLikeErrorSnackBar(true);
+        } 
     }
 
     function closeSnackBar(type) {
@@ -183,7 +186,9 @@ function Wall({ props }) {
             setOpenPostOptionSnackBar(true)
         } else if (type === 'answer_deleted') {
             setOpenDeletedMsgSnackBar(false);
-        }
+        } else if (type === 'own_post_like') {
+            setOpenOwnPostLikeErrorSnackBar(false);
+        } 
     }
 
     useEffect(() => {
@@ -246,7 +251,7 @@ function Wall({ props }) {
         })
     }
 
-    function getPostOptions(questionId, question, postId, answer, yesNoAnswer, createdOn) {
+    function getPostOptions(questionId, question, postId, answer, yesNoAnswer, createdOn, postIndex) {
         setSelectedPostData({
             questionId: questionId,
             question: question,
@@ -254,7 +259,8 @@ function Wall({ props }) {
             answer: answer,
             yesNoAnswer: yesNoAnswer,
             createdOn: createdOn,
-            postOrigin: 'wall_page'
+            postOrigin: 'wall_page',
+            postIndex: postIndex
         })
         openSnackBar('post_options');
     }
@@ -267,6 +273,7 @@ function Wall({ props }) {
         deletePost(selectedPostData.postId, selectedPostData.createdOn, function (res) {
             if (res === true) {
                 setDeletedMsg('Answer deleted successfully');
+                posts.splice(selectedPostData.postIndex, 1);
             } else {
                 setDeletedMsg('An unknown error occured.');
             }
@@ -274,6 +281,10 @@ function Wall({ props }) {
         });
         closeSnackBar('confirm_delete');
         closeSnackBar('post_options');
+    }
+
+    function ownPostLikeError() {
+        openSnackBar('own_post_like');
     }
 
     return (
@@ -289,10 +300,11 @@ function Wall({ props }) {
                                 </Question>
                                 <WallWrapper>
                                     {
-                                        posts.map((data) =>
+                                        posts.map((data, data_index) =>
                                             <WallPost
                                                 getPostOptions={getPostOptions}
                                                 key={data.postId}
+                                                postIndex={data_index}
                                                 path={data.path}
                                                 likesCount={data.likes}
                                                 userName={data.userName}
@@ -302,6 +314,7 @@ function Wall({ props }) {
                                                 question={data.question}
                                                 questionId={data.questionId}
                                                 yesNoAnswer={data.yesOrNo}
+                                                ownPostLikeError={ownPostLikeError}
                                             />
                                         )
                                     }
@@ -328,6 +341,9 @@ function Wall({ props }) {
                     postsLoading ? <DotLoader /> :
                         posts && posts.length === 0 ?
                             <Fragment>
+                                <Question>
+                                    {questionResponse.question}
+                                </Question>
                                 <ImageWrapper>
                                     <FirstIcon src={First} />
                                 </ImageWrapper>
@@ -346,6 +362,9 @@ function Wall({ props }) {
             </CustomSnackBar>
             <CustomSnackBar open={openDeletedMsgSnackBar} handleClose={() => closeSnackBar('answer_deleted')}>
                 <DeletedMsg>{deletedMsg}</DeletedMsg>
+            </CustomSnackBar>
+            <CustomSnackBar open={openOwnPostLikeErrorSnackBar} handleClose={() => closeSnackBar('own_post_like')}>
+                <DeletedMsg>You can't clap for your own answer.</DeletedMsg>
             </CustomSnackBar>
         </Fragment>
     );

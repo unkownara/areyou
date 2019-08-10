@@ -247,11 +247,10 @@ const Question = styled.div`
     word-break: break-word;
 `
 
-export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, question, questionId, getPostOptions }) {
+export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, postIndex, question, questionId, getPostOptions, ownPostLikeError }) {
 
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
-    const [likeErrMsg, setLikeErrMsg] = useState('');
     const [answer, setAnswer] = useState('');
     const [likedByUser, setLikedByUser] = useState(false);
     const [showAnim, setShowAnim] = useState(false);
@@ -285,7 +284,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                 });
             })
         } else {
-            setLikeErrMsg("You can't like your own post");
+            ownPostLikeError();
         }
     };
 
@@ -340,7 +339,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                             <OptionsIconWrapper>
                                 {
                                     showPostOptions ?
-                                        <OptionsIcon onClick={() => getPostOptions(questionId, question, postId, answer, yesNoAnswer, uploadDate)} src={Options} /> : null
+                                        <OptionsIcon onClick={() => getPostOptions(questionId, question, postId, answer, yesNoAnswer, uploadDate, postIndex)} src={Options} /> : null
                                 }
                             </OptionsIconWrapper>
                         </ProfileWrapper>
