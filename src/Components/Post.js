@@ -6,6 +6,7 @@ import cookie from 'react-cookies';
 import ContentLoader from './ContentLoader';
 import { getDate1, getRandomColor } from '../Functions/Generics';
 import { user_post_like_url } from '../backend/Apis';
+import history from '../history';
 
 import Happy from '../Images/happy1.png';
 import Sad from '../Images/sad1.png';
@@ -131,6 +132,11 @@ const ProfileName = styled.div`
     font-weight: bold;
     font-size: 16px;
     padding-top: 4px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const UploadDate = styled.div`
@@ -320,6 +326,10 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
         });
     }, [path]);
 
+    function redirectToUserProfile() {
+        history.push(`/profile/${userId}`);
+    }
+
     return (
         <PostWrapper>
             {
@@ -332,7 +342,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                         bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
                                 </ProfileImageWrapper>
                                 <ProfileDetailsWrapper>
-                                    <ProfileName>{userName}</ProfileName>
+                                    <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? redirectToUserProfile : null}>{userName}</ProfileName>
                                     <UploadDate>{getDate1(uploadDate)}</UploadDate>
                                 </ProfileDetailsWrapper>
                             </ProfileContainer>
@@ -391,6 +401,6 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                     <ContentLoader count={5} />
             }
             <HR />
-        </PostWrapper>
+        </PostWrapper >
     );
 }
