@@ -296,7 +296,7 @@ function SignUp() {
                 };
                 obj.postApiRequestCall(user_info_url, payload, function (response) {
                     try {
-                        if (response && response.data && response.data.Items && response.data.Items.length > 0) {
+                        if (response && response.data === true) {
                             setErrorMsg('');
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__', JSON.stringify(payload));
