@@ -100,12 +100,14 @@ const Question = styled.div`
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
     margin: 20px auto;
+    font-size: 24px;
     letter-spacing: 1px;
     line-height: 25px;
     word-break: break-word;
     width: 600px;
 
     @media(max-width: 700px){
+        font-size: 22px;
         width: 100%;
     }
 `
@@ -234,6 +236,7 @@ function Wall({ props }) {
                                     setShowRefreshPost(true);
                                 }
                             }
+                            setPostsLoading(false);
                         } else {
                             localStorage.setItem('userAnswers', JSON.stringify(newPosts));
                             setPosts(newPosts);

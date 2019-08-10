@@ -317,6 +317,7 @@ function Login() {
                         {...email}
                         placeholder={'Email'}
                         onKeyPress={(e) => enterPressed(e)}
+                        disabled={verifyingCredentials}
                     />
                     {
                         emailErrorMsg.length ?
@@ -332,6 +333,7 @@ function Login() {
                         autoComplete="off"
                         placeholder="Password"
                         onKeyPress={(e) => enterPressed(e)}
+                        disabled={verifyingCredentials}
                     />
                     {
                         <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
@@ -346,7 +348,7 @@ function Login() {
                 </PasswordWrapper>
             </InputWrapper>
             <Button
-                onClick={LoginUser}
+                onClick={verifyingCredentials ? null : LoginUser}
                 disabled={verifyingCredentials}
                 login={verifyingCredentials}>
                 <span>{!verifyingCredentials ? "Let's Go" : 'Verifying ...'}</span>

@@ -140,7 +140,6 @@ const Button = styled.div`
     }
 `
 
-
 const LoaderLine = keyframes`
     0% {
         margin-left: 0px;
@@ -333,6 +332,7 @@ function SignUp() {
                         {...name}
                         placeholder={'Name'}
                         onKeyPress={(e) => enterPressed(e)}
+                        disabled={verifyingCredentials}
                     />
                     {
                         nameErrorMsg.length ?
@@ -345,6 +345,7 @@ function SignUp() {
                         {...email}
                         placeholder={'Email'}
                         onKeyPress={(e) => enterPressed(e)}
+                        disabled={verifyingCredentials}
                     />
                     {
                         emailErrorMsg.length ?
@@ -358,6 +359,7 @@ function SignUp() {
                         type="number"
                         placeholder={'Phone (Optional)'}
                         onKeyPress={(e) => enterPressed(e)}
+                        disabled={verifyingCredentials}
                     />
                     {
                         phoneErrorMsg.length ?
@@ -373,6 +375,7 @@ function SignUp() {
                         autoComplete="off"
                         placeholder="Password"
                         onKeyPress={(e) => enterPressed(e)}
+                        disabled={verifyingCredentials}
                     />
                     {
                         !passwordErrorMsg.length ?
@@ -388,7 +391,7 @@ function SignUp() {
                 </PasswordWrapper>
             </InputWrapper>
             <Button
-                onClick={SignUpNewUser}
+                onClick={verifyingCredentials ? null : SignUpNewUser}
                 disabled={verifyingCredentials}
                 login={verifyingCredentials}>
                 <span>{!verifyingCredentials ? "Sign Up" : 'Signing you up ...'}</span>
