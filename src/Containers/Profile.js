@@ -316,7 +316,7 @@ export default function Profile(props) {
 
     return (
         <Fragment>
-            <Header openSnackBar={openSnackBar} />
+            <Header openSnackBar={openSnackBar} origin={'Profile Page'} />
             <ProfileContainer>
                 {
                     !checkingUser ?
@@ -332,14 +332,6 @@ export default function Profile(props) {
                                 {
                                     !loadingPosts ?
                                         <Fragment>
-                                            <Info>
-                                                {
-                                                    userInfo && uId === userInfo.userId ?
-                                                        userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`
-                                                        :
-                                                        userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
-                                                }
-                                            </Info>
                                             {
                                                 !loadingPosts && userPosts && userPosts.length > 0 ?
                                                     userPosts.map((data, data_index) =>
@@ -370,7 +362,16 @@ export default function Profile(props) {
                                             }
                                         </Fragment>
                                         :
-                                        <ContentLoader />
+                                        userPosts && userPosts.length === 0 ?
+                                            <ContentLoader /> :
+                                            <Info>
+                                                {
+                                                    userInfo && uId === userInfo.userId ?
+                                                        userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`
+                                                        :
+                                                        userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
+                                                }
+                                            </Info>
                                 }
                                 <SkipWrapper>
                                     <OR>or</OR>

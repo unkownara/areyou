@@ -26,17 +26,11 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 0px auto 60px auto;
+    margin: 10px auto 60px auto;
 
     @media(max-width: 700px){
         margin: 0px auto 35px auto;
     }
-`
-
-
-const TagLine = styled.div`
-    color: #000;
-    font-size: 14px;
 `
 
 const LoginHeading = styled.p`
@@ -107,8 +101,9 @@ const Button = styled.div`
     font-weight: bold;
     margin: 20px auto;
     cursor: pointer;
+    letter-spacing: 1px;
     pointer-events: ${props => props.disabled ? 'none' : 'auto'};
-    opacity: ${props => props.submitting ? '0.7' : '1'};
+    opacity: ${props => props.disabled ? '0.7' : '1'};
     
     @media(max-width: 700px){
         cursor: default;
@@ -201,6 +196,17 @@ const PasswordHiderIcon = styled.img`
     }
 `
 
+const CredentialsError = styled.div`
+    margin: 0px auto 20px auto;
+    font-size: 11px;
+    font-weight: bold;
+    background: #E74C3C;
+    color: #fff;
+    padding: 5px 10px;
+    letter-spacing: 1px;
+    border-radius: 10px;
+`
+
 function Login() {
 
     const email = useInput('');
@@ -219,30 +225,30 @@ function Login() {
 
     function ValidateEmailAndPassword() {
 
-        let errFlag = false;
+        let emailErrFlag, passErrFlag = false;
 
         let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (email.value.length !== 0 && email.value !== undefined && email.value !== '') {
             if (!regex.test(email.value)) {
                 setEmailErrorMsg('Invalid Email')
-                errFlag = true
+                emailErrFlag = true
             } else {
-                errFlag = false
+                emailErrFlag = false
             }
         } else {
             setEmailErrorMsg('Required');
-            errFlag = true
+            emailErrFlag = true
         }
 
         if (password.value === '' || password.value.length === 0 || password.value === undefined) {
             setPasswordErrorMsg('Required');
-            errFlag = true
+            passErrFlag = true
         } else {
-            errFlag = false
+            passErrFlag = false
         }
 
-        return errFlag
+        return emailErrFlag || passErrFlag
     }
 
     function enterPressed(e) {
@@ -255,6 +261,7 @@ function Login() {
     const LoginUser = () => {
         if (!ValidateEmailAndPassword()) {
             setVerifyingCredentials(true);
+            setLoginErrorMsg('');
             import('../backend/ApiRequests').then(obj => {
                 let params = {
                     userId: email.value,
@@ -358,7 +365,10 @@ function Login() {
                         <LineLoader /> : null
                 }
             </Button>
-            <ErrorLabel margin={'20px auto'}>{loginErrorMsg}</ErrorLabel>
+            {
+                loginErrorMsg.length ?
+                    <CredentialsError margin={'20px auto'}>{loginErrorMsg}</CredentialsError> : null
+            }
             <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
             <SkipToAnswers origin={'Login Page'} />
