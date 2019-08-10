@@ -218,9 +218,9 @@ function SignUp() {
     const phone = useInput('');
     const name = useInput('');
     const [validatingUsername, setValidatingUsername] = useState(false);
-    const [usernameAvailable, setUsernameAvailable] = useState(false);
     const [showPass, setShowPass] = useState(false);
-    const [isUserNameExist, setIsUserNameExist] = useState(false);
+    const [showResponse, setShowResponse] = useState(false);
+    const [usernameAvailable, setUsernameAvailable] = useState(false);
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [nameErrorMsg, setNameErrorMsg] = useState('');
     const [phoneErrorMsg, setPhoneErrorMsg] = useState('');
@@ -324,23 +324,29 @@ function SignUp() {
     };
 
     function validateUsername() {
-        console.log('validation ');
         let params = {
             userName: name.value
         }
-        getApiRequestCall(user_name_checking_url, params, function(response) {
-            try {
-                if(response.data === true) {
-                    setIsUserNameExist(false);
-                    setValidatingUsername(true);
-                } else {
-                    setIsUserNameExist(true);
+        setValidatingUsername(true);
+        if (name.value.length) {
+            setShowResponse(true);
+            getApiRequestCall(user_name_checking_url, params, function (response) {
+                try {
+                    if (response.data === true) {
+                        setUsernameAvailable(true);
+                        setValidatingUsername(false);
+                    } else {
+                        setUsernameAvailable(false);
+                        setValidatingUsername(false);
+                    }
+                } catch (e) {
+                    setUsernameAvailable(true);
                     setValidatingUsername(false);
                 }
-            } catch(e) {
-                setIsUserNameExist(true);
-            }
-        });
+            });
+        } else {
+            setShowResponse(false);
+        }
     }
 
     const logInRedirect = () => {
@@ -390,10 +396,11 @@ function SignUp() {
                                 margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter correct name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
                     }
                     {
-                        validatingUsername ?
-                            <ValidatingUsername>Validating username...</ValidatingUsername> :
-                            usernameAvailable ? <ValidatingUsername>Username Available.</ValidatingUsername> :
-                                <UsernameTaken>Username already taken.</UsernameTaken>
+                        showResponse ?
+                            validatingUsername ?
+                                <ValidatingUsername>Validating username...</ValidatingUsername> :
+                                usernameAvailable ? <ValidatingUsername>Username Available.</ValidatingUsername> :
+                                    <UsernameTaken>Username already taken.</UsernameTaken> : null
                     }
                 </InputContainer>
                 <InputContainer>
