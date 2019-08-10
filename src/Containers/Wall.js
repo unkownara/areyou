@@ -211,8 +211,10 @@ function Wall({ props }) {
             };
             setPostsLoading(true);
 
-            if (localStorage.getItem('userAnswers') !== undefined && localStorage.getItem('userAnswers') !== null) {
-                setPosts(JSON.parse(localStorage.getItem('userAnswers')));
+            if (props.location.state === undefined) {
+                if (localStorage.getItem('userAnswers') !== undefined && localStorage.getItem('userAnswers') !== null) {
+                    setPosts(JSON.parse(localStorage.getItem('userAnswers')));
+                }
             }
 
             getApiRequestCall(user_post_url, params, function (response) {
@@ -223,10 +225,17 @@ function Wall({ props }) {
                         let oldPosts = JSON.parse(localStorage.getItem('userAnswers'));
 
                         if (oldPosts.length !== newPosts.length || JSON.stringify(oldPosts) !== JSON.stringify(newPosts)) {
-                            localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                            setUpdatedPosts(newPosts);
-                            setShowRefreshPost(true);
+                            if (props.location.state !== undefined && props.location.state !== null && props.location.state.newAnswers !== undefined && props.location.state.newAnswers) {
+                                localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                                setPosts(newPosts)
+                            } else {
+                                localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                                setUpdatedPosts(newPosts);
+                                setShowRefreshPost(true);
+                            }
                         }
+
+                        localStorage.setItem('userAnswers', JSON.stringify(newPosts));
                         setPostsLoading(false);
                     } else {
                         console.log('No posts are available');

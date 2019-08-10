@@ -434,7 +434,7 @@ function QnAPage(props) {
     }
 
     function redirectToOrigin() {
-        !postEdit ? history.push({ pathname: '/' }) : history.push(`/profile/${userInfo.userId}`)
+        !postEdit ? history.push({ pathname: '/', state: { newAnswers: true } }) : history.push(`/profile/${userInfo.userId}`)
     }
 
     return (
