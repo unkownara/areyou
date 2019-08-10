@@ -7,10 +7,12 @@ import { useInput } from '../Components/hooks';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid } from '../Functions/Generics';
 import history from "../history";
-import { user_info_url } from "../backend/Apis";
+import { user_info_url, user_name_checking_url } from "../backend/Apis";
 
 import ShowEye from '../Images/eye.png';
 import HideEye from '../Images/eyecross.png';
+import { getApiRequestCall } from '../backend/ApiRequests';
+import { func } from 'prop-types';
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -214,6 +216,7 @@ function SignUp() {
     const [validatingUsername, setValidatingUsername] = useState(false);
     const [usernameAvailable, setUsernameAvailable] = useState(false);
     const [showPass, setShowPass] = useState(false);
+    const [isUserNameExist, setIsUserNameExist] = useState(false);
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [nameErrorMsg, setNameErrorMsg] = useState('');
     const [phoneErrorMsg, setPhoneErrorMsg] = useState('');
@@ -316,6 +319,26 @@ function SignUp() {
         }
     };
 
+    function validateUsername() {
+        console.log('validation ');
+        let params = {
+            userName: name.value
+        }
+        getApiRequestCall(user_name_checking_url, params, function(response) {
+            try {
+                if(response.data === true) {
+                    setIsUserNameExist(false);
+                    setValidatingUsername(true);
+                } else {
+                    setIsUserNameExist(true);
+                    setValidatingUsername(false);
+                }
+            } catch(e) {
+                setIsUserNameExist(true);
+            }
+        });
+    }
+
     const logInRedirect = () => {
         history.push('/login');
     };
@@ -323,10 +346,6 @@ function SignUp() {
     function togglePassword() {
         setShowPass(!showPass);
         passswordRef.current.focus();
-    }
-
-    function validateUsername() {
-        setValidatingUsername(true);
     }
 
     useEffect(() => {
