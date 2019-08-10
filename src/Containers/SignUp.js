@@ -204,6 +204,10 @@ const ValidatingUsername = styled.div`
     margin: 5px 0 0 5px;
 `
 
+const ErrMsg = styled(UsernameTaken)`
+    margin: 0px auto 20px auto;
+`
+
 function SignUp() {
 
     const [errorMsg, setErrorMsg] = useState('');
@@ -279,7 +283,7 @@ function SignUp() {
     }
 
     const SignUpNewUser = () => {
-        if (!ValidateSignUpFields()) {
+        if (!ValidateSignUpFields() && usernameAvailable) {
             setVerifyingCredentials(true);
             import('../backend/ApiRequests').then(obj => {
                 let payload = {
@@ -432,6 +436,10 @@ function SignUp() {
                         <LineLoader /> : null
                 }
             </Button>
+            {
+                errorMsg.length ?
+                    <ErrMsg>{errorMsg}</ErrMsg> : null
+            }
             <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers origin={'Sign Up Page'} />
