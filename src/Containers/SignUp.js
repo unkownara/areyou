@@ -26,12 +26,7 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 0px auto 35px auto;
-`
-
-const TagLine = styled.div`
-    color: #000;
-    font-size: 14px;
+    margin: 10px auto 35px auto;
 `
 
 const SignUpHeading = styled.p`
@@ -97,7 +92,7 @@ const Input = styled.input`
     border: 1px solid #eee;
     padding: 10px;
     outline: none;
-    margin: 0 auto 20px auto;
+    margin: ${props => props.margin || '20px auto 0px auto'};
 
     &::placeholder{
         color: #d3d3d3;
@@ -115,6 +110,7 @@ const ErrorLabel = styled.span`
     font-size: 11px;
     font-weight: 500;
     background: #fff;
+    letter-spacing: 1px;
     position: absolute;
     padding: 0 5px;
     margin: ${props => props.margin || '0'};
@@ -131,10 +127,11 @@ const Button = styled.div`
     border-radius: 5px;
     color: #fff;
     font-weight: bold;
-    margin: 20px auto;
+    margin: 30px auto 20px auto;
     cursor: pointer;
+    letter-spacing: 1px;
     pointer-events: ${props => props.disabled ? 'none' : 'auto'};
-    opacity: ${props => props.submitting ? '0.7' : '1'};
+    opacity: ${props => props.disabled ? '0.7' : '1'};
     
     @media(max-width: 700px){
         cursor: default;
@@ -179,7 +176,7 @@ const PasswordHiderIcon = styled.img`
     width: 20px;
     position: absolute;
     margin-left: -30px;
-    margin-top: 14px;
+    margin-top: 35px;
     cursor: pointer;
 
     @media(max-width: 700px){
@@ -187,15 +184,35 @@ const PasswordHiderIcon = styled.img`
     }
 `
 
+const UsernameTaken = styled.div`
+    font-size: 10px;
+    letter-spacing: 1px;
+    background: red;
+    width: max-content;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    margin: 5px 0 0 5px;
+    font-weight: bold;
+    opacity: 0.6;
+`
+
+const ValidatingUsername = styled.div`
+    color: #48C9B0;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin: 5px 0 0 5px;
+`
 
 function SignUp() {
 
     const [errorMsg, setErrorMsg] = useState('');
-
     const email = useInput('');
     const password = useInput('');
     const phone = useInput('');
     const name = useInput('');
+    const [validatingUsername, setValidatingUsername] = useState(false);
+    const [usernameAvailable, setUsernameAvailable] = useState(false);
     const [showPass, setShowPass] = useState(false);
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [nameErrorMsg, setNameErrorMsg] = useState('');
@@ -211,15 +228,15 @@ function SignUp() {
 
     function ValidateSignUpFields() {
 
-        let errFlag = false;
+        let usernameErrorFlag, emailErrorFlag, passErrorFlag = false;
 
         // Name validation
         if (name.value.length === 0) {
-            errFlag = false;
+            usernameErrorFlag = false;
             setNameErrorMsg('Required')
         } else if (name.value.length) {
             if (!name.value.match(/^[a-zA-Z_ ]+$/)) {
-                errFlag = false;
+                usernameErrorFlag = false;
                 setNameErrorMsg('Enter correct name')
             }
         }
@@ -230,25 +247,28 @@ function SignUp() {
         if (email.value.length !== 0 && email.value !== undefined && email.value !== '') {
             if (!regex.test(email.value)) {
                 setEmailErrorMsg('Invalid Email')
-                errFlag = true
+                emailErrorFlag = true
             } else {
-                errFlag = false
+                emailErrorFlag = false
             }
         } else {
             setEmailErrorMsg('Required');
-            errFlag = true
+            emailErrorFlag = true
         }
 
         // Password Vaidation
 
         if (password.value === '' || password.value.length === 0 || password.value === undefined) {
             setPasswordErrorMsg('Required');
-            errFlag = true
+            passErrorFlag = true
+        } else if (password.value.length < 8) {
+            setPasswordErrorMsg('Minimum 8 chars');
+            passErrorFlag = true
         } else {
-            errFlag = false
+            passErrorFlag = false
         }
 
-        return errFlag
+        return usernameErrorFlag || passErrorFlag || emailErrorFlag
     }
 
     function enterPressed(e) {
@@ -257,6 +277,7 @@ function SignUp() {
             SignUpNewUser();
         }
     }
+
     const SignUpNewUser = () => {
         if (!ValidateSignUpFields()) {
             setVerifyingCredentials(true);
@@ -304,6 +325,10 @@ function SignUp() {
         passswordRef.current.focus();
     }
 
+    function validateUsername() {
+        setValidatingUsername(true);
+    }
+
     useEffect(() => {
         setPasswordErrorMsg('')
     }, [password.value]);
@@ -331,14 +356,21 @@ function SignUp() {
                 <InputContainer>
                     <Input
                         {...name}
-                        placeholder={'Name'}
+                        placeholder={'Username'}
                         onKeyPress={(e) => enterPressed(e)}
                         disabled={verifyingCredentials}
+                        onBlur={validateUsername}
                     />
                     {
                         nameErrorMsg.length ?
                             <ErrorLabel
-                                margin={nameErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : nameErrorMsg === 'Enter correct name' ? '-6.5px 0px 0px -115px' : '-6.5px 0px 0px -117px'}>{nameErrorMsg}</ErrorLabel> : null
+                                margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter correct name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
+                    }
+                    {
+                        validatingUsername ?
+                            <ValidatingUsername>Validating username...</ValidatingUsername> :
+                            usernameAvailable ? <ValidatingUsername>Username Available.</ValidatingUsername> :
+                                <UsernameTaken>Username already taken.</UsernameTaken>
                     }
                 </InputContainer>
                 <InputContainer>
@@ -351,7 +383,7 @@ function SignUp() {
                     {
                         emailErrorMsg.length ?
                             <ErrorLabel
-                                margin={emailErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : emailErrorMsg === 'Invalid Email' ? '-6.5px 0px 0px -82px' : '-6.5px 0px 0px -117px'}>{emailErrorMsg}</ErrorLabel> : null
+                                margin={emailErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : emailErrorMsg === 'Invalid Email' ? '13.5px 0px 0px -92px' : '13.5px 0px 0px -127px'}>{emailErrorMsg}</ErrorLabel> : null
                     }
                 </InputContainer>
                 <InputContainer>
@@ -365,7 +397,7 @@ function SignUp() {
                     {
                         phoneErrorMsg.length ?
                             <ErrorLabel
-                                margin={phoneErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : phoneErrorMsg === 'Invalid number' ? '-6.5px 0px 0px -93px' : '-6.5px 0px 0px -117px'}>{phoneErrorMsg}</ErrorLabel> : null
+                                margin={phoneErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : phoneErrorMsg === 'Invalid number' ? '13.5px 0px 0px -103px' : '13.5px 0px 0px -127px'}>{phoneErrorMsg}</ErrorLabel> : null
                     }
                 </InputContainer>
                 <PasswordWrapper>
@@ -379,15 +411,14 @@ function SignUp() {
                         disabled={verifyingCredentials}
                     />
                     {
-                        !passwordErrorMsg.length ?
-                            <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
-                                onClick={togglePassword}
-                                alt={'pass'} /> : null
+                        <PasswordHiderIcon src={showPass ? ShowEye : HideEye}
+                            onClick={togglePassword}
+                            alt={'pass'} />
                     }
                     {
                         passwordErrorMsg.length ?
                             <ErrorLabel
-                                margin={passwordErrorMsg === 'Required' ? '-6.5px 0px 0px -65px' : '-6.5px 0px 0px -130px'}>{passwordErrorMsg}</ErrorLabel> : null
+                                margin={passwordErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : '13.5px 0px 0px -115px'}>{passwordErrorMsg}</ErrorLabel> : null
                     }
                 </PasswordWrapper>
             </InputWrapper>

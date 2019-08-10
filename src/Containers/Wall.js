@@ -326,7 +326,7 @@ function Wall({ props }) {
 
     return (
         <Fragment>
-            <Header />
+            <Header origin={'Wall Page'} />
             {
                 posts && posts.length && questionResponse.qId !== '' ?
                     <Suspense fallback={<DotLoader />}>
