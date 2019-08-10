@@ -228,6 +228,7 @@ export default function Profile(props) {
                 label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from URL` : `Logged out user visited ${userInfo.userId} from URL`)
             });
         }
+        console.log(props)
     }, []);
 
     useEffect(() => {
@@ -402,7 +403,6 @@ export default function Profile(props) {
                                         </Fragment>
                                         :
                                         userPosts && userPosts.length === 0 ?
-                                            <ContentLoader /> :
                                             <Info>
                                                 {
                                                     userInfo && uId === userInfo.userId ?
@@ -410,7 +410,8 @@ export default function Profile(props) {
                                                         :
                                                         userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
                                                 }
-                                            </Info>
+                                            </Info> :
+                                            <ContentLoader />
                                 }
                                 <SkipWrapper>
                                     <OR>or</OR>
