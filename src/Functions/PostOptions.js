@@ -4,14 +4,16 @@ import { postApiRequestCall } from "../backend/ApiRequests";
 import { user_post_delete_url, user_post_edit_url } from '../backend/Apis';
 
 /* post deletion */
-export const deletePost = (postId, createdOn) => {
+export const deletePost = function(postId, createdOn, callback) {
     let payload = {
         postId: postId,
         createdOn: createdOn
     };
     postApiRequestCall(user_post_delete_url, payload, function (response) {
         if (response.data === true) {
-            console.log('Successfully deleted');
+            callback(true);
+        } else {
+            callback(false);
         }
     })
 };
