@@ -11,6 +11,7 @@ import { DeleteButton, EditButton } from '../Components/Buttons';
 import CustomSnackBar from '../Components/CustomSnackBar';
 import Header from '../Components/Header';
 import DotLoader from '../Components/DotLoader';
+import ContentLoader from '../Components/ContentLoader';
 
 import First from '../Images/first.png';
 import More from '../Images/more.png';
@@ -144,11 +145,15 @@ const DeletedMsg = styled.div`
     border: 1px solid #eee;
     border-radius: 5px;
     padding: 10px;
-    font-weight: 500;
+    font-weight: bold;
     letter-spacing: 1px;    
     font-size: 14px;
     text-align: center;
     margin: 15px auto 15px auto;
+`
+
+const RefreshButton = styled(DeletedMsg)`
+    background: #58D68D;
 `
 
 function Wall({ props }) {
@@ -159,6 +164,8 @@ function Wall({ props }) {
     const [endOfPosts, setEndOfPosts] = useState(false);
     const [postsLoading, setPostsLoading] = useState(true);
     const [selectedPostData, setSelectedPostData] = useState({});
+    const [updatedPosts, setUpdatedPosts] = useState([]);
+    const [showRefreshPost, setShowRefreshPost] = useState(false);
     const [openOwnPostLikeErrorSnackBar, setOpenOwnPostLikeErrorSnackBar] = useState(false);
     const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
     const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false)
@@ -175,7 +182,7 @@ function Wall({ props }) {
             setOpenDeletedMsgSnackBar(true);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(true);
-        } 
+        }
     }
 
     function closeSnackBar(type) {
@@ -188,7 +195,7 @@ function Wall({ props }) {
             setOpenDeletedMsgSnackBar(false);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(false);
-        } 
+        }
     }
 
     useEffect(() => {
@@ -198,18 +205,29 @@ function Wall({ props }) {
 
     useEffect(() => {
         if (questionResponse.qId !== '') {
-            setPostsLoading(true);
             let params = {
                 date: postApiDate,
                 questionId: questionResponse.qId
             };
+            setPostsLoading(true);
+
+            if (localStorage.getItem('userAnswers') !== undefined && localStorage.getItem('userAnswers') !== null) {
+                setPosts(JSON.parse(localStorage.getItem('userAnswers')));
+            }
+
             getApiRequestCall(user_post_url, params, function (response) {
                 try {
                     if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                         let newPosts = posts.length === 0 ? response.data.Items : posts.concat(response.data.Items);
+
+                        let oldPosts = JSON.parse(localStorage.getItem('userAnswers'));
+
+                        if (oldPosts.length !== newPosts.length || JSON.stringify(oldPosts) !== JSON.stringify(newPosts)) {
+                            localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                            setUpdatedPosts(newPosts);
+                            setShowRefreshPost(true);
+                        }
                         setPostsLoading(false);
-                        setPosts(newPosts);
-                        console.log(newPosts)
                     } else {
                         console.log('No posts are available');
                         setPostsLoading(false);
@@ -222,6 +240,11 @@ function Wall({ props }) {
             });
         }
     }, [questionResponse, postApiDate]);
+
+    function refreshPost() {
+        setShowRefreshPost(false);
+        setPosts(updatedPosts);
+    }
 
     useEffect(() => {
         let params = {
@@ -338,7 +361,7 @@ function Wall({ props }) {
                         </Fragment>
                     </Suspense>
                     :
-                    postsLoading ? <DotLoader /> :
+                    postsLoading ? <ContentLoader /> :
                         posts && posts.length === 0 ?
                             <Fragment>
                                 <Question>
@@ -352,6 +375,9 @@ function Wall({ props }) {
                             </Fragment> :
                             <DotLoader />
             }
+            <CustomSnackBar open={showRefreshPost}>
+                <RefreshButton onClick={refreshPost}>Refresh Posts</RefreshButton>
+            </CustomSnackBar>
             <CustomSnackBar open={openPostOptionSnackBar} handleClose={() => closeSnackBar('post_options')}>
                 <DeleteButton onClick={deletePostConfirmation}>Delete</DeleteButton>
                 <EditButton onClick={redirectToQnAPage}>Edit</EditButton>
