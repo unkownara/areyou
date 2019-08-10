@@ -201,7 +201,7 @@ export default function Profile(props) {
             setOpenDeletedMsgSnackBar(true);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(true);
-        } 
+        }
     }
 
     function closeSnackBar(type) {
@@ -214,7 +214,7 @@ export default function Profile(props) {
             setOpenDeletedMsgSnackBar(false);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(false);
-        } 
+        }
     }
 
     useEffect(() => {
