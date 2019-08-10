@@ -228,7 +228,6 @@ export default function Profile(props) {
                 label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from URL` : `Logged out user visited ${userInfo.userId} from URL`)
             });
         }
-        console.log(props)
     }, []);
 
     useEffect(() => {
