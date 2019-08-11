@@ -378,7 +378,7 @@ function QnAPage(props) {
         if (answerInput <= 1) {
             ReactGA.event({
                 category: 'New Answer',
-                action: 'Answer Typing',
+                action: 'Answer Filling',
                 label: `User started Typing Answer after ${(Math.abs((new Date()).getTime() - pageStartTime)) / 1000} sec`
             });
         }
