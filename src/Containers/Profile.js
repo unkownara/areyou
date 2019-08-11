@@ -369,6 +369,19 @@ export default function Profile(props) {
         openSnackBar('own_post_like');
     }
 
+    function shareProfile() {
+        console.log('a')
+        if (navigator.share) {
+            navigator.share({
+                title: 'Web Fundamentals',
+                text: 'Check out Web Fundamentals — it rocks!',
+                url: 'https://developers.google.com/web',
+            })
+                .then(() => console.log('Successful share'))
+                .catch((error) => console.log('Error sharing', error));
+        }
+    }
+
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} origin={'Profile Page'} />
@@ -386,7 +399,7 @@ export default function Profile(props) {
                                     <ProfileImage
                                         bg={getRandomColor(userInfo && userInfo.userName.substring(0, 1).toLowerCase())}>{userInfo && userInfo.userName.substring(0, 1)}</ProfileImage>
                                 </ImageWrapper>
-                                <ProfileName>{(userInfo && userInfo.userName) || 'User'}</ProfileName>
+                                <ProfileName onClick={shareProfile}>{(userInfo && userInfo.userName) || 'User'}</ProfileName>
                                 <Email>{(userInfo && userInfo.userId) || ''}</Email>
                                 <Info style={{ margin: 0 }}>You can enter the email id of your friend directly in the URL to visit their profie.</Info>
                                 <HR />
