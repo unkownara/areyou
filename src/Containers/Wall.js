@@ -413,7 +413,7 @@ function Wall({ props }) {
                         </Fragment>
                     </Suspense>
                     :
-                    postsLoading ? <ContentLoader /> :
+                    postsLoading ? <DotLoader /> :
                         posts && posts.length === 0 ?
                             <WallContainer>
                                 <Question>
