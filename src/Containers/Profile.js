@@ -320,6 +320,8 @@ export default function Profile(props) {
             if (res === true) {
                 setDeletedMsg('Answer deleted successfully');
                 userPosts.splice(selectedPostData.postIndex, 1);
+                setUsersPost(userPosts);
+                localStorage.setItem('userAnswers', JSON.stringify(userPosts));
                 ReactGA.event({
                     category: 'Delete Answer',
                     action: 'Answer Deleted',

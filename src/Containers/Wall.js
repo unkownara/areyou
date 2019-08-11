@@ -330,6 +330,8 @@ function Wall({ props }) {
             if (res === true) {
                 setDeletedMsg('Answer deleted successfully');
                 posts.splice(selectedPostData.postIndex, 1);
+                setPosts(posts);
+                localStorage.setItem('userAnswers', JSON.stringify(posts));
                 ReactGA.event({
                     category: 'Delete Answer',
                     action: 'Answer Deleted',
