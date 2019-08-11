@@ -225,7 +225,7 @@ export default function Profile(props) {
             let path = location.pathname.split('/');
             setUId(path[2]);
             setUsersPost([]);
-      })
+        })
     }, []);
 
     useEffect(() => {
@@ -378,7 +378,7 @@ export default function Profile(props) {
                                 </ImageWrapper>
                                 <ProfileName>{(userInfo && userInfo.userName) || 'User'}</ProfileName>
                                 <Email>{(userInfo && userInfo.userId) || ''}</Email>
-                                <Info style={{ margin: 0 }}>You can enter thes email id of your friend directly in the URL to visit their profie.</Info>
+                                <Info style={{ margin: 0 }}>You can enter the email id of your friend directly in the URL to visit their profie.</Info>
                                 <HR />
                                 {
                                     !loadingPosts ?
@@ -417,10 +417,11 @@ export default function Profile(props) {
                                             <ContentLoader /> :
                                             <Info>
                                                 {
-                                                    userInfo && uId === userInfo.userId ?
-                                                        userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any questions. To answer, click on "Answer" button in the top right corner.`
+                                                    (localStorage.getItem('__u_info__') !== undefined && localStorage.getItem('__u_info__') !== null && (localStorage.getItem('__u_info__').userId !== uId)) ?
+                                                        (userPosts && userPosts.length ? `Your answers` : `Looks like you have not answered any 
+                                                        questions. To answer, click on "Answer" button in the top right corner.`)
                                                         :
-                                                        userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
+                                                        (userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`)
                                                 }
                                             </Info>
                                 }
@@ -428,7 +429,10 @@ export default function Profile(props) {
                                     <OR>or</OR>
                                     <SkipToAnswers origin={'Profile Page'} />
                                 </SkipWrapper>
-                                <Button onClick={logout}>Logout</Button>
+                                {
+                                    localStorage.getItem('__u_info__') !== undefined && localStorage.getItem('__u_info__') !== null ?
+                                        <Button onClick={logout}>Logout</Button> : null
+                                }
                             </ProfileWrapper>
                             :
                             <UserNotFound>
@@ -456,6 +460,6 @@ export default function Profile(props) {
             <CustomSnackBar open={openOwnPostLikeErrorSnackBar} handleClose={() => closeSnackBar('own_post_like')}>
                 <DeletedMsg>You can't clap for your own answer.</DeletedMsg>
             </CustomSnackBar>
-        </Fragment>
+        </Fragment >
     );
 }

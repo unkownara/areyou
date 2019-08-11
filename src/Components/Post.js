@@ -138,6 +138,7 @@ const ProfileName = styled.div`
 
     @media(max-width: 700px){
         cursor: default;
+        font-weight: 500;
     }
 `
 
@@ -253,6 +254,11 @@ const Question = styled.div`
     letter-spacing: 1px;
     line-height: 20px;
     word-break: break-word;
+    
+    @media(max-width: 700px){
+        font-size: 18px;
+        font-weight: 500;
+    }
 `
 
 export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, postIndex, question, questionId, getPostOptions, ownPostLikeError }) {
