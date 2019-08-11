@@ -180,6 +180,7 @@ export default function Profile(props) {
 
     const [userInfo, setUserInfo] = useState(null);
     const [uId, setUId] = useState(url[4]);
+    const [urlPath, setUrlPath] = useState(url);
     const [userPosts, setUsersPost] = useState([]);
     const [postMsg, setPostMsg] = useState('');
     const [deletedMsg, setDeletedMsg] = useState('');
@@ -217,6 +218,14 @@ export default function Profile(props) {
             setOpenOwnPostLikeErrorSnackBar(false);
         }
     }
+
+    useEffect(() => {
+        history.listen((location, action) => {
+            let path = location.pathname.split('/');
+            setUId(path[2]);
+            setUsersPost([]);
+      })
+    }, []);
 
     useEffect(() => {
         ReactGA.pageview(`/profile/${uId}`);
@@ -403,7 +412,7 @@ export default function Profile(props) {
                                             }
                                         </Fragment>
                                         :
-                                        userPosts && userPosts.length === 0 ?
+                                        userPosts && userPosts.length === 0 && loadingPosts === false ?
                                             <ContentLoader /> :
                                             <Info>
                                                 {

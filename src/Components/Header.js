@@ -162,7 +162,7 @@ export default function Header({ openSnackBar }) {
     }
 
     function redirectToProfilePage() {
-        if (userInfo !== null) {
+        if (userInfo !== null && userInfo !== undefined) {
             ReactGA.event({
                 category: 'User Profile Visit',
                 action: 'Profile Visit',
