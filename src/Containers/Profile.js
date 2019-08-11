@@ -372,7 +372,7 @@ export default function Profile(props) {
             <Helmet>
                 <meta charSet="utf-8" />
                 <title>{`${(userInfo && userInfo.userName) || ''} | Are You?`}</title>
-                <meta name="description" content={window.location.href.split('/') || ''} />
+                <meta name="description" content={window.location.href.split('/')[4] || ''} />
             </Helmet>
             <ProfileContainer>
                 {

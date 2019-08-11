@@ -28,16 +28,27 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 10px auto 35px auto;
+    margin: 10px auto 5px auto;
 
     @media(max-width: 700px){
-        margin-bottom: 10px;
+        margin: 0px auto 10px auto;
+    }
+`
+
+const TagLine = styled.div`
+    margin: 10px auto 10px auto;
+    letter-spacing: 1px;
+    color: gray;
+
+    @media(max-width: 700px){
+        margin: 0px auto 10px auto;
     }
 `
 
 const SignUpHeading = styled.p`
     width: 300px;
     padding-left: 10px;
+    margin: 15px;
     text-align: center;
     font-size: 20px;
     color: gray;
@@ -409,10 +420,11 @@ function SignUp() {
         <SignUpWrapper>
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>Are You?</title>
-                <meta name="description" content="" />
+                <title>Are You? | Share yourself</title>
+                <meta name="description" content="Are you interested to share yourself?" />
             </Helmet>
             <AppName>Are You ?</AppName>
+            <TagLine>Share yourself.</TagLine>
             <SignUpHeading>Sign Up</SignUpHeading>
             <InputWrapper>
                 <InputContainer>

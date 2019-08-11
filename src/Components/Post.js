@@ -281,7 +281,6 @@ const Question = styled.div`
 `
 
 export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, postIndex, question, questionId, getPostOptions, ownPostLikeError }) {
-    console.log(userId)
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [answer, setAnswer] = useState('');

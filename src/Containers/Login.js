@@ -27,8 +27,18 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 10px auto 60px auto;
+    margin: 10px auto 10px auto;
 
+    @media(max-width: 700px){
+        margin: 0px auto 10px auto;
+    }
+`
+
+const TagLine = styled.div`
+    margin: 5px auto 60px auto;
+    letter-spacing: 1px;
+    color: gray;
+    
     @media(max-width: 700px){
         margin: 0px auto 35px auto;
     }
@@ -339,10 +349,11 @@ function Login() {
         <LoginWrapper>
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>Are You?</title>
-                <meta name="description" content="" />
+                <title>Are You? | Share yourself</title>
+                <meta name="description" content="Are you interested to share yourself?" />
             </Helmet>
             <AppName>Are You ?</AppName>
+            <TagLine>Share yourself.</TagLine>
             <LoginHeading>Login</LoginHeading>
             <InputWrapper>
                 <InputContainer>

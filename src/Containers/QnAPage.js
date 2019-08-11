@@ -518,7 +518,7 @@ function QnAPage(props) {
             <Helmet>
                 <meta charSet="utf-8" />
                 <title>{`${questionResponse.question || ''}  | Are You?`}</title>
-                <meta name="description" content={questionResponse.question} />
+                <meta name="description" content={`${questionResponse.question} Are you interested to share yourself? Answer this question.`} />
             </Helmet>
             {
                 (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') || (userInfo !== undefined && userInfo !== null && postEdit) ?
