@@ -62,7 +62,7 @@ const AnswerTrigger = styled.div`
     text-align: center;
     letter-spacing: 1px;
     padding: 0 20px;
-    border-radius: 3px;
+    border-radius: 5px;
     color: #fff;
     font-weight: bold;
     margin: 0 30px 0 20px;
