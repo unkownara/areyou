@@ -42,6 +42,7 @@ const AppName = styled.div`
     padding-left: 10px;
     cursor: pointer;
     width: max-content;
+    letter-spacing: 1px;
 
     @media(max-width: 700px){
         cursor: default;
