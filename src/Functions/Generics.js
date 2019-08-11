@@ -74,7 +74,6 @@ export const GA_ID = 'UA-145111269-1';
 
 export function getDate() {
     let nowDate = new Date();
-    console.log(nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate())
     return nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate();
 }
 
