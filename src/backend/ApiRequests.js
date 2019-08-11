@@ -30,7 +30,7 @@ export const postApiRequestCall = function(url, payload, callback) {
         }
     }).then(res => {
         callback(res);
-        console.log('response ', res);
+        // console.log('response ', res);
     }).catch(err => {
         callback(err);
         console.log('error ', err);
