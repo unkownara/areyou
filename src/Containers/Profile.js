@@ -66,6 +66,7 @@ const ProfileImage = styled.div`
 const ProfileName = styled.div`
     font-weight: bold;
     font-size: 22px;
+    letter-spacing: 1px;
     text-align: center;
     padding-top: 2px;
     margin: 20px auto 10px auto;
