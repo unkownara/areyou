@@ -28,6 +28,10 @@ const AppName = styled.div`
     font-size: 42px;
     font-weight: bold;
     margin: 10px auto 35px auto;
+
+    @media(max-width: 700px){
+        margin-bottom: 10px;
+    }
 `
 
 const SignUpHeading = styled.p`

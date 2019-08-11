@@ -97,7 +97,7 @@ const OptionsIcon = styled.img`
 const Answer = styled.div`
     margin: 20px 0 0 0;
     letter-spacing: 0.5px;
-    line-height: 22px;
+    line-height: 24px;
     padding-left: 10px;
     text-align: left;
     word-break: break-word;
@@ -107,7 +107,6 @@ const Answer = styled.div`
     @media(max-width: 700px){
         cursor: default;
         font-size: 18px;
-        line-height: 24px;
     }
 `
 
