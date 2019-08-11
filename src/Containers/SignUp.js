@@ -200,7 +200,7 @@ const UsernameTaken = styled.div`
 `
 
 const ValidatingUsername = styled.div`
-    color: #28B463;
+    color: #48C9B0;
     font-size: 10px;
     letter-spacing: 1px;
     margin: 5px 0 0 5px;
@@ -240,13 +240,12 @@ function SignUp() {
         if (name.value.length === 0) {
             usernameErrorFlag = false;
             setNameErrorMsg('Required')
+        } else if (name.value.length) {
+            if (!name.value.match(/^[a-zA-Z_ ]+$/)) {
+                usernameErrorFlag = false;
+                setNameErrorMsg('Enter correct name')
+            }
         }
-        // if (name.value.length) {
-        //     if (!name.value.match(/^[a-zA-Z_ ]+$/)) {
-        //         usernameErrorFlag = false;
-        //         setNameErrorMsg('Enter correct name')
-        //     }
-        // }
 
         // Email Validation
         let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -297,7 +296,7 @@ function SignUp() {
                 };
                 obj.postApiRequestCall(user_info_url, payload, function (response) {
                     try {
-                        if (response && response.data === true) {
+                        if (response && response.data) {
                             setErrorMsg('');
                             cookie.save('__u_id__', email.value);
                             localStorage.setItem('__u_info__', JSON.stringify(payload));
@@ -307,17 +306,13 @@ function SignUp() {
                                 label: `User Signed Up on ${(new Date()).toDateString()} at ${(new Date()).getHours()}:${(new Date()).getMinutes()}`
                             });
                             history.push({
-                                pathname: '/qna'
+                                pathname: '/qna',
+                                search: `wall?u_id=${makeid(6)}`,
+                                state: { detail: payload }
                             });
                             setVerifyingCredentials(false);
                         } else {
-                            let errMsg = '';
-                            if (response.data === "user already exists") {
-                                errMsg = "Email alredy exists";
-                            } else {
-                                errMsg = 'Something went wrong';
-                            }
-                            setErrorMsg(errMsg);
+                            setErrorMsg('Something wrong');
                             setVerifyingCredentials(false);
                             ReactGA.event({
                                 category: 'Auth',
@@ -422,7 +417,7 @@ function SignUp() {
                     {
                         nameErrorMsg.length ?
                             <ErrorLabel
-                                margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter valid name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
+                                margin={nameErrorMsg === 'Required' ? '13.5px 0px 0px -70px' : nameErrorMsg === 'Enter correct name' ? '13.5px 0px 0px -120px' : '13.5px 0px 0px -127px'}>{nameErrorMsg}</ErrorLabel> : null
                     }
                     {
                         showResponse ?
