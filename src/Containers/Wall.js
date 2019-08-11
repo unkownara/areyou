@@ -54,6 +54,7 @@ const LoadMore = styled.div`
 
     &>p{
         margin: 5px;
+        letter-spacing: 1px;
     }
 
     @media(max-width: 700px){
