@@ -415,7 +415,7 @@ function Wall({ props }) {
                     :
                     postsLoading ? <ContentLoader /> :
                         posts && posts.length === 0 ?
-                            <WallContainer>
+                            <Fragment>
                                 <Question>
                                     {questionResponse.question}
                                 </Question>
@@ -424,7 +424,7 @@ function Wall({ props }) {
                                 </ImageWrapper>
                                 <NoPosts>No answers found.</NoPosts>
                                 <Info onClick={() => history.push("/qna")}>Be the first to answer</Info>
-                            </WallContainer> :
+                            </Fragment> :
                             <DotLoader />
             }
             <CustomSnackBar open={showRefreshPost}>
