@@ -97,7 +97,7 @@ const OptionsIcon = styled.img`
 const Answer = styled.div`
     margin: 20px 0 0 0;
     letter-spacing: 0.5px;
-    line-height: 22px;
+    line-height: 24px;
     padding-left: 10px;
     text-align: left;
     word-break: break-word;
@@ -106,6 +106,7 @@ const Answer = styled.div`
     
     @media(max-width: 700px){
         cursor: default;
+        font-size: 18px;
     }
 `
 
@@ -113,6 +114,12 @@ const ShowMore = styled.span`
     color: #329bff;
     font-size: 14px;
     font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const ShowLess = styled.div`
@@ -123,6 +130,7 @@ const ShowLess = styled.div`
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    letter-spacing: 1px;
 
     @media(max-width: 700px){
         cursor: default;
@@ -130,7 +138,7 @@ const ShowLess = styled.div`
 `
 
 const ProfileName = styled.div`
-    font-weight: bold;
+    font-weight: 500;
     font-size: 16px;
     padding-top: 4px;
     cursor: pointer;
@@ -190,12 +198,23 @@ const LikeIcon = styled.img`
 `
 
 const LikesCount = styled.div`
-    font-size: 14px;
+    font-size: 15px;
     padding-top: 2px;
     padding-left: 10px;
-
+    padding-right: 2px;
+    
     &>span{
+        color: #000;
         font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    @media(max-width: 700px){
+        color: gray;
+
+        &>span{
+            color: #000;
+        }
     }
 `
 
@@ -238,6 +257,7 @@ const YesNoIcon = styled.img`
 const YesNoText = styled.div`
     padding-left: 5px;
     font-weight: bold;
+    letter-spacing: 1px;
     color: ${props => props.selected ? '#000' : 'gray'};
 
     @media(max-width: 700px){
@@ -253,10 +273,15 @@ const Question = styled.div`
     letter-spacing: 1px;
     line-height: 20px;
     word-break: break-word;
+    
+    @media(max-width: 700px){
+        font-size: 18px;
+        font-weight: 500;
+    }
 `
 
 export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, postIndex, question, questionId, getPostOptions, ownPostLikeError }) {
-
+    console.log(userId)
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [answer, setAnswer] = useState('');
@@ -349,12 +374,12 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
         });
     }, [path]);
 
-    function redirectToUserProfile() {
+    function redirectToUserProfile(userId) {
         var userInfo = JSON.parse(localStorage.getItem('__u_info__'));
         ReactGA.event({
             category: 'User Profile Visit',
             action: 'Profile Visit',
-            label: (userInfo !== undefined && userInfo !== null ? `User ${cookie.load('__u_id__')} visited ${userInfo.userId} from Wall Page` : `Logged out user visited ${userInfo.userId} from Wall Page`)
+            label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from Wall Page` : `Logged out user visited ${userId} from Wall Page`)
         });
         history.push({ pathname: `/profile/${userId}`, state: { directProfileLanding: false } });
     }
@@ -371,7 +396,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                         bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
                                 </ProfileImageWrapper>
                                 <ProfileDetailsWrapper>
-                                    <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? redirectToUserProfile : null}>{userName}</ProfileName>
+                                    <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? () => redirectToUserProfile(userId) : null}>{userName}</ProfileName>
                                     <UploadDate>{getDate1(uploadDate)}</UploadDate>
                                 </ProfileDetailsWrapper>
                             </ProfileContainer>
@@ -400,7 +425,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                             {
                                 answer && answer.length >= 200 && !showMore ?
                                     <Fragment>
-                                        {answer.substring(1, 200)}
+                                        {answer.substring(0, 200)}
                                         <ShowMore>... show full</ShowMore>
                                     </Fragment> :
                                     <Fragment>
@@ -423,7 +448,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                     />
                                 </div>
                                 <LikesCount>
-                                    <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer.
+                                    <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer
                                 </LikesCount>
                             </LikeIconWrapper>
                         </PostOptionsWrapper>

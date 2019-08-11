@@ -12,7 +12,6 @@ import { user_info_url, user_name_checking_url } from "../backend/Apis";
 import ShowEye from '../Images/eye.png';
 import HideEye from '../Images/eyecross.png';
 import { getApiRequestCall } from '../backend/ApiRequests';
-import { func } from 'prop-types';
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -29,6 +28,10 @@ const AppName = styled.div`
     font-size: 42px;
     font-weight: bold;
     margin: 10px auto 35px auto;
+
+    @media(max-width: 700px){
+        margin-bottom: 10px;
+    }
 `
 
 const SignUpHeading = styled.p`

@@ -107,6 +107,16 @@ const Question = styled.div`
     word-break: break-word;
     width: 600px;
 
+    &>span{
+        background: #73C6B6;
+        display: block;
+        width: max-content;
+        padding: 0px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin: 10px 0;
+    }
+
     @media(max-width: 700px){
         font-size: 22px;
         width: 100%;
@@ -374,6 +384,7 @@ function Wall({ props }) {
                         <Fragment>
                             <WallContainer>
                                 <Question>
+                                    {/* <span>Question 1</span> */}
                                     {questionResponse.question}
                                 </Question>
                                 <WallWrapper>
@@ -416,7 +427,7 @@ function Wall({ props }) {
                         </Fragment>
                     </Suspense>
                     :
-                    postsLoading ? <ContentLoader /> :
+                    postsLoading ? <DotLoader /> :
                         posts && posts.length === 0 ?
                             <Fragment>
                                 <Question>
