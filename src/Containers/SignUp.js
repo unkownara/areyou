@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import { useInput } from '../Components/hooks';
 import SkipToAnswers from '../Components/SkipToAnswers';
@@ -406,8 +407,12 @@ function SignUp() {
 
     return (
         <SignUpWrapper>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Are You?</title>
+                <meta name="description" content="" />
+            </Helmet>
             <AppName>Are You ?</AppName>
-            {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
             <SignUpHeading>Sign Up</SignUpHeading>
             <InputWrapper>
                 <InputContainer>

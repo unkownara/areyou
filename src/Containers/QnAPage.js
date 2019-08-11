@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import { editPost } from '../Functions/PostOptions';
 import { getDate1 } from '../Functions/Generics';
@@ -514,6 +515,11 @@ function QnAPage(props) {
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} />
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>{`${questionResponse.question || ''}  | Are You?`}</title>
+                <meta name="description" content={questionResponse.question} />
+            </Helmet>
             {
                 (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') || (userInfo !== undefined && userInfo !== null && postEdit) ?
                     <QnAContainer>

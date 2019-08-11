@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from "react-cookies";
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import { useInput } from "../Components/hooks";
 import { user_info_url } from '../backend/Apis';
@@ -336,6 +337,11 @@ function Login() {
 
     return (
         <LoginWrapper>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Are You?</title>
+                <meta name="description" content="" />
+            </Helmet>
             <AppName>Are You ?</AppName>
             <LoginHeading>Login</LoginHeading>
             <InputWrapper>
