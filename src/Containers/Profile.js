@@ -80,6 +80,7 @@ const Email = styled.h2`
     font-size: 14px;
     color: gray;
     margin: 0 0 30px 0;
+    font-weight: 500;
     padding: 0;
     letter-spacing: 1px;
 `
