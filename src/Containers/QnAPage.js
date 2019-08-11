@@ -333,7 +333,7 @@ function QnAPage(props) {
             ReactGA.event({
                 category: 'New Answer',
                 action: 'Yes/No Selected',
-                label: `User selected YES after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+                label: `User selected YES after ${(Math.abs((new Date()).getTime() - pageStartTime)) / 1000} sec`
             });
             if (postEdit) {
                 ReactGA.event({
@@ -349,7 +349,7 @@ function QnAPage(props) {
             ReactGA.event({
                 category: 'New Answer',
                 action: 'Yes/No Selected',
-                label: `User selected NO after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+                label: `User selected NO after ${(Math.abs((new Date()).getTime() - pageStartTime)) / 1000} sec`
             });
             if (postEdit) {
                 ReactGA.event({
@@ -369,7 +369,7 @@ function QnAPage(props) {
             ReactGA.event({
                 category: 'New Answer',
                 action: 'Answer Typing',
-                label: `User started Typing Answer after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+                label: `User started Typing Answer after ${(Math.abs((new Date()).getTime() - pageStartTime)) / 1000} sec`
             });
         }
         if (postEdit && !answerEditFlag) {
@@ -436,7 +436,7 @@ function QnAPage(props) {
                                     ReactGA.event({
                                         category: 'New Answer',
                                         action: 'Answer Submitted',
-                                        label: `User Submitted Answer after ${Math.abs((new Date()).getTime() - pageStartTime)} sec`
+                                        label: `User Submitted Answer after ${(Math.abs((new Date()).getTime() - pageStartTime)) / 1000} sec`
                                     });
                                 } else {
                                     setPostUploadStatus('failure');
