@@ -137,10 +137,11 @@ const ShowLess = styled.div`
     }
 `
 
-const ProfileName = styled.div`
+const ProfileName = styled.h2`
     font-weight: 500;
     font-size: 16px;
-    padding-top: 4px;
+    padding: 4px 0 0 0;
+    margin: 0px;
     cursor: pointer;
     letter-spacing: 1px;
 
@@ -281,7 +282,6 @@ const Question = styled.div`
 `
 
 export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, postIndex, question, questionId, getPostOptions, ownPostLikeError }) {
-    console.log(userId)
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [answer, setAnswer] = useState('');

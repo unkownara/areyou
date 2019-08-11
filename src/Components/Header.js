@@ -31,15 +31,15 @@ const Wrapper = styled.div`
     }
 `
 
-const AppName = styled.div`
+const AppName = styled.h1`
     color: #000;
     text-decoration: none;
     font-size: 26px;
     font-weight: bold;
     vertical-align: middle;
     line-height: 60px;
-    margin-left: 10px;
-    padding-left: 10px;
+    margin: 0 0 0 10px;
+    padding: 0 0 0 10px;
     cursor: pointer;
     width: max-content;
     letter-spacing: 1px;

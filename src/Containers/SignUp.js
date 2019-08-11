@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import { useInput } from '../Components/hooks';
 import SkipToAnswers from '../Components/SkipToAnswers';
@@ -27,16 +28,27 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 10px auto 35px auto;
+    margin: 10px auto 5px auto;
 
     @media(max-width: 700px){
-        margin-bottom: 10px;
+        margin: 0px auto 10px auto;
+    }
+`
+
+const TagLine = styled.div`
+    margin: 10px auto 10px auto;
+    letter-spacing: 1px;
+    color: gray;
+
+    @media(max-width: 700px){
+        margin: 0px auto 10px auto;
     }
 `
 
 const SignUpHeading = styled.p`
     width: 300px;
     padding-left: 10px;
+    margin: 15px;
     text-align: center;
     font-size: 20px;
     color: gray;
@@ -406,8 +418,13 @@ function SignUp() {
 
     return (
         <SignUpWrapper>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Are You? | Share yourself</title>
+                <meta name="description" content="Are you interested to share yourself?" />
+            </Helmet>
             <AppName>Are You ?</AppName>
-            {/* <TagLine>Share your answers with out "you are" questions. Happy sharing!</TagLine> */}
+            <TagLine>Share yourself.</TagLine>
             <SignUpHeading>Sign Up</SignUpHeading>
             <InputWrapper>
                 <InputContainer>

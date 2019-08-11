@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import cookie from "react-cookies";
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import { useInput } from "../Components/hooks";
 import { user_info_url } from '../backend/Apis';
@@ -26,8 +27,18 @@ const AppName = styled.div`
     color: #000;
     font-size: 42px;
     font-weight: bold;
-    margin: 10px auto 60px auto;
+    margin: 10px auto 10px auto;
 
+    @media(max-width: 700px){
+        margin: 0px auto 10px auto;
+    }
+`
+
+const TagLine = styled.div`
+    margin: 5px auto 60px auto;
+    letter-spacing: 1px;
+    color: gray;
+    
     @media(max-width: 700px){
         margin: 0px auto 35px auto;
     }
@@ -336,7 +347,13 @@ function Login() {
 
     return (
         <LoginWrapper>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Are You? | Share yourself</title>
+                <meta name="description" content="Are you interested to share yourself?" />
+            </Helmet>
             <AppName>Are You ?</AppName>
+            <TagLine>Share yourself.</TagLine>
             <LoginHeading>Login</LoginHeading>
             <InputWrapper>
                 <InputContainer>

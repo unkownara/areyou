@@ -1,6 +1,7 @@
 import React, { useEffect, useState, lazy, Fragment, Suspense } from 'react';
 import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import history from '../history';
 import { deletePost } from '../Functions/PostOptions';
@@ -97,24 +98,25 @@ const Info = styled.div`
     }
 `
 
-const Question = styled.div`
+const Question = styled.h1`
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
     margin: 20px auto;
-    font-size: 24px;
+    padding: 0px;
+    font-size: 30px;
     letter-spacing: 1px;
     line-height: 25px;
     word-break: break-word;
     width: 600px;
 
     &>span{
-        background: #73C6B6;
+        background: #8BBAFA;
         display: block;
         width: max-content;
         padding: 0px 10px;
         border-radius: 4px;
         font-size: 11px;
-        margin: 10px 0;
+        margin: 10px 0 15px 0;
     }
 
     @media(max-width: 700px){
@@ -378,13 +380,18 @@ function Wall({ props }) {
     return (
         <Fragment>
             <Header origin={'Wall Page'} />
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>{`${questionResponse.question || ''}  | Are You?`}</title>
+                <meta name="description" content={`${questionResponse.question} Are you interested to share yourself? Answer this question.`} />
+            </Helmet>
             {
                 posts && posts.length && questionResponse.qId !== '' ?
                     <Suspense fallback={<DotLoader />}>
                         <Fragment>
                             <WallContainer>
                                 <Question>
-                                    {/* <span>Question 1</span> */}
+                                    <span>Question 1</span>
                                     {questionResponse.question}
                                 </Question>
                                 <WallWrapper>
@@ -429,7 +436,7 @@ function Wall({ props }) {
                     :
                     postsLoading ? <DotLoader /> :
                         posts && posts.length === 0 ?
-                            <Fragment>
+                            <WallContainer>
                                 <Question>
                                     {questionResponse.question}
                                 </Question>
@@ -438,7 +445,7 @@ function Wall({ props }) {
                                 </ImageWrapper>
                                 <NoPosts>No answers found.</NoPosts>
                                 <Info onClick={() => history.push("/qna")}>Be the first to answer</Info>
-                            </Fragment> :
+                            </WallContainer> :
                             <DotLoader />
             }
             <CustomSnackBar open={showRefreshPost}>

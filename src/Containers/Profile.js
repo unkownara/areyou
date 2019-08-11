@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import styled, { keyframes } from 'styled-components';
 import ReactGA from 'react-ga';
 import cookie from 'react-cookies';
+import { Helmet } from 'react-helmet';
 
 import { deletePost } from '../Functions/PostOptions';
 import history from '../history';
@@ -64,21 +65,23 @@ const ProfileImage = styled.div`
     background: ${props => props.bg || '#eee'};
     border-radius: 50%;
 `
-const ProfileName = styled.div`
+const ProfileName = styled.h1`
     font-weight: bold;
     font-size: 22px;
     letter-spacing: 1px;
     text-align: center;
-    padding-top: 2px;
+    padding: 2px 0 0 0;
     margin: 20px auto 10px auto;
 `
 
-const Email = styled.div`
+const Email = styled.h2`
     width: 100%;
     text-align: center;
     font-size: 14px;
     color: gray;
-    margin-bottom: 30px;
+    margin: 0 0 30px 0;
+    padding: 0;
+    letter-spacing: 1px;
 `
 
 const HR = styled.div`
@@ -368,6 +371,11 @@ export default function Profile(props) {
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} origin={'Profile Page'} />
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>{`${(userInfo && userInfo.userName) || ''} | Are You?`}</title>
+                <meta name="description" content={window.location.href.split('/')[4] || ''} />
+            </Helmet>
             <ProfileContainer>
                 {
                     !checkingUser ?
@@ -461,6 +469,6 @@ export default function Profile(props) {
             <CustomSnackBar open={openOwnPostLikeErrorSnackBar} handleClose={() => closeSnackBar('own_post_like')}>
                 <DeletedMsg>You can't clap for your own answer.</DeletedMsg>
             </CustomSnackBar>
-        </Fragment >
+        </Fragment>
     );
 }

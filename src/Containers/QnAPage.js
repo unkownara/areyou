@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 import styled, { keyframes } from 'styled-components';
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
+import { Helmet } from 'react-helmet';
 
 import { editPost } from '../Functions/PostOptions';
 import { getDate1 } from '../Functions/Generics';
@@ -53,13 +54,15 @@ const QnAWrapper = styled.div`
     }
 `
 
-const Question = styled.p`
+const Question = styled.h1`
     text-align: left;
-    font-size: 22px;
-    font-weight: 500;
+    font-size: 26px;
+    margin: 0px;
+    padding: 0px;
+    font-weight: bold;
     width: 100%;
     letter-spacing: 0.5px;
-    line-height: 29px;
+    line-height: 35px;
     word-break: break-word;
     font-family: 'Raleway', sans-serif;
 `
@@ -115,7 +118,11 @@ const ToggleButtonWrapper = styled.div`
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
     width: 220px;
-    margin: 10px auto 20px auto;
+    margin: 30px auto 20px auto;
+
+    @media(max-width: 700px){
+        margin: 30px auto 20px auto;
+    }
 `
 
 const ToggleButton = styled.div`
@@ -387,13 +394,21 @@ function QnAPage(props) {
 
     const SubmitAnswer = () => {
         setPostSuccessType('');
-        if (answerInput.length === 0 || answerInput === undefined || answerInput === null) {
+        if (answerInput === undefined || answerInput === null || answerInput.length === 0) {
             setErrorMsg('Please write an answer.');
             setOpenSnackBar(true);
             ReactGA.event({
                 category: 'New Answer',
                 action: 'Answer Filling',
                 label: `User submitting an answer without content.`
+            });
+        } else if (answerInput === undefined || answerInput === null || answerInput.length < 50) {
+            setErrorMsg('Please write for atleast 50 characters.');
+            setOpenSnackBar(true);
+            ReactGA.event({
+                category: 'New Answer',
+                action: 'Answer Filling',
+                label: `User submitting small answer.`
             });
         } else {
             setOpenSnackBar(false);
@@ -514,6 +529,11 @@ function QnAPage(props) {
     return (
         <Fragment>
             <Header openSnackBar={openSnackBar} />
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>{`${questionResponse.question || ''}  | Are You?`}</title>
+                <meta name="description" content={`${questionResponse.question} Are you interested to share yourself? Answer this question.`} />
+            </Helmet>
             {
                 (userInfo !== undefined && userInfo !== null && questionResponse.qId !== '' && questionResponse.question !== '') || (userInfo !== undefined && userInfo !== null && postEdit) ?
                     <QnAContainer>
