@@ -223,7 +223,7 @@ export default function Profile(props) {
             setOpenDeletedMsgSnackBar(true);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(true);
-        } else if (type === 'profile_share') {
+        } else if (type === 'share_profile') {
             setOpenShareSnackBar(true);
         }
     }
@@ -238,7 +238,7 @@ export default function Profile(props) {
             setOpenDeletedMsgSnackBar(false);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(false);
-        } else if (type === 'profile_share') {
+        } else if (type === 'share_profile') {
             setOpenShareSnackBar(false);
         }
     }
@@ -391,7 +391,7 @@ export default function Profile(props) {
         if (navigator.share) {
             navigator.share({
                 title: 'Are You? ',
-                text: 'Check out my answers — Are you interested!',
+                text: 'Check out my answers — Are you interested?',
                 url: `${window.location.href}`,
             })
                 .then(() => console.log('Successful share'))
