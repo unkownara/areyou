@@ -137,10 +137,11 @@ const ShowLess = styled.div`
     }
 `
 
-const ProfileName = styled.div`
+const ProfileName = styled.h2`
     font-weight: 500;
     font-size: 16px;
-    padding-top: 4px;
+    padding: 4px 0 0 0;
+    margin: 0px;
     cursor: pointer;
     letter-spacing: 1px;
 

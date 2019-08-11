@@ -98,10 +98,11 @@ const Info = styled.div`
     }
 `
 
-const Question = styled.div`
+const Question = styled.h1`
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
     margin: 20px auto;
+    padding: 0px;
     font-size: 30px;
     letter-spacing: 1px;
     line-height: 25px;
@@ -435,7 +436,7 @@ function Wall({ props }) {
                     :
                     postsLoading ? <DotLoader /> :
                         posts && posts.length === 0 ?
-                            <Fragment>
+                            <WallContainer>
                                 <Question>
                                     {questionResponse.question}
                                 </Question>
@@ -444,7 +445,7 @@ function Wall({ props }) {
                                 </ImageWrapper>
                                 <NoPosts>No answers found.</NoPosts>
                                 <Info onClick={() => history.push("/qna")}>Be the first to answer</Info>
-                            </Fragment> :
+                            </WallContainer> :
                             <DotLoader />
             }
             <CustomSnackBar open={showRefreshPost}>
