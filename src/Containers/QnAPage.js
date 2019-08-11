@@ -31,8 +31,10 @@ const LiftUp = keyframes`
         transform: translate(0%, 0px);
     }
 `
+
 const QnAContainer = styled.div`
     padding: 20px;
+    padding-bottom: 30px;
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
@@ -69,6 +71,7 @@ const AnswerInput = styled.textarea`
     font-weight: 500;
     font-size: 18px;
     padding: 5px;
+    height: max-content;
 `
 
 const SubmitButton = styled.div`
@@ -548,7 +551,7 @@ function QnAPage(props) {
                                     </ToggleButtonWrapper>
                                     <Info>Express your answer in words.</Info>
                                     <AnswerInput
-                                        rows={7}
+                                        rows={10}
                                         name="answer"
                                         value={answerInput}
                                         onChange={setAnswer}
