@@ -256,7 +256,7 @@ const Question = styled.div`
 `
 
 export default function WallPost({ showQuestion, path, likesCount, userName, userId, uploadDate, yesNoAnswer, postId, postIndex, question, questionId, getPostOptions, ownPostLikeError }) {
-
+    console.log(userId)
     const [showMore, setShowMore] = useState(false);
     const [like, setLike] = useState(likesCount);
     const [answer, setAnswer] = useState('');
@@ -349,12 +349,12 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
         });
     }, [path]);
 
-    function redirectToUserProfile() {
+    function redirectToUserProfile(userId) {
         var userInfo = JSON.parse(localStorage.getItem('__u_info__'));
         ReactGA.event({
             category: 'User Profile Visit',
             action: 'Profile Visit',
-            label: (userInfo !== undefined && userInfo !== null ? `User ${cookie.load('__u_id__')} visited ${userInfo.userId} from Wall Page` : `Logged out user visited ${userInfo.userId} from Wall Page`)
+            label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from Wall Page` : `Logged out user visited ${userId} from Wall Page`)
         });
         history.push({ pathname: `/profile/${userId}`, state: { directProfileLanding: false } });
     }
@@ -371,7 +371,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                         bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
                                 </ProfileImageWrapper>
                                 <ProfileDetailsWrapper>
-                                    <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? redirectToUserProfile : null}>{userName}</ProfileName>
+                                    <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? () => redirectToUserProfile(userId) : null}>{userName}</ProfileName>
                                     <UploadDate>{getDate1(uploadDate)}</UploadDate>
                                 </ProfileDetailsWrapper>
                             </ProfileContainer>
