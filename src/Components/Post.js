@@ -171,7 +171,9 @@ const LikeIconWrapper = styled.div`
     }
 
     @media(max-width: 700px){
-        
+        &:hover, &:active, &:focus{
+            background: #fff;
+        }
     }
 
 `
