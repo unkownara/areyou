@@ -134,6 +134,7 @@ const ProfileName = styled.div`
     font-size: 16px;
     padding-top: 4px;
     cursor: pointer;
+    letter-spacing: 1px;
 
     @media(max-width: 700px){
         cursor: default;
