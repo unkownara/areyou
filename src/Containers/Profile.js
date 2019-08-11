@@ -235,7 +235,7 @@ export default function Profile(props) {
             ReactGA.event({
                 category: 'User Profile Visit',
                 action: 'Profile Visit',
-                label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from URL` : `Logged out user visited ${userInfo.userId} from URL`)
+                label: (userInfo !== undefined && userInfo !== null ? `User ${userInfo.userId} visited ${userInfo.userId} from URL` : `Logged out user visited ${uId} from URL`)
             });
         }
     }, []);
