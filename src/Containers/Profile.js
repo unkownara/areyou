@@ -402,7 +402,6 @@ export default function Profile(props) {
                                         </Fragment>
                                         :
                                         userPosts && userPosts.length === 0 ?
-                                            <ContentLoader /> :
                                             <Info>
                                                 {
                                                     userInfo && uId === userInfo.userId ?
@@ -410,7 +409,8 @@ export default function Profile(props) {
                                                         :
                                                         userPosts && userPosts.length ? `${uId} answers` : `Looks like ${uId} has not answered any questions.`
                                                 }
-                                            </Info>
+                                            </Info> :
+                                            <ContentLoader />
                                 }
                                 <SkipWrapper>
                                     <OR>or</OR>
