@@ -33,6 +33,7 @@ const LiftUp = keyframes`
 
 const ProfileContainer = styled.div`
     padding: 20px;
+    padding-bottom: 40px;
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;

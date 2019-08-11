@@ -106,6 +106,7 @@ const Answer = styled.div`
     
     @media(max-width: 700px){
         cursor: default;
+        font-size: 18px;
     }
 `
 
@@ -113,6 +114,12 @@ const ShowMore = styled.span`
     color: #329bff;
     font-size: 14px;
     font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    @media(max-width: 700px){
+        cursor: default;
+    }
 `
 
 const ShowLess = styled.div`
@@ -123,6 +130,7 @@ const ShowLess = styled.div`
     font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    letter-spacing: 1px;
 
     @media(max-width: 700px){
         cursor: default;
@@ -191,12 +199,23 @@ const LikeIcon = styled.img`
 `
 
 const LikesCount = styled.div`
-    font-size: 14px;
+    font-size: 15px;
     padding-top: 2px;
     padding-left: 10px;
-
+    padding-right: 2px;
+    
     &>span{
+        color: #000;
         font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    @media(max-width: 700px){
+        color: gray;
+
+        &>span{
+            color: #000;
+        }
     }
 `
 
@@ -239,6 +258,7 @@ const YesNoIcon = styled.img`
 const YesNoText = styled.div`
     padding-left: 5px;
     font-weight: bold;
+    letter-spacing: 1px;
     color: ${props => props.selected ? '#000' : 'gray'};
 
     @media(max-width: 700px){
@@ -429,7 +449,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                     />
                                 </div>
                                 <LikesCount>
-                                    <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer.
+                                    <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer
                                 </LikesCount>
                             </LikeIconWrapper>
                         </PostOptionsWrapper>
