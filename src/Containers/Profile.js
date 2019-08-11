@@ -180,6 +180,20 @@ const DeletedMsg = styled.div`
     margin: 15px auto 15px auto;
 `
 
+const ShareSuccess = styled.div`
+    color: #fff;
+    background: #82E0AA;
+    width: 300px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;    
+    font-size: 14px;
+    text-align: center;
+    margin: 15px auto 15px auto;
+`
+
 export default function Profile(props) {
     // Api call for my answers
     let url = window.location.href.split('/');
@@ -198,7 +212,7 @@ export default function Profile(props) {
     const [openPostOptionSnackBar, setOpenPostOptionSnackBar] = useState(false);
     const [openConfirmDeleteSnackBar, setOpenConfirmDeleteSnackBar] = useState(false);
     const [openDeletedMsgSnackBar, setOpenDeletedMsgSnackBar] = useState(false);
-
+    const [openShareSnackBar, setOpenShareSnackBar] = useState(false);
     function openSnackBar(type) {
         if (type === 'post_options') {
             setOpenPostOptionSnackBar(true)
@@ -209,6 +223,8 @@ export default function Profile(props) {
             setOpenDeletedMsgSnackBar(true);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(true);
+        } else if (type === 'profile_share') {
+            setOpenShareSnackBar(true);
         }
     }
 
@@ -222,6 +238,8 @@ export default function Profile(props) {
             setOpenDeletedMsgSnackBar(false);
         } else if (type === 'own_post_like') {
             setOpenOwnPostLikeErrorSnackBar(false);
+        } else if (type === 'profile_share') {
+            setOpenShareSnackBar(false);
         }
     }
 
@@ -370,12 +388,11 @@ export default function Profile(props) {
     }
 
     function shareProfile() {
-        console.log('a')
         if (navigator.share) {
             navigator.share({
-                title: 'Web Fundamentals',
-                text: 'Check out Web Fundamentals — it rocks!',
-                url: 'https://developers.google.com/web',
+                title: 'Are You? ',
+                text: 'Check out my answers — Are you interested!',
+                url: `${window.location.href}`,
             })
                 .then(() => console.log('Successful share'))
                 .catch((error) => console.log('Error sharing', error));
@@ -482,6 +499,9 @@ export default function Profile(props) {
             </CustomSnackBar>
             <CustomSnackBar open={openOwnPostLikeErrorSnackBar} handleClose={() => closeSnackBar('own_post_like')}>
                 <DeletedMsg>You can't clap for your own answer.</DeletedMsg>
+            </CustomSnackBar>
+            <CustomSnackBar open={openShareSnackBar} handleClose={() => closeSnackBar('share_profile')}>
+                <ShareSuccess>Profile successfully shared.</ShareSuccess>
             </CustomSnackBar>
         </Fragment>
     );
