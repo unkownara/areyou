@@ -240,12 +240,13 @@ function SignUp() {
         if (name.value.length === 0) {
             usernameErrorFlag = false;
             setNameErrorMsg('Required')
-        } else if (name.value.length) {
-            if (!name.value.match(/^[a-zA-Z_ ]+$/)) {
-                usernameErrorFlag = false;
-                setNameErrorMsg('Enter correct name')
-            }
         }
+        // if (name.value.length) {
+        //     if (!name.value.match(/^[a-zA-Z_ ]+$/)) {
+        //         usernameErrorFlag = false;
+        //         setNameErrorMsg('Enter correct name')
+        //     }
+        // }
 
         // Email Validation
         let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
