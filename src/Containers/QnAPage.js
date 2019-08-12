@@ -314,7 +314,7 @@ function QnAPage(props) {
                         if (response.data && response.data.Items && response.data.Items.length > 0) {
                             setQuestionResponse(response.data.Items[0]);
                         } else {
-                            console.log('Error ', response);
+                            // console.log('Error ', response);
                         }
                     })
                 })
@@ -441,7 +441,7 @@ function QnAPage(props) {
 
                 s3Bucket.putObject(s3Obj, function (err, data) {
                     if (err) {
-                        console.log('Error message', err);
+                        // console.log('Error message', err);
                         setSubmitting(false);
                     } else {
                         import('../backend/ApiRequests').then(obj => {

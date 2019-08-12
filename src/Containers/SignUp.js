@@ -349,7 +349,7 @@ function SignUp() {
                 })
             });
         } else {
-            console.log('Fix Errors')
+            // console.log('Fix Errors')
             setVerifyingCredentials(false);
         }
     };

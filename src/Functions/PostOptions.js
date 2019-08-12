@@ -35,7 +35,7 @@ export const editPost = function (postId, createdOn, questionId, editedContent, 
     };
     s3Bucket.putObject(s3Obj, function (err, data) {
         if (err) {
-            console.log('Error message', err);
+            // console.log('Error message', err);
         } else {
             let payload = {
                 postId,
