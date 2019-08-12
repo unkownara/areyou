@@ -199,7 +199,7 @@ export default function Header({ openSnackBar }) {
     return (
         <Headroom>
             <HeaderWrapper>
-                <AppName onClick={redirectToWallPage}>Are You</AppName>
+                <AppName onClick={redirectToWallPage}>Are You ?</AppName>
                 <Wrapper>
                     <LogoWrapper>
                         <AnswerTrigger
