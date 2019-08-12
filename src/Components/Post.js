@@ -454,9 +454,12 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                         </PostOptionsWrapper>
                     </Post>
                     :
-                    <ContentLoader count={5} />
+                    null
             }
-            <HR />
+            {
+                answer && answer.length > 0 ?
+                    <HR /> : null
+            }
         </PostWrapper>
     );
 }
