@@ -426,7 +426,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
                                 answer && answer.length >= 200 && !showMore ?
                                     <Fragment>
                                         {answer.substring(0, 200)}
-                                        <ShowMore>... show full</ShowMore>
+                                        <ShowMore>... Show full</ShowMore>
                                     </Fragment> :
                                     <Fragment>
                                         {answer}
