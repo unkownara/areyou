@@ -4,6 +4,7 @@ import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
+import TnCTrigger from '../Components/TnCTrigger';
 import { useInput } from '../Components/hooks';
 import SkipToAnswers from '../Components/SkipToAnswers';
 import { makeid } from '../Functions/Generics';
@@ -514,6 +515,7 @@ function SignUp() {
             <LoginRedirect>Already a member? <span onClick={logInRedirect}>Login</span></LoginRedirect>
             <OR>or</OR>
             <SkipToAnswers origin={'Sign Up Page'} />
+            <TnCTrigger />
         </SignUpWrapper>
     );
 }

@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, Fragment } from 'react';
 import history from './history';
 import { Router, Switch, Route } from 'react-router';
+import TermsAndConditions from './Containers/TermsAndConditions';
 
 const App = lazy(() => import('./App'));
 const Login = lazy(() => import('./Containers/Login'));
@@ -37,7 +38,11 @@ function Routers() {
                             path="/profile"
                             component={Profile}
                         />
-
+                        <Route
+                            exact
+                            path="/terms-and-conditions"
+                            component={TermsAndConditions}
+                        />
                     </Switch>
                 </Suspense>
             </Router>
