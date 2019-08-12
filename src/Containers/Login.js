@@ -69,13 +69,14 @@ const Input = styled.input`
     font-weight: 500;
     letter-spacing: 0.6px;
     border: none;
-    border: 1px solid #eee;
+    border: 1px solid rgb(228, 228, 228);
     padding: 10px;
     outline: none;
     margin: 0 auto 20px auto;
 
     &::placeholder{
         color: #d3d3d3;
+        font-size: 14px;
     }
 
     &:focus{
