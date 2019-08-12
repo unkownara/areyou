@@ -230,35 +230,38 @@ function Wall({ props }) {
             };
             setPostsLoading(true);
 
-            if (props.location.state === undefined) {
-                if (localStorage.getItem('userAnswers') !== undefined && localStorage.getItem('userAnswers') !== null) {
-                    setPosts(JSON.parse(localStorage.getItem('userAnswers')));
-                }
-            }
+            // if (props.location.state === undefined) {
+            //     if (localStorage.getItem('userAnswers') !== undefined && localStorage.getItem('userAnswers') !== null) {
+            //         setPosts(JSON.parse(localStorage.getItem('userAnswers')));
+            //     }
+            // }
 
             getApiRequestCall(user_post_url, params, function (response) {
                 try {
                     if (response && response.data && response.data.Items && response.data.Items.length > 0) {
                         let newPosts = posts.length === 0 ? response.data.Items : posts.concat(response.data.Items);
 
-                        let oldPosts = JSON.parse(localStorage.getItem('userAnswers'));
-                        if (oldPosts !== undefined && oldPosts !== null) {
-                            if (oldPosts.length !== newPosts.length || JSON.stringify(oldPosts) !== JSON.stringify(newPosts)) {
-                                if ((props.location.state !== undefined && props.location.state !== null && props.location.state.newAnswers !== undefined && props.location.state.newAnswers) || (oldPosts.length === 0)) {
-                                    localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                                    setPosts(newPosts);
-                                } else {
-                                    localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                                    setUpdatedPosts(newPosts);
-                                    setShowRefreshPost(true);
-                                }
-                            }
-                            setPostsLoading(false);
-                        } else {
-                            localStorage.setItem('userAnswers', JSON.stringify(newPosts));
-                            setPosts(newPosts);
-                            setPostsLoading(false);
-                        }
+                        // let oldPosts = JSON.parse(localStorage.getItem('userAnswers'));
+                        // if (oldPosts !== undefined && oldPosts !== null) {
+                        //     if (oldPosts.length !== newPosts.length || JSON.stringify(oldPosts) !== JSON.stringify(newPosts)) {
+                        //         if ((props.location.state !== undefined && props.location.state !== null && props.location.state.newAnswers !== undefined && props.location.state.newAnswers) || (oldPosts.length === 0)) {
+                        //             localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                        //             setPosts(newPosts);
+                        //         } else {
+                        //             localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                        //             setUpdatedPosts(newPosts);
+                        //             setShowRefreshPost(true);
+                        //         }
+                        //     }
+                        //     setPostsLoading(false);
+                        // } else {
+                        //     localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                        //     setPosts(newPosts);
+                        //     setPostsLoading(false);
+                        // }
+                        localStorage.setItem('userAnswers', JSON.stringify(newPosts));
+                        setPosts(newPosts);
+                        setPostsLoading(false);
                     } else {
                         // console.log('No posts are available');
                         setPostsLoading(false);
