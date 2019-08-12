@@ -394,7 +394,7 @@ function Wall({ props }) {
                         <Fragment>
                             <WallContainer>
                                 <Question>
-                                    <span>Question 1</span>
+                                    <span>Question</span>
                                     {questionResponse.question}
                                 </Question>
                                 <WallWrapper>
