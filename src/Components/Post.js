@@ -287,6 +287,7 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
     const [answer, setAnswer] = useState('');
     const [likedByUser, setLikedByUser] = useState(false);
     const [showAnim, setShowAnim] = useState(false);
+    const [apiError, setApiError] = useState(false);
     const [showPostOptions, setShowPostOptions] = useState(false);
 
     function showFullAnswer() {
@@ -362,13 +363,14 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
             Bucket: 'areyou-posts',
             Key: path
         };
-
+        setApiError(false);
         s3.getObject(getParams, function (err, data) {
             if (err) {
+                setApiError(true);
                 return '';
             }
             else {
-                // console.log('data body ', data.Body.toString('utf-8'))
+                setApiError(false);
                 setAnswer(data.Body.toString('utf-8'));
             }
         });
@@ -387,74 +389,79 @@ export default function WallPost({ showQuestion, path, likesCount, userName, use
     return (
         <PostWrapper>
             {
-                answer && answer.length > 0 ?
-                    <Post>
-                        <ProfileWrapper>
-                            <ProfileContainer>
-                                <ProfileImageWrapper>
-                                    <ProfileImage
-                                        bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
-                                </ProfileImageWrapper>
-                                <ProfileDetailsWrapper>
-                                    <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? () => redirectToUserProfile(userId) : null}>{userName}</ProfileName>
-                                    <UploadDate>{getDate1(uploadDate)}</UploadDate>
-                                </ProfileDetailsWrapper>
-                            </ProfileContainer>
-                            <OptionsIconWrapper>
+                apiError ? null :
+                    <Fragment>
+
+                        {answer && answer.length > 0 ?
+                            <Post>
+                                <ProfileWrapper>
+                                    <ProfileContainer>
+                                        <ProfileImageWrapper>
+                                            <ProfileImage
+                                                bg={getRandomColor(userName.substring(0, 1).toLowerCase())}>{userName.substring(0, 1)}</ProfileImage>
+                                        </ProfileImageWrapper>
+                                        <ProfileDetailsWrapper>
+                                            <ProfileName onClick={(userId !== cookie.load('__u_id__')) ? () => redirectToUserProfile(userId) : null}>{userName}</ProfileName>
+                                            <UploadDate>{getDate1(uploadDate)}</UploadDate>
+                                        </ProfileDetailsWrapper>
+                                    </ProfileContainer>
+                                    <OptionsIconWrapper>
+                                        {
+                                            showPostOptions ?
+                                                <OptionsIcon onClick={() => getPostOptions(questionId, question, postId, answer, yesNoAnswer, uploadDate, postIndex)} src={Options} /> : null
+                                        }
+                                    </OptionsIconWrapper>
+                                </ProfileWrapper>
                                 {
-                                    showPostOptions ?
-                                        <OptionsIcon onClick={() => getPostOptions(questionId, question, postId, answer, yesNoAnswer, uploadDate, postIndex)} src={Options} /> : null
+                                    showQuestion ?
+                                        <Question>
+                                            {question}
+                                        </Question> : null
                                 }
-                            </OptionsIconWrapper>
-                        </ProfileWrapper>
-                        {
-                            showQuestion ?
-                                <Question>
-                                    {question}
-                                </Question> : null
-                        }
-                        <YesNoWrapper>
-                            <YesNoAnswer selected>
-                                <YesNoIconWrapper>
-                                    <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
-                                </YesNoIconWrapper>
-                                <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
-                            </YesNoAnswer>
-                        </YesNoWrapper>
-                        <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
-                            {
-                                answer && answer.length >= 200 && !showMore ?
-                                    <Fragment>
-                                        {answer.substring(0, 200)}
-                                        <ShowMore>... Show full</ShowMore>
-                                    </Fragment> :
-                                    <Fragment>
-                                        {answer}
-                                    </Fragment>
-                            }
-                        </Answer>
-                        {
-                            showMore ?
-                                <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
-                        }
-                        <PostOptionsWrapper>
-                            <LikeIconWrapper anim={showAnim}>
-                                <div>
-                                    <LikeIcon
-                                        anim={showAnim}
-                                        onClick={likeAnswer}
-                                        src={likedByUser ? Clap : UnClap}
-                                        alt={'Like'}
-                                    />
-                                </div>
-                                <LikesCount>
-                                    <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer
+                                <YesNoWrapper>
+                                    <YesNoAnswer selected>
+                                        <YesNoIconWrapper>
+                                            <YesNoIcon src={yesNoAnswer === 'yes' ? Happy : Sad} />
+                                        </YesNoIconWrapper>
+                                        <YesNoText selected>{yesNoAnswer === 'yes' ? 'Yes' : 'No'}</YesNoText>
+                                    </YesNoAnswer>
+                                </YesNoWrapper>
+                                <Answer onClick={answer && answer.length >= 200 ? showFullAnswer : null} pointer={answer && answer.length <= 200}>
+                                    {
+                                        answer && answer.length >= 200 && !showMore ?
+                                            <Fragment>
+                                                {answer.substring(0, 200)}
+                                                <ShowMore>... Show full</ShowMore>
+                                            </Fragment> :
+                                            <Fragment>
+                                                {answer}
+                                            </Fragment>
+                                    }
+                                </Answer>
+                                {
+                                    showMore ?
+                                        <ShowLess onClick={hideFullAnswer}> Show less</ShowLess> : null
+                                }
+                                <PostOptionsWrapper>
+                                    <LikeIconWrapper anim={showAnim}>
+                                        <div>
+                                            <LikeIcon
+                                                anim={showAnim}
+                                                onClick={likeAnswer}
+                                                src={likedByUser ? Clap : UnClap}
+                                                alt={'Like'}
+                                            />
+                                        </div>
+                                        <LikesCount>
+                                            <span>{like}</span> {like === 1 ? 'clap' : 'claps'} to this answer
                                 </LikesCount>
-                            </LikeIconWrapper>
-                        </PostOptionsWrapper>
-                    </Post>
-                    :
-                    null
+                                    </LikeIconWrapper>
+                                </PostOptionsWrapper>
+                            </Post>
+                            :
+                            <ContentLoader />
+                        }
+                    </Fragment>
             }
             {
                 answer && answer.length > 0 ?
