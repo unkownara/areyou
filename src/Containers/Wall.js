@@ -260,13 +260,13 @@ function Wall({ props }) {
                             setPostsLoading(false);
                         }
                     } else {
-                        console.log('No posts are available');
+                        // console.log('No posts are available');
                         setPostsLoading(false);
                         setEndOfPosts(true);
                     }
                 } catch (e) {
                     setPostsLoading(false);
-                    console.log('Something went wrong', e);
+                    // console.log('Something went wrong', e);
                 }
             });
         }

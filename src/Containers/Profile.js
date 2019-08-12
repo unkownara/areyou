@@ -262,7 +262,7 @@ export default function Profile(props) {
                     action: 'Invalid Profile Visit',
                     label: `User not found`
                 });
-                console.log('User does not exit');
+                // console.log('User does not exit');
             }
         })
     }, [uId]);

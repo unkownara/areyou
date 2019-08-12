@@ -11,7 +11,7 @@ export const getApiRequestCall = function(url, payload, callback) {
         callback(res);
         // console.log('response ', res);
     }).catch(err => {
-        console.log('error ', err);
+        // console.log('error ', err);
         callback(err);
     });
 };
