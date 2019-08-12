@@ -221,7 +221,7 @@ const AskedOn = styled.div`
     color: gray;
     text-align: left;
     width: 100%;
-    margin-bottom: 15px;
+    margin: 15px 0;
 `
 
 const ImageWrapper = styled.div`
@@ -263,6 +263,14 @@ const OkButton = styled(CancelButton)`
     animation: ${LiftUp} ease 0.7s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
+`
+
+const ValidInfo = styled.div`
+    color: gray;
+    text-align: left;
+    font-size: 10px;
+    width: 100%;
+    margin: 10px 0;
 `
 
 function QnAPage(props) {
@@ -549,6 +557,10 @@ function QnAPage(props) {
                                 :
                                 <QnAWrapper>
                                     <Question> {postEdit ? postData.question : questionResponse.question} </Question>
+                                    {
+                                        !postEdit ?
+                                            <ValidInfo>Question changes every morning.</ValidInfo> : null
+                                    }
                                     {
                                         postEdit ?
                                             <AskedOn>Asked on {getDate1(postData.createdOn)}</AskedOn> : null
