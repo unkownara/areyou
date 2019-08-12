@@ -4,6 +4,7 @@ import cookie from "react-cookies";
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 
+import TnCTrigger from '../Components/TnCTrigger';
 import { useInput } from "../Components/hooks";
 import { user_info_url } from '../backend/Apis';
 import SkipToAnswers from '../Components/SkipToAnswers';
@@ -408,6 +409,7 @@ function Login() {
             <SignUpRedirect>Want to join us? <span onClick={signUpRedirect}>Sign Up</span></SignUpRedirect>
             <OR>or</OR>
             <SkipToAnswers origin={'Login Page'} />
+            <TnCTrigger />
         </LoginWrapper>
     );
 }
